@@ -3,7 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { addPrompt } from "@/lib/actions/prompts";
 
-export function AddPromptForm() {
+export function AddPerceptionPromptForm() {
   const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
@@ -19,7 +19,7 @@ export function AddPromptForm() {
             color: open ? "var(--ink)" : "var(--cream)",
           }}
         >
-          {open ? "Cancel" : "Add a prompt"}
+          {open ? "Cancel" : "Add a perception prompt"}
         </button>
       </div>
 
@@ -29,6 +29,7 @@ export function AddPromptForm() {
             ref={formRef}
             action={(formData) =>
               startTransition(async () => {
+                formData.set("prompt_type", "perception");
                 await addPrompt(formData);
                 formRef.current?.reset();
                 setOpen(false);
@@ -38,12 +39,12 @@ export function AddPromptForm() {
           >
             <div>
               <label className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
-                New prompt
+                Open brand-description prompt
               </label>
               <input
                 name="query_text"
                 required
-                placeholder="e.g. is almond oil good for hair growth"
+                placeholder="e.g. How would you describe Bajaj Almond Drops as a brand?"
                 className="mt-2.5 w-full border-0 border-b border-[var(--ink)] bg-transparent py-2 font-serif text-2xl text-[var(--ink)] outline-none placeholder:text-[var(--faint)]"
               />
             </div>

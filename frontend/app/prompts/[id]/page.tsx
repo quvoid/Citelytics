@@ -1,12 +1,44 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createAnonServerClient } from "@/lib/supabase/server";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { EngineLabel } from "@/components/engine-icons";
 import type { Citation, Engine, Prompt } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
+
+function Dot({ real }: { real: boolean }) {
+  return (
+    <span
+      className="inline-block h-[6px] w-[6px] rounded-full"
+      style={{
+        background: real ? "var(--green)" : "transparent",
+        border: `1px solid ${real ? "var(--green)" : "var(--faint)"}`,
+      }}
+    />
+  );
+}
+
+function MentionMark({
+  value,
+}: {
+  value: boolean | null;
+}) {
+  const yes = value === true;
+  const unknown = value === null;
+  const label = unknown ? "unknown" : yes ? "names Bajaj" : "no mention";
+  const color = unknown ? "var(--faint)" : yes ? "var(--green)" : "var(--faint)";
+  return (
+    <div className="inline-flex items-center gap-1.5">
+      <span
+        className="inline-block h-[9px] w-[9px]"
+        style={{ background: yes ? "var(--green)" : "transparent", border: `1px solid ${color}` }}
+      />
+      <span className="text-[10.5px] tracking-[0.09em] whitespace-nowrap uppercase" style={{ color }}>
+        {label}
+      </span>
+    </div>
+  );
+}
 
 export default async function PromptDetailPage({
   params,
@@ -38,13 +70,25 @@ export default async function PromptDetailPage({
 
   const { data: rawResponses } = await sb
     .from("raw_responses")
-    .select("id, engine_id, brand_mentioned_in_answer")
+    .select("id, engine_id, brand_mentioned_in_answer, brand_sentiment_score, brand_position, fetched_at")
     .eq("prompt_id", id)
-    .returns<{ id: string; engine_id: string; brand_mentioned_in_answer: boolean }[]>();
+    .returns<
+      {
+        id: string;
+        engine_id: string;
+        brand_mentioned_in_answer: boolean;
+        brand_sentiment_score: number | null;
+        brand_position: number | null;
+        fetched_at: string;
+      }[]
+    >();
 
   const answerMentionByEngine = new Map(
     (rawResponses ?? []).map((r) => [r.engine_id, r.brand_mentioned_in_answer])
   );
+  const sentimentByEngine = new Map((rawResponses ?? []).map((r) => [r.engine_id, r.brand_sentiment_score]));
+  const positionByEngine = new Map((rawResponses ?? []).map((r) => [r.engine_id, r.brand_position]));
+  const lastFetchByEngine = new Map((rawResponses ?? []).map((r) => [r.engine_id, r.fetched_at]));
 
   const byEngine = new Map<string, Citation[]>();
   for (const c of citations ?? []) {
@@ -53,95 +97,132 @@ export default async function PromptDetailPage({
     byEngine.set(c.engine_id, list);
   }
 
+  const totalCitations = citations?.length ?? 0;
   const citationsMentioningBrand = (citations ?? []).filter((c) => c.mentions_brand === true).length;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <Link href="/prompts" className="text-sm text-primary hover:underline">
-          ← Back to Prompts
+    <div>
+      <section className="border-b border-[var(--ink)] py-10">
+        <Link
+          href="/prompts"
+          className="font-sans text-[11px] tracking-[0.11em] text-[var(--rust)] uppercase no-underline"
+        >
+          ← all prompts
         </Link>
-        <h1 className="mt-2 text-xl font-semibold tracking-tight">{prompt.query_text}</h1>
-        <p className="mt-0.5 text-muted-foreground">
-          {citations?.length ?? 0} citations across {byEngine.size} engine(s) ·{" "}
-          {citationsMentioningBrand} cited page(s) mention your brand ·{" "}
-          {prompt.active ? "Active" : "Inactive"}
-        </p>
-      </div>
+        <div className="mt-5 grid grid-cols-1 items-end gap-14 md:grid-cols-[1.4fr_1fr]">
+          <div>
+            <h1 className="m-0 font-serif text-[38px] leading-[1.15] font-normal tracking-[-0.02em]">
+              &ldquo;{prompt.query_text}&rdquo;
+            </h1>
+            <div className="mt-3.5 flex items-center gap-4 text-[12px] text-[var(--muted-2)]">
+              <span>{prompt.active ? "active" : "paused"}</span>
+              <span>{byEngine.size} engine(s)</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-px border border-[var(--rule)] bg-[var(--rule)]">
+            {[
+              { label: "Citations", value: totalCitations },
+              { label: "Name you", value: citationsMentioningBrand },
+              { label: "Engines", value: byEngine.size },
+            ].map((s) => (
+              <div key={s.label} className="bg-[var(--paper)] px-4.5 py-4">
+                <div className="text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+                  {s.label}
+                </div>
+                <div className="mt-1.5 font-serif text-[28px]">{s.value}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      {[...byEngine.entries()].map(([engineId, rows]) => (
-        <Card key={engineId}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Badge variant={engineById.get(engineId) === "gemini" ? "default" : "secondary"}>
-                {engineById.get(engineId) ?? "—"}
-              </Badge>
-              {rows.length} citations
-              {answerMentionByEngine.get(engineId) ? (
-                <Badge variant="outline" className="border-primary text-primary">
-                  Brand mentioned in answer
-                </Badge>
-              ) : (
-                <span className="text-xs text-muted-foreground">Brand not mentioned in answer text</span>
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>URL</TableHead>
-                  <TableHead>Domain</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Mentions brand?</TableHead>
-                  <TableHead className="text-right">Fetched</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map((c) => (
-                  <TableRow key={c.id}>
-                    <TableCell className="max-w-md truncate">
-                      <a href={c.url} target="_blank" rel="noreferrer" className="hover:underline">
-                        {c.url}
+      {[...byEngine.entries()].map(([engineId, rows]) => {
+        const mentionedInAnswer = answerMentionByEngine.get(engineId) ?? false;
+        const nameCount = rows.filter((c) => c.mentions_brand === true).length;
+        return (
+          <section key={engineId} className="border-b border-[var(--rule)] py-9">
+            <div className="grid grid-cols-1 gap-11 md:grid-cols-[210px_1fr]">
+              <div>
+                <h2 className="m-0 flex items-center gap-2 font-serif text-[24px] font-medium tracking-[-0.01em]">
+                  <EngineLabel name={engineById.get(engineId)} size={20} />
+                </h2>
+                <p className="mt-2 font-serif text-[14px] leading-[1.5] text-[var(--muted-2)] italic">
+                  {rows.length} cited pages · {nameCount} name you
+                </p>
+                {lastFetchByEngine.get(engineId) && (
+                  <div className="mt-3 flex items-center gap-1.5 font-serif text-[12.5px] text-[var(--muted-2)] italic">
+                    <Dot real={rows.some((c) => !c.is_simulated)} />
+                    {rows.some((c) => !c.is_simulated) ? "real fetch" : "simulated"}
+                  </div>
+                )}
+                <div className="mt-3">
+                  <MentionMark value={mentionedInAnswer} />
+                </div>
+                {(sentimentByEngine.get(engineId) !== null || positionByEngine.get(engineId) !== null) && (
+                  <div className="mt-3 flex gap-4 font-serif text-[13px] text-[var(--muted-2)]">
+                    {sentimentByEngine.get(engineId) !== null && (
+                      <span>sentiment {sentimentByEngine.get(engineId)}</span>
+                    )}
+                    {positionByEngine.get(engineId) !== null && (
+                      <span>position #{positionByEngine.get(engineId)}</span>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div>
+                {rows.map((c, i) => (
+                  <article
+                    key={c.id}
+                    className="grid grid-cols-[30px_1fr_150px] items-start gap-4.5 border-t border-[var(--rule-light)] py-4.5"
+                  >
+                    <div className="font-serif text-[22px] leading-none text-[var(--faint)]">
+                      †{i + 1}
+                    </div>
+                    <div>
+                      <a
+                        href={c.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-serif text-[17px] leading-[1.35] text-[var(--ink)] hover:text-[var(--rust)]"
+                      >
+                        {c.domain}
                       </a>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">{c.domain}</TableCell>
-                    <TableCell>
-                      {c.is_simulated ? (
-                        <Badge variant="secondary">Simulated</Badge>
-                      ) : (
-                        <Badge>Real</Badge>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {c.mentions_brand === true && (
-                        <Badge className="bg-[#157f53]">Yes</Badge>
-                      )}
-                      {c.mentions_brand === false && (
-                        <span className="text-muted-foreground">No</span>
-                      )}
-                      {c.mentions_brand === null && (
-                        <span className="text-xs text-muted-foreground">Unknown (page blocked fetch)</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right text-muted-foreground">
-                      {new Date(c.fetched_at).toLocaleString()}
-                    </TableCell>
-                  </TableRow>
+                      <div>
+                        <a
+                          href={c.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-block text-[12px] break-all text-[var(--rust)]"
+                        >
+                          {c.url}
+                        </a>
+                      </div>
+                      <div className="mt-2 flex items-center gap-3.5 text-[11px] tracking-[0.06em] text-[var(--muted-2)] uppercase">
+                        <span>{c.is_simulated ? "simulated demo citation" : "real citation"}</span>
+                        <span className="flex items-center gap-1.5 font-serif text-[12.5px] tracking-[0.02em] italic normal-case">
+                          <Dot real={!c.is_simulated} />
+                          {c.is_simulated ? "simulated" : "live fetch"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <MentionMark value={c.mentions_brand} />
+                      <div className="mt-1.5 text-[11px] text-[var(--faint)]">
+                        {new Date(c.fetched_at).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </article>
                 ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      ))}
+              </div>
+            </div>
+          </section>
+        );
+      })}
 
       {!citations?.length && (
-        <Card>
-          <CardContent className="py-10 text-center text-muted-foreground">
-            No citations yet for this prompt — run &ldquo;Fetch citations now&rdquo; from the
-            Overview page.
-          </CardContent>
-        </Card>
+        <p className="border-b border-[var(--rule)] py-10 text-center font-serif text-[16px] text-[var(--muted-2)] italic">
+          No citations yet for this prompt — run &ldquo;Fetch citations now&rdquo; from the header.
+        </p>
       )}
     </div>
   );

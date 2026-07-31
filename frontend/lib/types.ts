@@ -3,6 +3,10 @@ export type Prompt = {
   project_id: string;
   query_text: string;
   active: boolean;
+  prompt_type: "citation" | "perception";
+  topic: string | null;
+  intent: "Commercial" | "Informational" | "Transactional" | "Navigational" | null;
+  is_branded: boolean;
 };
 
 export type Engine = {
@@ -14,6 +18,7 @@ export type TrackedUrl = {
   id: string;
   project_id: string;
   url: string;
+  name: string;
   is_competitor: boolean;
 };
 
@@ -26,24 +31,77 @@ export type Citation = {
   is_simulated: boolean;
   raw_response_id: string | null;
   mentions_brand: boolean | null;
+  content_type: string | null;
   fetched_at: string;
 };
 
-export type EngineResult = {
-  engine: "gemini" | "openrouter_demo";
-  status: "success" | "rate_limited" | "error";
+export type RawResponse = {
+  id: string;
+  prompt_id: string;
+  engine_id: string;
+  answer_text: string | null;
+  brand_mentioned_in_answer: boolean;
+  brand_sentiment_score: number | null;
+  brand_position: number | null;
+  fetched_at: string;
+};
+
+export type AnswerBrandMention = {
+  id: string;
+  raw_response_id: string;
+  tracked_url_id: string;
+  mentioned: boolean;
+  position: number | null;
+};
+
+export type DomainType = {
+  domain: string;
+  domain_type: "Corporate" | "Editorial" | "UGC" | "Institutional" | "Reference" | "Other";
+};
+
+export type DailyMetric = {
+  id: string;
+  project_id: string;
+  date: string;
+  visibility_pct: number | null;
+  sov_pct: number | null;
+  avg_sentiment: number | null;
+  avg_position: number | null;
+};
+
+export type QueryFanout = {
+  id: string;
+  raw_response_id: string;
+  query_text: string;
+};
+
+export type BrandAttribute = {
+  id: string;
+  raw_response_id: string;
+  tracked_url_id: string;
+  attribute: string;
+};
+
+export type FetchTriggerResponse = {
+  batch_id: string;
+  tasks_enqueued: number;
+};
+
+export type FetchTaskStatus = {
+  prompt_id: string;
+  engine_name: "gemini" | "openrouter";
+  status: "pending" | "success" | "rate_limited" | "error";
   message: string | null;
   citation_count: number;
 };
 
-export type PromptFetchStatus = {
-  prompt_id: string;
-  query_text: string;
-  results: EngineResult[];
+export type FetchBatchStatusResponse = {
+  batch_id: string;
+  project_id: string;
+  tasks: FetchTaskStatus[];
+  done: boolean;
 };
 
-export type FetchCitationsResponse = {
-  project_id: string;
-  prompts_processed: number;
-  statuses: PromptFetchStatus[];
+export type PerceptionFetchResponse = {
+  processed: number;
 };

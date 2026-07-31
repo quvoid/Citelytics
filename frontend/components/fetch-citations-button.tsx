@@ -1,38 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { BACKEND_URL, DEMO_PROJECT_ID } from "@/lib/constants";
-import type { FetchCitationsResponse } from "@/lib/types";
+import { EngineLabel } from "@/components/engine-icons";
+import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import type { FetchBatchStatusResponse, FetchTaskStatus } from "@/lib/types";
 
 type State =
   | { phase: "idle" }
-  | { phase: "loading" }
-  | { phase: "done"; data: FetchCitationsResponse }
+  | { phase: "polling"; tasks: FetchTaskStatus[]; promptText: Record<string, string> }
+  | { phase: "done"; tasks: FetchTaskStatus[]; promptText: Record<string, string> }
   | { phase: "error"; message: string };
+
+const POLL_INTERVAL_MS = 2000;
 
 export function FetchCitationsButton() {
   const [state, setState] = useState<State>({ phase: "idle" });
   const router = useRouter();
+  const pollingRef = useRef(false);
 
   async function handleFetch() {
-    setState({ phase: "loading" });
+    setState({ phase: "polling", tasks: [], promptText: {} });
     try {
-      const res = await fetch(
-        `${BACKEND_URL}/api/fetch-citations/${DEMO_PROJECT_ID}`,
-        { method: "POST" }
-      );
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(
-          body.detail || `Backend returned ${res.status} ${res.statusText}`
-        );
+      const triggerRes = await fetch(`${BACKEND_URL}/api/projects/${DEMO_PROJECT_ID}/fetch`, {
+        method: "POST",
+      });
+      if (!triggerRes.ok) {
+        const body = await triggerRes.json().catch(() => ({}));
+        throw new Error(body.detail || `Backend returned ${triggerRes.status} ${triggerRes.statusText}`);
       }
-      const data: FetchCitationsResponse = await res.json();
-      setState({ phase: "done", data });
-      router.refresh();
+      const { batch_id } = (await triggerRes.json()) as { batch_id: string };
+
+      const sb = createBrowserSupabaseClient();
+      const { data: prompts } = await sb
+        .from("prompts")
+        .select("id, query_text")
+        .eq("project_id", DEMO_PROJECT_ID);
+      const promptText: Record<string, string> = Object.fromEntries(
+        (prompts ?? []).map((p) => [p.id, p.query_text])
+      );
+
+      pollingRef.current = true;
+      await pollUntilDone(batch_id, promptText);
     } catch (err) {
       setState({
         phase: "error",
@@ -44,48 +54,93 @@ export function FetchCitationsButton() {
     }
   }
 
+  async function pollUntilDone(batchId: string, promptText: Record<string, string>) {
+    while (pollingRef.current) {
+      const res = await fetch(
+        `${BACKEND_URL}/api/projects/${DEMO_PROJECT_ID}/fetch-status/${batchId}`
+      );
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.detail || `Backend returned ${res.status} ${res.statusText}`);
+      }
+      const data: FetchBatchStatusResponse = await res.json();
+      setState({ phase: data.done ? "done" : "polling", tasks: data.tasks, promptText });
+
+      if (data.done) {
+        pollingRef.current = false;
+        router.refresh();
+        return;
+      }
+      await new Promise((r) => setTimeout(r, POLL_INTERVAL_MS));
+    }
+  }
+
+  const isBusy = state.phase === "polling";
+
   return (
-    <div className="flex flex-col gap-3">
-      <Button onClick={handleFetch} disabled={state.phase === "loading"}>
-        {state.phase === "loading" ? "Fetching citations…" : "Fetch citations now"}
-      </Button>
+    <div className="relative">
+      <button
+        onClick={handleFetch}
+        disabled={isBusy}
+        className="whitespace-nowrap border border-[var(--ink)] bg-[var(--ink)] px-4 py-2.5 font-sans text-xs tracking-[0.06em] text-[var(--cream)] uppercase hover:border-[var(--rust)] hover:bg-[var(--rust)] disabled:opacity-60"
+      >
+        {state.phase === "polling"
+          ? "Fetching…"
+          : state.phase === "done"
+          ? "Fetched — run again"
+          : "Fetch citations now"}
+      </button>
 
-      {state.phase === "error" && (
-        <p className="max-w-md text-sm text-destructive">{state.message}</p>
-      )}
-
-      {state.phase === "done" && (
-        <div className="flex max-w-xl flex-col gap-2 rounded-md border p-3 text-sm">
-          <p className="font-medium">
-            Processed {state.data.prompts_processed} prompt(s):
-          </p>
-          <ul className="flex flex-col gap-2">
-            {state.data.statuses.map((s) => (
-              <li key={s.prompt_id} className="flex flex-col gap-1">
-                <span className="text-muted-foreground">{s.query_text}</span>
-                <span className="flex flex-wrap gap-1.5">
-                  {s.results.map((r) => (
-                    <Badge
-                      key={r.engine}
-                      variant={
-                        r.status === "success"
-                          ? "default"
-                          : r.status === "rate_limited"
-                          ? "secondary"
-                          : "destructive"
-                      }
-                      title={r.message ?? undefined}
-                    >
-                      {r.engine}:{" "}
-                      {r.status === "success"
-                        ? `${r.citation_count} citations`
-                        : r.status}
-                    </Badge>
-                  ))}
-                </span>
-              </li>
-            ))}
-          </ul>
+      {(state.phase === "error" || state.phase === "polling" || state.phase === "done") && (
+        <div className="absolute top-full right-0 z-30 mt-2 max-h-[70vh] w-[440px] overflow-y-auto border border-[var(--ink)] bg-[var(--paper)] p-4 text-left shadow-lg">
+          {state.phase === "error" && (
+            <p className="font-serif text-[15px] text-[var(--rust)]">{state.message}</p>
+          )}
+          {(state.phase === "polling" || state.phase === "done") && (
+            <>
+              <p className="font-serif text-[15px]">
+                {state.phase === "polling" ? "Running…" : "Done"} —{" "}
+                {state.tasks.filter((t) => t.status !== "pending").length}/{state.tasks.length} tasks
+                complete
+              </p>
+              <ul className="mt-3 flex flex-col gap-2.5">
+                {Object.entries(
+                  state.tasks.reduce<Record<string, FetchTaskStatus[]>>((acc, t) => {
+                    (acc[t.prompt_id] ??= []).push(t);
+                    return acc;
+                  }, {})
+                ).map(([promptId, tasks]) => (
+                  <li key={promptId} className="border-t border-[var(--rule-light)] pt-2">
+                    <div className="font-serif text-[14px] italic text-[var(--muted-2)]">
+                      &ldquo;{state.promptText[promptId] ?? promptId}&rdquo;
+                    </div>
+                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] tracking-[0.04em] text-[var(--muted-2)] uppercase">
+                      {tasks.map((t) => (
+                        <span
+                          key={t.engine_name}
+                          title={t.message ?? undefined}
+                          className="inline-flex items-center gap-1"
+                        >
+                          <EngineLabel name={t.engine_name} size={11} />:{" "}
+                          <span
+                            className={
+                              t.status === "success"
+                                ? "text-[var(--green)]"
+                                : t.status === "pending"
+                                ? "text-[var(--faint)]"
+                                : "text-[var(--rust)]"
+                            }
+                          >
+                            {t.status === "success" ? `${t.citation_count} citations` : t.status}
+                          </span>
+                        </span>
+                      ))}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       )}
     </div>

@@ -12,18 +12,25 @@ function normalizeDomain(input: string): string {
   return value;
 }
 
+function deriveBrandName(domain: string): string {
+  const label = domain.split(".")[0] ?? domain;
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
 export async function addBrand(formData: FormData) {
   const rawUrl = String(formData.get("url") ?? "").trim();
+  const rawName = String(formData.get("name") ?? "").trim();
   const isCompetitor = formData.get("is_competitor") === "true";
   if (!rawUrl) return;
 
   const domain = normalizeDomain(rawUrl);
   if (!domain) return;
+  const name = rawName || deriveBrandName(domain);
 
   const sb = createAnonServerClient();
   const { error } = await sb
     .from("tracked_urls")
-    .insert({ project_id: DEMO_PROJECT_ID, url: domain, is_competitor: isCompetitor });
+    .insert({ project_id: DEMO_PROJECT_ID, url: domain, name, is_competitor: isCompetitor });
 
   if (error) throw new Error(`Failed to add brand: ${error.message}`);
   revalidatePath("/brands");

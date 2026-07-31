@@ -26,7 +26,11 @@ create table if not exists prompts (
 
 create table if not exists engines (
   id uuid primary key default gen_random_uuid(),
-  name text not null unique -- 'gemini', 'openrouter_demo'
+  name text not null unique
+  -- 'gemini', 'openrouter' today; add 'perplexity', 'openai', 'grok',
+  -- 'google_aio' when those real engine clients are wired in — the
+  -- EngineClient plug-in interface in backend/clients/ makes that a
+  -- one-class addition, no schema or task changes needed.
 );
 
 create table if not exists raw_responses (
@@ -56,9 +60,32 @@ create index if not exists citations_engine_id_idx on citations(engine_id);
 create index if not exists citations_domain_idx on citations(domain);
 create index if not exists raw_responses_prompt_id_idx on raw_responses(prompt_id);
 
+-- Async fetch tracking: one fetch_batches row per trigger (manual or Celery
+-- Beat scheduled), one fetch_batch_tasks row per (prompt, engine) in that
+-- batch. The frontend polls fetch_batch_tasks by batch_id to show live
+-- per-prompt/engine status while Celery workers process the fan-out.
+create table if not exists fetch_batches (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references projects(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists fetch_batch_tasks (
+  id uuid primary key default gen_random_uuid(),
+  batch_id uuid not null references fetch_batches(id) on delete cascade,
+  prompt_id uuid not null references prompts(id) on delete cascade,
+  engine_id uuid not null references engines(id) on delete cascade,
+  status text not null default 'pending', -- pending | success | rate_limited | error
+  message text,
+  citation_count integer not null default 0,
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists fetch_batch_tasks_batch_id_idx on fetch_batch_tasks(batch_id);
+
 -- Seed engines
 insert into engines (name) values ('gemini') on conflict (name) do nothing;
-insert into engines (name) values ('openrouter_demo') on conflict (name) do nothing;
+insert into engines (name) values ('openrouter') on conflict (name) do nothing;
 
 -- Basic RLS: enabled, but demo runs single-tenant with the service-role key
 -- for all writes, and a permissive read policy for the anon key (dashboard
@@ -69,6 +96,8 @@ alter table prompts enable row level security;
 alter table engines enable row level security;
 alter table raw_responses enable row level security;
 alter table citations enable row level security;
+alter table fetch_batches enable row level security;
+alter table fetch_batch_tasks enable row level security;
 
 create policy "public read projects" on projects for select using (true);
 create policy "public read tracked_urls" on tracked_urls for select using (true);
@@ -76,6 +105,13 @@ create policy "public read prompts" on prompts for select using (true);
 create policy "public read engines" on engines for select using (true);
 create policy "public read raw_responses" on raw_responses for select using (true);
 create policy "public read citations" on citations for select using (true);
+
+-- The frontend polls these directly (anon key) to show live fetch progress.
+create policy "public read fetch_batches" on fetch_batches for select using (true);
+create policy "public read fetch_batch_tasks" on fetch_batch_tasks for select using (true);
+create policy "public insert fetch_batches" on fetch_batches for insert with check (true);
+create policy "public insert fetch_batch_tasks" on fetch_batch_tasks for insert with check (true);
+create policy "public update fetch_batch_tasks" on fetch_batch_tasks for update using (true);
 
 -- Demo-only: the Next.js frontend manages prompts (add/deactivate) directly
 -- via the anon key, since it's not citation data written by the backend.
