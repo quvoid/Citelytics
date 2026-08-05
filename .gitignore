@@ -4,4 +4,4 @@ backend/**/__pycache__/
 backend/.env
 frontend/.env.local
 frontend/.env
-backend/uvicorn.log
+backend/*.log

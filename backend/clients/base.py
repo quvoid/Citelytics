@@ -4,6 +4,12 @@ from typing import Any, Literal
 from pydantic import BaseModel
 
 
+class RateLimitedError(Exception):
+    """Raised by an engine client on a 429 so the Celery task can retry with
+    backoff, rather than recording it as a permanent failure. Lives here (not
+    in a specific client) so every engine depends only on this interface."""
+
+
 class Citation(BaseModel):
     url: str
     domain: str

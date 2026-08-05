@@ -12,6 +12,18 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 # Flash-tier model before relying on this — slugs are periodically retired.
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 
+# Both engine clients bias answers toward this market — see gemini_client.py
+# (prompt-level instruction; the Gemini API exposes no country/locale param
+# for google_search grounding, only lat/lng for Maps-style local queries)
+# and openrouter_client.py (real user_location on the web_search server tool).
+ENGINE_LOCALE_COUNTRY = os.environ.get("ENGINE_LOCALE_COUNTRY", "IN")
+
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+# GPT-OSS 120B is Groq's currently-recommended general model (llama-3.3-70b
+# and llama-3.1-8b are being retired). Used only for prompt-research
+# brainstorming, never for citation tracking — Groq has no web search.
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
+
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 # gpt-4o-mini is what actually approximates real ChatGPT behavior for a user
 # query — gpt-oss-20b (OpenAI's free open-weight model) is NOT what ChatGPT

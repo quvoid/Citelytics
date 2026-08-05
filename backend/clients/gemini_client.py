@@ -2,14 +2,25 @@ import asyncio
 
 import httpx
 
-from clients.base import Citation, EngineClient, RawEngineResponse
-from config import GEMINI_API_KEY, GEMINI_MODEL
+from clients.base import Citation, EngineClient, RateLimitedError, RawEngineResponse
+from config import ENGINE_LOCALE_COUNTRY, GEMINI_API_KEY, GEMINI_MODEL
 from normalize import extract_domain
 
+_LOCALE_NAMES = {"IN": "India"}
 
-class RateLimitedError(Exception):
-    """Raised so the Celery task can retry with backoff instead of treating
-    a 429 as a permanent failure."""
+
+def _localize(prompt_text: str) -> str:
+    """Gemini's google_search grounding tool has no country/locale request
+    parameter (only lat/lng, meant for Maps-style "near me" queries — Google's
+    own docs note it doesn't meaningfully influence non-local queries like
+    ours). The real lever is prompt context: Gemini formulates its own search
+    queries from what we send it, so stating the market here biases those
+    searches toward local sources, retailers, and pricing."""
+    market = _LOCALE_NAMES.get(ENGINE_LOCALE_COUNTRY, ENGINE_LOCALE_COUNTRY)
+    return (
+        f"Answer as if for a user based in {market}. Prioritize {market}-relevant "
+        f"sources, retailers, and local currency/pricing where relevant.\n\n{prompt_text}"
+    )
 
 
 async def _resolve_redirect(client: httpx.AsyncClient, url: str) -> str:
@@ -49,7 +60,7 @@ class GeminiClient(EngineClient):
                     self._endpoint,
                     params={"key": GEMINI_API_KEY},
                     json={
-                        "contents": [{"parts": [{"text": prompt_text}]}],
+                        "contents": [{"parts": [{"text": _localize(prompt_text)}]}],
                         "tools": [{"google_search": {}}],
                     },
                 )

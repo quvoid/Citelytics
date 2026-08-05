@@ -1,6 +1,5 @@
 from classifier import classify_attributes
-from clients import get_engine_client
-from clients.gemini_client import RateLimitedError
+from clients import RateLimitedError, get_engine_client
 from db import get_supabase
 
 

@@ -1,10 +1,15 @@
 import hashlib
+from typing import Any
 
 import httpx
 
-from clients.base import Citation, EngineClient, RawEngineResponse
-from clients.gemini_client import RateLimitedError
-from config import OPENROUTER_API_KEY, OPENROUTER_ENABLE_WEB_SEARCH, OPENROUTER_MODEL
+from clients.base import Citation, EngineClient, RateLimitedError, RawEngineResponse
+from config import (
+    ENGINE_LOCALE_COUNTRY,
+    OPENROUTER_API_KEY,
+    OPENROUTER_ENABLE_WEB_SEARCH,
+    OPENROUTER_MODEL,
+)
 from normalize import extract_domain
 
 OPENROUTER_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
@@ -56,15 +61,32 @@ class OpenRouterClient(EngineClient):
         """Free-tier text generation via OpenRouter. Real url_citation
         annotations only if OPENROUTER_ENABLE_WEB_SEARCH=true (costs
         OpenRouter credits); otherwise layers clearly-labeled simulated
-        citations for UI demo purposes."""
+        citations for UI demo purposes.
+
+        Uses the openrouter:web_search server tool (not the deprecated
+        `:online` model-suffix plugin) so we can pass a real user_location —
+        the model decides whether to call it, OpenRouter executes it
+        server-side, and results come back as the same url_citation
+        annotations either way."""
         if not OPENROUTER_API_KEY:
             return RawEngineResponse(
                 engine_name=self.name, status="error", message="OPENROUTER_API_KEY is not configured."
             )
 
-        model = OPENROUTER_MODEL
+        body: dict[str, Any] = {
+            "model": OPENROUTER_MODEL,
+            "messages": [{"role": "user", "content": prompt_text}],
+        }
         if OPENROUTER_ENABLE_WEB_SEARCH:
-            model = f"{model.removesuffix(':free')}:online"
+            body["tools"] = [
+                {
+                    "type": "openrouter:web_search",
+                    "parameters": {
+                        "user_location": {"type": "approximate", "country": ENGINE_LOCALE_COUNTRY},
+                        "max_results": 5,
+                    },
+                }
+            ]
 
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
@@ -74,10 +96,7 @@ class OpenRouterClient(EngineClient):
                         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
                         "Content-Type": "application/json",
                     },
-                    json={
-                        "model": model,
-                        "messages": [{"role": "user", "content": prompt_text}],
-                    },
+                    json=body,
                 )
         except httpx.HTTPError as exc:
             return RawEngineResponse(

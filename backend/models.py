@@ -74,6 +74,53 @@ class FetchBatchStatusResponse(BaseModel):
     done: bool
 
 
+class ContentBriefCreate(BaseModel):
+    project_id: str
+    prompt_text: str
+    origin: str
+
+
+class ContentBriefOut(BaseModel):
+    id: str
+    project_id: str
+    prompt_text: str
+    origin: str
+    status: Literal["pending", "scored"]
+    score: int | None = None
+    tone: str | None = None
+    content_intent: str | None = None
+    language: str | None = None
+    article_type: str | None = None
+    cell_notes: dict[str, str | None] | None = None
+    main_topic: str | None = None
+    value_proposition: str | None = None
+    target_audience: str | None = None
+    key_takeaways: list[str] | None = None
+    created_at: str
+    analysed_at: str | None = None
+
+
+class PromptResearchRequest(BaseModel):
+    seed: str
+
+
+class PromptCandidateOut(BaseModel):
+    prompt_text: str
+    topic: str
+    search_query: str
+    intent: str
+    relevance_note: str
+    # Real Google Trends relative interest (0-100, geo-scoped), looked up for
+    # `search_query` — never AI-prompt traffic, no such data exists anywhere.
+    # None means unknown (Trends returned nothing / the unofficial API failed),
+    # not zero interest.
+    search_interest: int | None = None
+
+
+class PromptResearchResponse(BaseModel):
+    candidates: list[PromptCandidateOut]
+
+
 class HealthResponse(BaseModel):
     status: Literal["ok", "degraded"]
     supabase_connected: bool

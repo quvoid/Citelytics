@@ -2,9 +2,12 @@ import redis
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+from brief import analyse_brief
 from config import CELERY_BROKER_URL, FRONTEND_ORIGIN
 from db import get_supabase
 from models import (
+    ContentBriefCreate,
+    ContentBriefOut,
     FetchBatchStatusResponse,
     FetchTaskStatus,
     FetchTriggerResponse,
@@ -12,13 +15,17 @@ from models import (
     PerceptionFetchResponse,
     ProjectCreate,
     ProjectOut,
+    PromptCandidateOut,
     PromptCreate,
     PromptOut,
+    PromptResearchRequest,
+    PromptResearchResponse,
     PromptUpdate,
     TrackedUrlCreate,
     TrackedUrlOut,
 )
 from perception import run_perception_fetch
+from prompt_research import research_prompts
 from tasks import create_fetch_batch
 
 app = FastAPI(title="Citelytics Backend", version="0.2.0")
@@ -167,3 +174,54 @@ async def trigger_perception_fetch(project_id: str) -> PerceptionFetchResponse:
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Perception fetch failed: {exc}") from exc
     return PerceptionFetchResponse(processed=processed)
+
+
+# --- Content briefs ----------------------------------------------------
+
+@app.post("/api/content-briefs", response_model=ContentBriefOut)
+async def create_content_brief(body: ContentBriefCreate) -> ContentBriefOut:
+    """Creates a pending brief — fast, no Gemini call. Analysis is a
+    separate step (see below) so a rate-limited Gemini call never loses the
+    user's typed-in prompt."""
+    sb = get_supabase()
+    try:
+        row = sb.table("content_briefs").insert(body.model_dump()).execute().data[0]
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Failed to create brief: {exc}") from exc
+    return ContentBriefOut(**row)
+
+
+@app.post("/api/content-briefs/{brief_id}/analyze", response_model=ContentBriefOut)
+async def analyze_content_brief(brief_id: str) -> ContentBriefOut:
+    try:
+        row = await analyse_brief(brief_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    return ContentBriefOut(**row)
+
+
+# --- Prompt research (Groq brainstorming + real Google Trends interest) ----
+
+@app.post("/api/projects/{project_id}/prompt-research", response_model=PromptResearchResponse)
+async def prompt_research(project_id: str, body: PromptResearchRequest) -> PromptResearchResponse:
+    sb = get_supabase()
+    own = (
+        sb.table("tracked_urls")
+        .select("name, url")
+        .eq("project_id", project_id)
+        .eq("is_competitor", False)
+        .limit(1)
+        .execute()
+        .data
+    )
+    brand_name = own[0]["name"] if own else "the brand"
+    domain = own[0]["url"] if own else ""
+
+    try:
+        candidates = await research_prompts(body.seed, brand_name, domain)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Prompt research failed: {exc}") from exc
+
+    return PromptResearchResponse(candidates=[PromptCandidateOut(**c) for c in candidates])

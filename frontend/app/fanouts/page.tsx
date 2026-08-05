@@ -1,6 +1,4 @@
-import { createAnonServerClient } from "@/lib/supabase/server";
-import { DEMO_PROJECT_ID } from "@/lib/constants";
-import type { Prompt, QueryFanout } from "@/lib/types";
+import { getPrompts, getQueryFanouts, getRawResponses } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -21,40 +19,18 @@ function bigrams(text: string): string[] {
 }
 
 export default async function FanoutsPage() {
-  const sb = createAnonServerClient();
+  const [prompts, rawResponses] = await Promise.all([getPrompts(), getRawResponses()]);
 
-  const { data: prompts } = await sb
-    .from("prompts")
-    .select("id, project_id, query_text, active, prompt_type, topic, intent, is_branded")
-    .eq("project_id", DEMO_PROJECT_ID)
-    .returns<Prompt[]>();
-  const promptById = new Map((prompts ?? []).map((p) => [p.id, p]));
+  const promptById = new Map(prompts.map((p) => [p.id, p]));
+  const promptIdByRawResponse = new Map(rawResponses.map((r) => [r.id, r.prompt_id]));
 
-  const { data: rawResponses } = (prompts ?? []).length
-    ? await sb
-        .from("raw_responses")
-        .select("id, prompt_id")
-        .in(
-          "prompt_id",
-          (prompts ?? []).map((p) => p.id)
-        )
-    : { data: [] as { id: string; prompt_id: string }[] };
-  const promptIdByRawResponse = new Map((rawResponses ?? []).map((r) => [r.id, r.prompt_id]));
-  const rawResponseIds = (rawResponses ?? []).map((r) => r.id);
+  const fanouts = await getQueryFanouts(rawResponses.map((r) => r.id));
 
-  const { data: fanouts } = rawResponseIds.length
-    ? await sb
-        .from("query_fanouts")
-        .select("id, raw_response_id, query_text")
-        .in("raw_response_id", rawResponseIds)
-        .returns<QueryFanout[]>()
-    : { data: [] as QueryFanout[] };
-
-  const distinctQueries = new Set((fanouts ?? []).map((f) => f.query_text.toLowerCase()));
-  const totalOccurrences = fanouts?.length ?? 0;
+  const distinctQueries = new Set(fanouts.map((f) => f.query_text.toLowerCase()));
+  const totalOccurrences = fanouts.length;
 
   const byTopic = new Map<string, Map<string, number>>();
-  for (const f of fanouts ?? []) {
+  for (const f of fanouts) {
     const promptId = promptIdByRawResponse.get(f.raw_response_id);
     const topic = (promptId && promptById.get(promptId)?.topic) || "Uncategorized";
     const topicMap = byTopic.get(topic) ?? new Map<string, number>();
@@ -74,7 +50,7 @@ export default async function FanoutsPage() {
     .sort((a, b) => b.total - a.total);
 
   const phraseCounts = new Map<string, number>();
-  for (const f of fanouts ?? []) {
+  for (const f of fanouts) {
     for (const bg of bigrams(f.query_text)) {
       phraseCounts.set(bg, (phraseCounts.get(bg) ?? 0) + 1);
     }

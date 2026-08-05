@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BACKEND_URL, DEMO_PROJECT_ID } from "@/lib/constants";
+import { BACKEND_URL } from "@/lib/constants";
 import { EngineLabel } from "@/components/engine-icons";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import type { FetchBatchStatusResponse, FetchTaskStatus } from "@/lib/types";
@@ -15,7 +15,7 @@ type State =
 
 const POLL_INTERVAL_MS = 2000;
 
-export function FetchCitationsButton() {
+export function FetchCitationsButton({ projectId }: { projectId: string }) {
   const [state, setState] = useState<State>({ phase: "idle" });
   const router = useRouter();
   const pollingRef = useRef(false);
@@ -23,7 +23,7 @@ export function FetchCitationsButton() {
   async function handleFetch() {
     setState({ phase: "polling", tasks: [], promptText: {} });
     try {
-      const triggerRes = await fetch(`${BACKEND_URL}/api/projects/${DEMO_PROJECT_ID}/fetch`, {
+      const triggerRes = await fetch(`${BACKEND_URL}/api/projects/${projectId}/fetch`, {
         method: "POST",
       });
       if (!triggerRes.ok) {
@@ -36,7 +36,7 @@ export function FetchCitationsButton() {
       const { data: prompts } = await sb
         .from("prompts")
         .select("id, query_text")
-        .eq("project_id", DEMO_PROJECT_ID);
+        .eq("project_id", projectId);
       const promptText: Record<string, string> = Object.fromEntries(
         (prompts ?? []).map((p) => [p.id, p.query_text])
       );
@@ -57,7 +57,7 @@ export function FetchCitationsButton() {
   async function pollUntilDone(batchId: string, promptText: Record<string, string>) {
     while (pollingRef.current) {
       const res = await fetch(
-        `${BACKEND_URL}/api/projects/${DEMO_PROJECT_ID}/fetch-status/${batchId}`
+        `${BACKEND_URL}/api/projects/${projectId}/fetch-status/${batchId}`
       );
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));

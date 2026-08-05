@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { DownloadCsvButton } from "@/components/download-csv-button";
 import { removeBrand } from "@/lib/actions/brands";
 
 export type BrandRow = {
@@ -35,6 +36,31 @@ export function BrandsTable({ rows }: { rows: BrandRow[] }) {
 
   return (
     <section className="pt-2">
+      <div className="flex justify-end pb-3">
+        <DownloadCsvButton
+          filename="brands.csv"
+          rows={sorted.map((b) => ({
+            name: b.name,
+            domain: b.url,
+            is_competitor: b.is_competitor ? "yes" : "no",
+            share_of_voice_pct: b.shareOfVoice,
+            visibility_pct: b.visibility,
+            avg_position: b.avgPosition,
+            answers: b.answers,
+            cited_pages: b.pages,
+          }))}
+          columns={[
+            { key: "name", label: "Brand" },
+            { key: "domain", label: "Domain" },
+            { key: "is_competitor", label: "Competitor" },
+            { key: "share_of_voice_pct", label: "Share of voice %" },
+            { key: "visibility_pct", label: "Visibility %" },
+            { key: "avg_position", label: "Avg position" },
+            { key: "answers", label: "Answers" },
+            { key: "cited_pages", label: "Cited pages" },
+          ]}
+        />
+      </div>
       <div className="grid grid-cols-[1fr_1.6fr_90px_150px_24px] gap-9 border-b border-[var(--rule)] py-3.5 text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
         <span>Brand</span>
         <span>Share of voice</span>
