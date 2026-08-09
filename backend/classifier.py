@@ -161,6 +161,82 @@ async def classify_attributes(
     }
 
 
+async def generate_content_brief(prompt_text: str, brand_name: str) -> dict[str, Any] | None:
+    """Structured writing brief for a prompt/topic the brand wants to close a
+    citation gap on: tone, intent, article type, and the prose an editor
+    needs before drafting. Used by brief.py's analyse flow."""
+    schema = {
+        "type": "object",
+        "properties": {
+            "score": {
+                "type": "integer",
+                "description": "0-100 confidence this is a strong content opportunity — how directly the topic maps to a citable page, and how open the competitive ground currently is.",
+            },
+            "tone": {"type": "string", "description": "Short tone-of-voice label, e.g. 'Informative, warm'."},
+            "tone_note": {"type": "string", "description": "Short caveat, e.g. 'no hard-sell claims'."},
+            "content_intent": {"type": "string", "enum": INTENTS},
+            "intent_note": {"type": "string", "description": "Short note on reader stage, e.g. 'comparison-stage reader'."},
+            "language": {"type": "string", "description": "e.g. 'English (India)'."},
+            "language_note": {"type": "string", "description": "Short note on regional context."},
+            "article_type": {"type": "string", "description": "e.g. 'Buying guide', 'Explainer', 'Comparison'."},
+            "article_type_note": {"type": "string", "description": "Short note on approximate length, e.g. '1,200-1,500 words'."},
+            "main_topic": {
+                "type": "string",
+                "description": "2-3 sentences describing exactly what the article should cover.",
+            },
+            "value_proposition": {
+                "type": "string",
+                "description": "2-3 sentences on what would make this page worth citing over what's currently cited.",
+            },
+            "target_audience": {
+                "type": "string",
+                "description": "2-3 sentences describing who this is for and what stage they're at.",
+            },
+            "key_takeaways": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "3-6 concrete, specific writing directives an editor could act on directly — not generic advice.",
+            },
+        },
+        "required": [
+            "score", "tone", "content_intent", "language", "article_type",
+            "main_topic", "value_proposition", "target_audience", "key_takeaways",
+        ],
+    }
+
+    prompt = (
+        f"You are a content strategist writing a brief for the brand '{brand_name}' to close a "
+        f"citation gap with AI answer engines on this prompt/topic: {prompt_text!r}\n\n"
+        "Produce a writing brief per the schema: tone of voice with a short caveat, content "
+        "intent with a note on reader stage, language/locale with a note on regional context, "
+        "article type with a note on approximate length, a main topic description, a value "
+        "proposition explaining why this page should be the one engines cite instead of whatever "
+        "they cite today, a target audience description, and concrete writing takeaways specific "
+        "to this brand and topic — not generic content advice."
+    )
+
+    result = await _generate_json(prompt, schema)
+    if result is None:
+        return None
+
+    intent = result.get("content_intent")
+    return {
+        "score": result.get("score"),
+        "tone": result.get("tone"),
+        "tone_note": result.get("tone_note"),
+        "content_intent": intent if intent in INTENTS else None,
+        "intent_note": result.get("intent_note"),
+        "language": result.get("language"),
+        "language_note": result.get("language_note"),
+        "article_type": result.get("article_type"),
+        "article_type_note": result.get("article_type_note"),
+        "main_topic": result.get("main_topic"),
+        "value_proposition": result.get("value_proposition"),
+        "target_audience": result.get("target_audience"),
+        "key_takeaways": result.get("key_takeaways") or [],
+    }
+
+
 async def classify_domain_type(domain: str) -> str:
     """Classified once per unique domain and cached in domain_types —
     scales with unique domains (dozens), not with citation volume."""

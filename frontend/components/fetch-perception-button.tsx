@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { BACKEND_URL, DEMO_PROJECT_ID } from "@/lib/constants";
+import { BACKEND_URL } from "@/lib/constants";
 import type { PerceptionFetchResponse } from "@/lib/types";
 
 type State =
@@ -11,14 +11,14 @@ type State =
   | { phase: "done"; processed: number }
   | { phase: "error"; message: string };
 
-export function FetchPerceptionButton() {
+export function FetchPerceptionButton({ projectId }: { projectId: string }) {
   const [state, setState] = useState<State>({ phase: "idle" });
   const router = useRouter();
 
   async function handleFetch() {
     setState({ phase: "loading" });
     try {
-      const res = await fetch(`${BACKEND_URL}/api/projects/${DEMO_PROJECT_ID}/fetch-perception`, {
+      const res = await fetch(`${BACKEND_URL}/api/projects/${projectId}/fetch-perception`, {
         method: "POST",
       });
       if (!res.ok) {

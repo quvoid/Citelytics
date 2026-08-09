@@ -1,6 +1,15 @@
-from clients.base import EngineClient
+from clients.base import Citation, EngineClient, RateLimitedError, RawEngineResponse
 from clients.gemini_client import GeminiClient
 from clients.openrouter_client import OpenRouterClient
+
+__all__ = [
+    "Citation",
+    "EngineClient",
+    "RateLimitedError",
+    "RawEngineResponse",
+    "ENGINE_CLIENTS",
+    "get_engine_client",
+]
 
 # Register every engine here. Adding Perplexity/OpenAI/Grok/DataForSEO later
 # means writing one new class in clients/ implementing EngineClient and

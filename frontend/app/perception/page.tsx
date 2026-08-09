@@ -1,8 +1,14 @@
-import { createAnonServerClient } from "@/lib/supabase/server";
-import { DEMO_PROJECT_ID } from "@/lib/constants";
-import { AddPerceptionPromptForm } from "@/components/add-perception-prompt-form";
+import { PromptComposer } from "@/components/prompt-composer";
 import { FetchPerceptionButton } from "@/components/fetch-perception-button";
-import type { BrandAttribute, Prompt, TrackedUrl } from "@/lib/types";
+import { getCurrentProjectId } from "@/lib/current-project";
+import { countryName } from "@/lib/countries";
+import {
+  getBrandAttributes,
+  getProject,
+  getPrompts,
+  getRawResponses,
+  getTrackedUrls,
+} from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -18,41 +24,27 @@ function polarPoint(index: number, total: number, value: number) {
 }
 
 export default async function PerceptionPage() {
-  const sb = createAnonServerClient();
+  const projectId = await getCurrentProjectId();
+  const [brands, perceptionPrompts, project] = await Promise.all([
+    getTrackedUrls(),
+    getPrompts("perception"),
+    getProject(projectId),
+  ]);
+  const defaultCountry = project?.default_country ?? "IN";
 
-  const { data: brands } = await sb
-    .from("tracked_urls")
-    .select("id, project_id, url, name, is_competitor")
-    .eq("project_id", DEMO_PROJECT_ID)
-    .order("is_competitor")
-    .returns<TrackedUrl[]>();
+  // Perception answers live on perception-type prompts only, so scope the
+  // raw-response lookup to each of them rather than the whole project.
+  const rawResponsesByPrompt = await Promise.all(
+    perceptionPrompts.map((p) => getRawResponses(p.id))
+  );
+  const rawResponseIds = rawResponsesByPrompt.flat().map((r) => r.id);
+  const attributes = await getBrandAttributes(rawResponseIds);
 
-  const { data: perceptionPrompts } = await sb
-    .from("prompts")
-    .select("id, project_id, query_text, active, prompt_type, topic, intent, is_branded")
-    .eq("project_id", DEMO_PROJECT_ID)
-    .eq("prompt_type", "perception")
-    .returns<Prompt[]>();
-  const perceptionPromptIds = (perceptionPrompts ?? []).map((p) => p.id);
-
-  const { data: rawResponses } = perceptionPromptIds.length
-    ? await sb.from("raw_responses").select("id").in("prompt_id", perceptionPromptIds)
-    : { data: [] as { id: string }[] };
-  const rawResponseIds = (rawResponses ?? []).map((r) => r.id);
-
-  const { data: attributes } = rawResponseIds.length
-    ? await sb
-        .from("brand_attributes")
-        .select("id, raw_response_id, tracked_url_id, attribute")
-        .in("raw_response_id", rawResponseIds)
-        .returns<BrandAttribute[]>()
-    : { data: [] as BrandAttribute[] };
-
-  const own = (brands ?? []).find((b) => !b.is_competitor) ?? null;
+  const own = brands.find((b) => !b.is_competitor) ?? null;
 
   // Association score per attribute, for YOUR brand
   const ownAttributeCounts = new Map<string, number>();
-  for (const a of attributes ?? []) {
+  for (const a of attributes) {
     if (a.tracked_url_id !== own?.id) continue;
     ownAttributeCounts.set(a.attribute, (ownAttributeCounts.get(a.attribute) ?? 0) + 1);
   }
@@ -60,12 +52,12 @@ export default async function PerceptionPage() {
 
   // Radar: top attributes overall, compared across your brand + top 2 competitors by attribute volume
   const countsByBrand = new Map<string, Map<string, number>>();
-  for (const a of attributes ?? []) {
+  for (const a of attributes) {
     const map = countsByBrand.get(a.tracked_url_id) ?? new Map<string, number>();
     map.set(a.attribute, (map.get(a.attribute) ?? 0) + 1);
     countsByBrand.set(a.tracked_url_id, map);
   }
-  const brandTotals = (brands ?? [])
+  const brandTotals = brands
     .map((b) => ({
       brand: b,
       total: Array.from(countsByBrand.get(b.id)?.values() ?? []).reduce((s, v) => s + v, 0),
@@ -102,10 +94,16 @@ export default async function PerceptionPage() {
             from the citation-tracking prompts.
           </p>
         </div>
-        <FetchPerceptionButton />
+        <FetchPerceptionButton projectId={projectId} />
       </section>
 
-      <AddPerceptionPromptForm />
+      <PromptComposer
+        promptType="perception"
+        toggleLabel="Add a perception prompt"
+        fieldLabel="Open brand-description prompt"
+        placeholder="e.g. How would you describe Bajaj Almond Drops as a brand?"
+        defaultCountry={defaultCountry}
+      />
 
       <section className="grid grid-cols-1 gap-16 py-11 md:grid-cols-2">
         <div>
@@ -213,14 +211,20 @@ export default async function PerceptionPage() {
           Perception prompts
         </h2>
         <p className="m-0 mb-6 font-serif text-[14px] text-[var(--muted-2)] italic">
-          {(perceptionPrompts ?? []).length} tracked
+          {perceptionPrompts.length} tracked
         </p>
-        {(perceptionPrompts ?? []).map((p) => (
-          <div key={p.id} className="border-b border-[var(--rule-light)] py-3 font-serif text-[15px]">
-            &ldquo;{p.query_text}&rdquo;
+        {perceptionPrompts.map((p) => (
+          <div
+            key={p.id}
+            className="flex items-baseline justify-between gap-5 border-b border-[var(--rule-light)] py-3"
+          >
+            <span className="font-serif text-[15px]">&ldquo;{p.query_text}&rdquo;</span>
+            <span className="shrink-0 font-sans text-[10px] tracking-[0.1em] text-[var(--faint)] uppercase">
+              {countryName(p.country ?? defaultCountry)}
+            </span>
           </div>
         ))}
-        {!(perceptionPrompts ?? []).length && (
+        {!perceptionPrompts.length && (
           <p className="font-serif text-[14px] text-[var(--muted-2)] italic">
             No perception prompts yet.
           </p>

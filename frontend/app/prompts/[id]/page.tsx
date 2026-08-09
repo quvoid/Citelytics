@@ -1,44 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createAnonServerClient } from "@/lib/supabase/server";
 import { EngineLabel } from "@/components/engine-icons";
-import type { Citation, Engine, Prompt } from "@/lib/types";
+import { MentionMark, ProvenanceDot } from "@/components/marks";
+import { getCitations, getEngines, getPrompt, getRawResponses } from "@/lib/queries";
+import type { Citation } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
-
-function Dot({ real }: { real: boolean }) {
-  return (
-    <span
-      className="inline-block h-[6px] w-[6px] rounded-full"
-      style={{
-        background: real ? "var(--green)" : "transparent",
-        border: `1px solid ${real ? "var(--green)" : "var(--faint)"}`,
-      }}
-    />
-  );
-}
-
-function MentionMark({
-  value,
-}: {
-  value: boolean | null;
-}) {
-  const yes = value === true;
-  const unknown = value === null;
-  const label = unknown ? "unknown" : yes ? "names Bajaj" : "no mention";
-  const color = unknown ? "var(--faint)" : yes ? "var(--green)" : "var(--faint)";
-  return (
-    <div className="inline-flex items-center gap-1.5">
-      <span
-        className="inline-block h-[9px] w-[9px]"
-        style={{ background: yes ? "var(--green)" : "transparent", border: `1px solid ${color}` }}
-      />
-      <span className="text-[10.5px] tracking-[0.09em] whitespace-nowrap uppercase" style={{ color }}>
-        {label}
-      </span>
-    </div>
-  );
-}
 
 export default async function PromptDetailPage({
   params,
@@ -46,59 +13,33 @@ export default async function PromptDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const sb = createAnonServerClient();
 
-  const { data: prompt } = await sb
-    .from("prompts")
-    .select("id, project_id, query_text, active")
-    .eq("id", id)
-    .maybeSingle<Prompt>();
-
+  const prompt = await getPrompt(id);
   if (!prompt) notFound();
 
-  const { data: engines } = await sb.from("engines").select("id, name").returns<Engine[]>();
-  const engineById = new Map((engines ?? []).map((e) => [e.id, e.name]));
+  const [engines, citations, rawResponses] = await Promise.all([
+    getEngines(),
+    getCitations({ promptId: id }),
+    getRawResponses(id),
+  ]);
 
-  const { data: citations } = await sb
-    .from("citations")
-    .select(
-      "id, prompt_id, engine_id, url, domain, is_simulated, raw_response_id, mentions_brand, fetched_at"
-    )
-    .eq("prompt_id", id)
-    .order("fetched_at", { ascending: false })
-    .returns<Citation[]>();
-
-  const { data: rawResponses } = await sb
-    .from("raw_responses")
-    .select("id, engine_id, brand_mentioned_in_answer, brand_sentiment_score, brand_position, fetched_at")
-    .eq("prompt_id", id)
-    .returns<
-      {
-        id: string;
-        engine_id: string;
-        brand_mentioned_in_answer: boolean;
-        brand_sentiment_score: number | null;
-        brand_position: number | null;
-        fetched_at: string;
-      }[]
-    >();
-
+  const engineById = new Map(engines.map((e) => [e.id, e.name]));
   const answerMentionByEngine = new Map(
-    (rawResponses ?? []).map((r) => [r.engine_id, r.brand_mentioned_in_answer])
+    rawResponses.map((r) => [r.engine_id, r.brand_mentioned_in_answer])
   );
-  const sentimentByEngine = new Map((rawResponses ?? []).map((r) => [r.engine_id, r.brand_sentiment_score]));
-  const positionByEngine = new Map((rawResponses ?? []).map((r) => [r.engine_id, r.brand_position]));
-  const lastFetchByEngine = new Map((rawResponses ?? []).map((r) => [r.engine_id, r.fetched_at]));
+  const sentimentByEngine = new Map(rawResponses.map((r) => [r.engine_id, r.brand_sentiment_score]));
+  const positionByEngine = new Map(rawResponses.map((r) => [r.engine_id, r.brand_position]));
+  const lastFetchByEngine = new Map(rawResponses.map((r) => [r.engine_id, r.fetched_at]));
 
   const byEngine = new Map<string, Citation[]>();
-  for (const c of citations ?? []) {
+  for (const c of citations) {
     const list = byEngine.get(c.engine_id) ?? [];
     list.push(c);
     byEngine.set(c.engine_id, list);
   }
 
-  const totalCitations = citations?.length ?? 0;
-  const citationsMentioningBrand = (citations ?? []).filter((c) => c.mentions_brand === true).length;
+  const totalCitations = citations.length;
+  const citationsMentioningBrand = citations.filter((c) => c.mentions_brand === true).length;
 
   return (
     <div>
@@ -151,7 +92,7 @@ export default async function PromptDetailPage({
                 </p>
                 {lastFetchByEngine.get(engineId) && (
                   <div className="mt-3 flex items-center gap-1.5 font-serif text-[12.5px] text-[var(--muted-2)] italic">
-                    <Dot real={rows.some((c) => !c.is_simulated)} />
+                    <ProvenanceDot real={rows.some((c) => !c.is_simulated)} />
                     {rows.some((c) => !c.is_simulated) ? "real fetch" : "simulated"}
                   </div>
                 )}
@@ -200,7 +141,7 @@ export default async function PromptDetailPage({
                       <div className="mt-2 flex items-center gap-3.5 text-[11px] tracking-[0.06em] text-[var(--muted-2)] uppercase">
                         <span>{c.is_simulated ? "simulated demo citation" : "real citation"}</span>
                         <span className="flex items-center gap-1.5 font-serif text-[12.5px] tracking-[0.02em] italic normal-case">
-                          <Dot real={!c.is_simulated} />
+                          <ProvenanceDot real={!c.is_simulated} />
                           {c.is_simulated ? "simulated" : "live fetch"}
                         </span>
                       </div>
@@ -219,7 +160,7 @@ export default async function PromptDetailPage({
         );
       })}
 
-      {!citations?.length && (
+      {!citations.length && (
         <p className="border-b border-[var(--rule)] py-10 text-center font-serif text-[16px] text-[var(--muted-2)] italic">
           No citations yet for this prompt — run &ldquo;Fetch citations now&rdquo; from the header.
         </p>

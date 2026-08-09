@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createAnonServerClient } from "@/lib/supabase/server";
-import { DEMO_PROJECT_ID } from "@/lib/constants";
+import { getCurrentProjectId } from "@/lib/current-project";
 
 function normalizeDomain(input: string): string {
   let value = input.trim().toLowerCase();
@@ -28,9 +28,10 @@ export async function addBrand(formData: FormData) {
   const name = rawName || deriveBrandName(domain);
 
   const sb = createAnonServerClient();
+  const projectId = await getCurrentProjectId();
   const { error } = await sb
     .from("tracked_urls")
-    .insert({ project_id: DEMO_PROJECT_ID, url: domain, name, is_competitor: isCompetitor });
+    .insert({ project_id: projectId, url: domain, name, is_competitor: isCompetitor });
 
   if (error) throw new Error(`Failed to add brand: ${error.message}`);
   revalidatePath("/brands");

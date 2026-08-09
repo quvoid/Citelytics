@@ -10,7 +10,25 @@ SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 # Check https://ai.google.dev/gemini-api/docs/models for the current
 # Flash-tier model before relying on this — slugs are periodically retired.
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+# gemini-2.5-flash is closed to keys created after ~mid-2026 ("no longer
+# available to new users", HTTP 404), so a rotated key cannot use it even
+# though it still appears in ListModels. 3.x Flash is the current free-tier
+# generation. Note that google_search grounding is a paid-tier-only feature
+# regardless of model — see clients/gemini_client.py.
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.6-flash")
+
+# Last-resort market, used only when a prompt has no country AND its project
+# has no default_country. Targeting now lives in the database
+# (prompts.country -> projects.default_country), so this is a floor for
+# pre-migration rows, not the knob you turn to change markets — see
+# countries.py and store.resolve_country.
+DEFAULT_COUNTRY = os.environ.get("ENGINE_LOCALE_COUNTRY", "IN")
+
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+# GPT-OSS 120B is Groq's currently-recommended general model (llama-3.3-70b
+# and llama-3.1-8b are being retired). Used only for prompt-research
+# brainstorming, never for citation tracking — Groq has no web search.
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 # gpt-4o-mini is what actually approximates real ChatGPT behavior for a user

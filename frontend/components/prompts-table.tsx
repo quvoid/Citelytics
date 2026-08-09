@@ -2,17 +2,39 @@
 
 import Link from "next/link";
 import { useTransition } from "react";
-import { setPromptActive } from "@/lib/actions/prompts";
+import { DownloadCsvButton } from "@/components/download-csv-button";
+import { EmptyState } from "@/components/empty-state";
+import { setPromptActive, setPromptCountry } from "@/lib/actions/prompts";
+import { COUNTRIES, countryName } from "@/lib/countries";
 import type { Prompt } from "@/lib/types";
 
 export type PromptRow = Prompt & {
+  /** The market the next fetch will use — the prompt's own, or the project's
+   * inherited default. */
+  resolvedCountry: string;
+  inheritsCountry: boolean;
   citations: number;
   mentions: number;
   real: boolean;
   lastFetched: string | null;
   avgSentiment: number | null;
   avgPosition: number | null;
+  citeDelta: number;
+  mentionDelta: number;
 };
+
+function DeltaText({ value }: { value: number }) {
+  if (value === 0) return <div className="font-serif text-[11px] text-[var(--faint)] italic">±0</div>;
+  return (
+    <div
+      className="font-serif text-[11px] italic"
+      style={{ color: value > 0 ? "var(--green)" : "var(--rust)" }}
+    >
+      {value > 0 ? "+" : "−"}
+      {Math.abs(value)} vs prior
+    </div>
+  );
+}
 
 function ToggleButton({ id, active }: { id: string; active: boolean }) {
   const [isPending, startTransition] = useTransition();
@@ -32,17 +54,74 @@ function ToggleButton({ id, active }: { id: string; active: boolean }) {
   );
 }
 
-const COLS = "1.4fr 82px 72px 64px 100px 110px 150px 92px";
+/** Changing a prompt's market resets its comparability — answers fetched
+ * before the change were built from a different country's sources — so this
+ * is a deliberate per-row control rather than a bulk action. */
+function MarketSelect({ row }: { row: PromptRow }) {
+  const [isPending, startTransition] = useTransition();
+  return (
+    <select
+      aria-label={`Market for "${row.query_text}"`}
+      value={row.country ?? ""}
+      disabled={isPending}
+      onChange={(e) =>
+        startTransition(() => setPromptCountry(row.id, e.target.value || null))
+      }
+      className="w-full border border-[var(--rule)] bg-transparent px-1.5 py-1 font-sans text-[11px] text-[var(--ink)] outline-none focus:border-[var(--ember)] disabled:opacity-60"
+    >
+      <option value="">Default ({countryName(row.resolvedCountry)})</option>
+      {COUNTRIES.map((c) => (
+        <option key={c.code} value={c.code}>
+          {c.name}
+        </option>
+      ))}
+    </select>
+  );
+}
 
-export function PromptsTable({ prompts }: { prompts: PromptRow[] }) {
+const COLS = "1.4fr 82px 118px 72px 64px 100px 110px 150px 92px";
+
+export function PromptsTable({ prompts, compare = false }: { prompts: PromptRow[]; compare?: boolean }) {
   return (
     <section>
+      <div className="flex justify-end pt-4">
+        <DownloadCsvButton
+          filename="prompts.csv"
+          rows={prompts.map((p) => ({
+            prompt: p.query_text,
+            topic: p.topic,
+            market: p.resolvedCountry,
+            intent: p.intent,
+            branded: p.is_branded ? "yes" : "no",
+            citations: p.citations,
+            mentions: p.mentions,
+            avg_sentiment: p.avgSentiment,
+            avg_position: p.avgPosition,
+            last_fetched: p.lastFetched,
+            state: p.active ? "active" : "paused",
+          }))}
+          columns={[
+            { key: "prompt", label: "Prompt" },
+            { key: "topic", label: "Topic" },
+            { key: "market", label: "Market" },
+            { key: "intent", label: "Intent" },
+            { key: "branded", label: "Branded" },
+            { key: "citations", label: "Citations" },
+            { key: "mentions", label: "Mentions" },
+            { key: "avg_sentiment", label: "Avg sentiment" },
+            { key: "avg_position", label: "Avg position" },
+            { key: "last_fetched", label: "Last fetched" },
+            { key: "state", label: "State" },
+          ]}
+        />
+      </div>
       <div
         className="grid gap-5 border-b border-[var(--rule)] py-3.5 text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
         style={{ gridTemplateColumns: COLS }}
       >
         <span>Prompt</span>
         <span>Topic</span>
+        <span>Market</span>
         <span className="text-right">Sent.</span>
         <span className="text-right">Pos.</span>
         <span className="text-right">Citations</span>
@@ -72,13 +151,19 @@ export function PromptsTable({ prompts }: { prompts: PromptRow[] }) {
           <div className="font-serif text-[13px] text-[var(--muted-2)] italic">
             {p.topic ?? "—"}
           </div>
+          <div>
+            <MarketSelect row={p} />
+          </div>
           <div className="text-right font-serif text-[16px]">
             {p.avgSentiment !== null ? Math.round(p.avgSentiment) : "—"}
           </div>
           <div className="text-right font-serif text-[16px]">
             {p.avgPosition !== null ? `#${p.avgPosition.toFixed(1)}` : "—"}
           </div>
-          <div className="text-right font-serif text-[20px]">{p.citations}</div>
+          <div className="text-right">
+            <div className="font-serif text-[20px]">{p.citations}</div>
+            {compare && <DeltaText value={p.citeDelta} />}
+          </div>
           <div className="text-right">
             <span
               className="font-serif text-[20px]"
@@ -89,6 +174,7 @@ export function PromptsTable({ prompts }: { prompts: PromptRow[] }) {
             <div className="font-serif text-[11.5px] text-[var(--faint)] italic">
               {p.citations ? `${Math.round((p.mentions / p.citations) * 100)}%` : "—"}
             </div>
+            {compare && <DeltaText value={p.mentionDelta} />}
           </div>
           <div className="text-[12px] text-[var(--muted-2)]">
             <div>{p.lastFetched ? new Date(p.lastFetched).toLocaleString() : "not yet fetched"}</div>
@@ -113,11 +199,7 @@ export function PromptsTable({ prompts }: { prompts: PromptRow[] }) {
           </div>
         </div>
       ))}
-      {!prompts.length && (
-        <p className="border-b border-[var(--rule-light)] py-6 font-serif text-[15px] text-[var(--muted-2)] italic">
-          No prompts yet — add one above.
-        </p>
-      )}
+      {!prompts.length && <EmptyState title="No prompts yet" body="Add one above, or research some." />}
     </section>
   );
 }

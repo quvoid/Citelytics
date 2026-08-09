@@ -1,11 +1,47 @@
-import { createAnonServerClient } from "@/lib/supabase/server";
-import { DEMO_PROJECT_ID } from "@/lib/constants";
 import { SourcesTable, type DomainGroup } from "@/components/sources-table";
-import type { Citation, DomainType, Prompt, TrackedUrl } from "@/lib/types";
+import { getCitations, getDomainTypes, getTrackedUrls } from "@/lib/queries";
+import type { Citation } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
 const MOVER_WINDOW_MS = 3 * 24 * 60 * 60 * 1000; // 3-day windows for trending/losing comparison
+
+type UrlRow = {
+  url: string;
+  title: string;
+  citations: number;
+  mentions: boolean | null;
+  contentType: string | null;
+};
+
+/** Collapses repeat citations of the same URL into one row.
+ *
+ * Deliberately order-independent: a URL cited several times may have rows
+ * from before content_type / mentions_brand were populated, so prefer any
+ * definite value over null rather than trusting whichever row sorts first. */
+function aggregateUrls(citations: Citation[]): UrlRow[] {
+  const byUrl = new Map<string, UrlRow>();
+
+  for (const c of citations) {
+    const existing = byUrl.get(c.url);
+    if (!existing) {
+      byUrl.set(c.url, {
+        url: c.url,
+        title: titleFromUrl(c.url),
+        citations: 1,
+        mentions: c.mentions_brand,
+        contentType: c.content_type,
+      });
+      continue;
+    }
+    existing.citations += 1;
+    if (c.mentions_brand === true) existing.mentions = true;
+    else if (existing.mentions === null) existing.mentions = c.mentions_brand;
+    existing.contentType ??= c.content_type;
+  }
+
+  return [...byUrl.values()].sort((a, b) => b.citations - a.citations);
+}
 
 function titleFromUrl(url: string): string {
   try {
@@ -19,44 +55,19 @@ function titleFromUrl(url: string): string {
 }
 
 export default async function SourcesPage() {
-  const sb = createAnonServerClient();
+  const [citations, ownBrand] = await Promise.all([
+    getCitations(),
+    getTrackedUrls({ ownOnly: true }),
+  ]);
 
-  const { data: prompts } = await sb
-    .from("prompts")
-    .select("id")
-    .eq("project_id", DEMO_PROJECT_ID)
-    .returns<Pick<Prompt, "id">[]>();
-  const promptIds = (prompts ?? []).map((p) => p.id);
+  const ownDomains = new Set(ownBrand.map((b) => b.url));
+  const domainTypeByDomain = await getDomainTypes([...new Set(citations.map((c) => c.domain))]);
 
-  const { data: citations } = promptIds.length
-    ? await sb
-        .from("citations")
-        .select(
-          "id, prompt_id, engine_id, url, domain, is_simulated, raw_response_id, mentions_brand, content_type, fetched_at"
-        )
-        .in("prompt_id", promptIds)
-        .returns<Citation[]>()
-    : { data: [] as Citation[] };
-
-  const { data: ownBrand } = await sb
-    .from("tracked_urls")
-    .select("id, project_id, url, name, is_competitor")
-    .eq("project_id", DEMO_PROJECT_ID)
-    .eq("is_competitor", false)
-    .returns<TrackedUrl[]>();
-  const ownDomains = new Set((ownBrand ?? []).map((b) => b.url));
-
-  const allDomains = [...new Set((citations ?? []).map((c) => c.domain))];
-  const { data: domainTypeRows } = allDomains.length
-    ? await sb.from("domain_types").select("domain, domain_type").in("domain", allDomains).returns<DomainType[]>()
-    : { data: [] as DomainType[] };
-  const domainTypeByDomain = new Map((domainTypeRows ?? []).map((d) => [d.domain, d.domain_type]));
-
-  const totalCitations = citations?.length ?? 0;
+  const totalCitations = citations.length;
   const now = Date.now();
 
   const byDomain = new Map<string, { citations: Citation[] }>();
-  for (const c of citations ?? []) {
+  for (const c of citations) {
     const g = byDomain.get(c.domain) ?? { citations: [] };
     g.citations.push(c);
     byDomain.set(c.domain, g);
@@ -76,6 +87,11 @@ export default async function SourcesPage() {
         (t) => now - t > MOVER_WINDOW_MS && now - t <= MOVER_WINDOW_MS * 2
       ).length;
 
+      const positions = g.citations.map((c) => c.position).filter((p): p is number => p !== null);
+      const avgPosition = positions.length
+        ? Math.round((positions.reduce((a, b) => a + b, 0) / positions.length) * 10) / 10
+        : null;
+
       return {
         domain,
         domainType: domainTypeByDomain.get(domain) ?? null,
@@ -86,26 +102,8 @@ export default async function SourcesPage() {
         isNew: now - firstSeen <= MOVER_WINDOW_MS,
         recentCount,
         priorCount,
-        urls: g.citations
-          .reduce<
-            { url: string; title: string; citations: number; mentions: boolean | null; contentType: string | null }[]
-          >((acc, c) => {
-            const existing = acc.find((u) => u.url === c.url);
-            if (existing) {
-              existing.citations += 1;
-              if (c.mentions_brand) existing.mentions = true;
-            } else {
-              acc.push({
-                url: c.url,
-                title: titleFromUrl(c.url),
-                citations: 1,
-                mentions: c.mentions_brand,
-                contentType: c.content_type,
-              });
-            }
-            return acc;
-          }, [])
-          .sort((a, b) => b.citations - a.citations),
+        avgPosition,
+        urls: aggregateUrls(g.citations),
       };
     })
     .sort((a, b) => b.citations - a.citations);

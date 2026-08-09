@@ -154,6 +154,13 @@ Open [http://localhost:3000](http://localhost:3000).
 - **Prompts** page: add/deactivate tracked prompts. Topic/Intent/Branded are
   classified automatically on first successful fetch; Sentiment/Position are
   per-answer averages toward your own brand.
+- **Market (country)**: every prompt runs against one market. A project has a
+  home market (`projects.default_country`, set when you create it); a prompt
+  can override it (`prompts.country`), and the Prompts table has a per-row
+  market selector plus market filter chips. The resolved code is stamped onto
+  every `raw_responses`/`citations` row it produces, so changing a prompt's
+  market later never relabels the history it already generated. See
+  "Country targeting" below for what each engine actually does with it.
 - Click **"Fetch citations now"** — calls `POST /api/projects/{id}/fetch`,
   which returns a `batch_id` immediately. The button then polls
   `GET /api/projects/{id}/fetch-status/{batch_id}` every 2s and shows live
@@ -208,6 +215,38 @@ None of this needs new paid APIs — it's all built on the same free-tier
 Gemini/OpenRouter calls, using Gemini Flash as a shared classifier
 regardless of which engine produced the answer being classified.
 
+### Country targeting
+
+Resolution order is `prompts.country` → `projects.default_country` →
+`ENGINE_LOCALE_COUNTRY` (the env var is now only a floor for rows predating
+migration `0005`, not the knob you turn to change markets). The resolved ISO
+alpha-2 code is passed into `EngineClient.fetch(prompt_text, country)`, and
+each client applies it with whatever its API actually supports:
+
+- **OpenRouter** — a real `user_location.country` on the `openrouter:web_search`
+  server tool (web-search mode only), *plus* the prompt-level framing below.
+  The location parameter steers the **search**; it does not tell the model
+  who it's writing for, so without the framing the answer is still written
+  for a generic (usually US) reader while citing local sources.
+- **Gemini** — prompt-level framing only. The `google_search` grounding tool
+  exposes no country parameter (only lat/lng, for Maps-style "near me"
+  queries); Gemini writes its own search queries from the prompt, so stating
+  the market there is the only lever that exists.
+
+Both engines share one `countries.localize_prompt()` so the same prompt run
+against both is phrased identically — otherwise cross-engine comparison
+would be measuring our own wording, not the engines.
+
+Two honest limits: prompt-level framing is a **bias, not a guarantee** — an
+engine can still return sources from elsewhere — and neither free-tier engine
+offers true geo-routed execution (a request actually issued from that
+country), which is what the paid GEO data APIs sell. Treat the market as
+"answered for a user in X", not "answered in X".
+
+`daily_metrics` now carries a `country` column: `''` is the blended
+all-markets row the Overview trend reads, and one row per market is written
+alongside it on every rollup.
+
 ## Known limits (by design, this phase)
 
 - No billing, no plan limits.
@@ -240,6 +279,7 @@ backend/
   tasks.py                    Celery tasks — one per (prompt, engine) pair
   db.py                       Supabase service-role client
   config.py                   All env-driven settings
+  countries.py                Supported markets + shared prompt localization
   classifier.py               Gemini-Flash structured-output classification:
                               brand mentions/order, sentiment, topic/intent,
                               domain type, perception attributes
@@ -266,4 +306,7 @@ supabase/
   migrations/0001_init.sql     Core schema + async fetch tracking
   migrations/0002_analytics.sql  Competitor mentions, sentiment/position,
                                  domain types, daily metrics, fanouts, attributes
+  migrations/0003_content_briefs.sql  AI-generated content briefs
+  migrations/0004_citation_position.sql  Citation order within an answer
+  migrations/0005_prompt_country.sql  Per-prompt market targeting
 ```

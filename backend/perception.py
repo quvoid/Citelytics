@@ -1,6 +1,6 @@
+import store
 from classifier import classify_attributes
-from clients import get_engine_client
-from clients.gemini_client import RateLimitedError
+from clients import RateLimitedError, get_engine_client
 from db import get_supabase
 
 
@@ -13,7 +13,7 @@ async def run_perception_fetch(project_id: str) -> int:
 
     prompts = (
         sb.table("prompts")
-        .select("id, query_text")
+        .select("id, project_id, query_text, country")
         .eq("project_id", project_id)
         .eq("active", True)
         .eq("prompt_type", "perception")
@@ -39,10 +39,14 @@ async def run_perception_fetch(project_id: str) -> int:
 
     processed = 0
     for prompt in prompts:
+        # Same resolution order as the citation flow — a perception prompt is
+        # market-specific too ("what is Bajaj known for?" reads differently
+        # in India than in the US).
+        country = store.resolve_country(prompt)
         for engine in engines:
             client = get_engine_client(engine["name"])
             try:
-                result = await client.fetch(prompt["query_text"])
+                result = await client.fetch(prompt["query_text"], country)
             except RateLimitedError:
                 continue  # skip this engine for now, next manual run will retry
             if result.status != "success":
@@ -54,6 +58,7 @@ async def run_perception_fetch(project_id: str) -> int:
                     {
                         "prompt_id": prompt["id"],
                         "engine_id": engine["id"],
+                        "country": country,
                         "raw_response": result.raw_json,
                         "answer_text": result.answer_text,
                         "brand_mentioned_in_answer": False,
