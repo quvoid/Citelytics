@@ -4,7 +4,7 @@ from typing import Any
 from celery.exceptions import MaxRetriesExceededError
 
 import store
-from brand_check import text_mentions_brand
+from brand_check import brand_keywords_for, text_mentions_brand
 from celery_app import celery_app
 from classifier import classify_answer
 from clients import RateLimitedError, get_engine_client
@@ -31,13 +31,15 @@ class FetchOutcome:
         self.citation_rows = citation_rows or []
 
 
-def _fallback_classification(answer_text: str | None, own: dict | None) -> dict[str, Any]:
+def _fallback_classification(
+    answer_text: str | None, own: dict | None, brand_keywords: list[str]
+) -> dict[str, Any]:
     """Used when the classifier call itself fails — commonly a rate limit,
     since it shares Gemini's quota with the grounding call. Falls back to a
     plain text match so brand_mentioned_in_answer is never wrong just
     because the richer classification couldn't run; sentiment/position/topic
     are left unset rather than guessed."""
-    mentioned = own is not None and text_mentions_brand(answer_text)
+    mentioned = own is not None and text_mentions_brand(answer_text, brand_keywords)
     return {
         "mentioned_brands": [own["name"]] if mentioned and own else [],
         "own_brand_sentiment": None,
@@ -47,15 +49,18 @@ def _fallback_classification(answer_text: str | None, own: dict | None) -> dict[
     }
 
 
-async def _run_fetch(prompt: dict, engine_name: str, tracked: list[dict]) -> FetchOutcome:
+async def _run_fetch(
+    prompt: dict, engine_name: str, tracked: list[dict], country: str
+) -> FetchOutcome:
     """The async half of the task: call the engine, classify the answer, and
     enrich the citations. Kept separate from the Celery task so the whole
     thing is one asyncio.run() rather than several."""
-    result = await get_engine_client(engine_name).fetch(prompt["query_text"])
+    result = await get_engine_client(engine_name).fetch(prompt["query_text"], country)
     if result.status != "success":
         return FetchOutcome(status=result.status, message=result.message)
 
     own = next((t for t in tracked if not t["is_competitor"]), None)
+    brand_keywords = brand_keywords_for(own)
 
     classification = await classify_answer(
         query_text=prompt["query_text"],
@@ -64,9 +69,9 @@ async def _run_fetch(prompt: dict, engine_name: str, tracked: list[dict]) -> Fet
         own_brand_name=own["name"] if own else "",
     )
     if classification is None:
-        classification = _fallback_classification(result.answer_text, own)
+        classification = _fallback_classification(result.answer_text, own, brand_keywords)
 
-    citation_rows = await enrich_citations(result.citations)
+    citation_rows = await enrich_citations(result.citations, brand_keywords)
     await ensure_domain_types({c.domain for c in result.citations if not c.is_simulated})
 
     return FetchOutcome(
@@ -84,8 +89,9 @@ def fetch_citations_task(self, batch_task_id: str, prompt_id: str, engine_name: 
     try:
         prompt = store.get_prompt(prompt_id)
         tracked = store.get_tracked_urls(prompt["project_id"])
+        country = store.resolve_country(prompt)
 
-        outcome = asyncio.run(_run_fetch(prompt, engine_name, tracked))
+        outcome = asyncio.run(_run_fetch(prompt, engine_name, tracked, country))
 
         if outcome.status != "success":
             store.update_batch_task_status(batch_task_id, outcome.status, message=outcome.message)
@@ -96,6 +102,7 @@ def fetch_citations_task(self, batch_task_id: str, prompt_id: str, engine_name: 
         store.save_fetch_result(
             prompt_id=prompt_id,
             engine_name=engine_name,
+            country=country,
             result=outcome.result,
             classification=outcome.classification,
             citation_rows=outcome.citation_rows,

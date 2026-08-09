@@ -17,17 +17,22 @@ import type {
 
 // Column lists live here so adding a column is a one-file change rather than
 // hunting through every page that happens to select the same table.
-const PROMPT_COLS = "id, project_id, query_text, active, prompt_type, topic, intent, is_branded";
+const PROMPT_COLS =
+  "id, project_id, query_text, active, prompt_type, country, topic, intent, is_branded";
 const CITATION_COLS =
-  "id, prompt_id, engine_id, url, domain, is_simulated, raw_response_id, mentions_brand, content_type, position, fetched_at";
+  "id, prompt_id, engine_id, country, url, domain, is_simulated, raw_response_id, mentions_brand, content_type, position, fetched_at";
 const RAW_RESPONSE_COLS =
-  "id, prompt_id, engine_id, answer_text, brand_mentioned_in_answer, brand_sentiment_score, brand_position, fetched_at";
+  "id, prompt_id, engine_id, country, answer_text, brand_mentioned_in_answer, brand_sentiment_score, brand_position, fetched_at";
 const TRACKED_URL_COLS = "id, project_id, url, name, is_competitor";
 const CONTENT_BRIEF_COLS =
   "id, project_id, prompt_text, origin, status, score, tone, content_intent, language, article_type, cell_notes, main_topic, value_proposition, target_audience, key_takeaways, created_at, analysed_at";
 
 export type PromptType = "citation" | "perception";
 
+/** Returns every prompt regardless of market. Country filtering is left to
+ * callers: `prompts.country` is null for anything inheriting the project's
+ * market, so the filter needs the project's default_country to resolve —
+ * which the pages already have loaded. */
 export async function getPrompts(promptType?: PromptType, projectId?: string): Promise<Prompt[]> {
   const sb = createAnonServerClient();
   const pid = projectId ?? (await getCurrentProjectId());
@@ -41,10 +46,20 @@ export async function getProjects(): Promise<Project[]> {
   const sb = createAnonServerClient();
   const { data } = await sb
     .from("projects")
-    .select("id, name, domain")
+    .select("id, name, domain, default_country")
     .order("created_at")
     .returns<Project[]>();
   return data ?? [];
+}
+
+export async function getProject(id: string): Promise<Project | null> {
+  const sb = createAnonServerClient();
+  const { data } = await sb
+    .from("projects")
+    .select("id, name, domain, default_country")
+    .eq("id", id)
+    .maybeSingle<Project>();
+  return data ?? null;
 }
 
 export async function getPrompt(id: string): Promise<Prompt | null> {
@@ -137,13 +152,21 @@ export async function getDomainTypes(domains: string[]): Promise<Map<string, str
   return new Map((data ?? []).map((d) => [d.domain, d.domain_type]));
 }
 
-export async function getDailyMetrics(limit = 8, projectId?: string): Promise<DailyMetric[]> {
+/** `country` defaults to "" — the all-markets aggregate row. Pass a code to
+ * read that market's own trend line; the rows are written per market at
+ * fetch time, so this is a filter, not a recomputation. */
+export async function getDailyMetrics(
+  limit = 8,
+  projectId?: string,
+  country = ""
+): Promise<DailyMetric[]> {
   const sb = createAnonServerClient();
   const pid = projectId ?? (await getCurrentProjectId());
   const { data } = await sb
     .from("daily_metrics")
-    .select("id, project_id, date, visibility_pct, sov_pct, avg_sentiment, avg_position")
+    .select("id, project_id, date, country, visibility_pct, sov_pct, avg_sentiment, avg_position")
     .eq("project_id", pid)
+    .eq("country", country)
     .order("date", { ascending: false })
     .limit(limit)
     .returns<DailyMetric[]>();

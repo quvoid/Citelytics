@@ -4,10 +4,15 @@ import Link from "next/link";
 import { useTransition } from "react";
 import { DownloadCsvButton } from "@/components/download-csv-button";
 import { EmptyState } from "@/components/empty-state";
-import { setPromptActive } from "@/lib/actions/prompts";
+import { setPromptActive, setPromptCountry } from "@/lib/actions/prompts";
+import { COUNTRIES, countryName } from "@/lib/countries";
 import type { Prompt } from "@/lib/types";
 
 export type PromptRow = Prompt & {
+  /** The market the next fetch will use — the prompt's own, or the project's
+   * inherited default. */
+  resolvedCountry: string;
+  inheritsCountry: boolean;
   citations: number;
   mentions: number;
   real: boolean;
@@ -49,7 +54,32 @@ function ToggleButton({ id, active }: { id: string; active: boolean }) {
   );
 }
 
-const COLS = "1.4fr 82px 72px 64px 100px 110px 150px 92px";
+/** Changing a prompt's market resets its comparability — answers fetched
+ * before the change were built from a different country's sources — so this
+ * is a deliberate per-row control rather than a bulk action. */
+function MarketSelect({ row }: { row: PromptRow }) {
+  const [isPending, startTransition] = useTransition();
+  return (
+    <select
+      aria-label={`Market for "${row.query_text}"`}
+      value={row.country ?? ""}
+      disabled={isPending}
+      onChange={(e) =>
+        startTransition(() => setPromptCountry(row.id, e.target.value || null))
+      }
+      className="w-full border border-[var(--rule)] bg-transparent px-1.5 py-1 font-sans text-[11px] text-[var(--ink)] outline-none focus:border-[var(--ember)] disabled:opacity-60"
+    >
+      <option value="">Default ({countryName(row.resolvedCountry)})</option>
+      {COUNTRIES.map((c) => (
+        <option key={c.code} value={c.code}>
+          {c.name}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+const COLS = "1.4fr 82px 118px 72px 64px 100px 110px 150px 92px";
 
 export function PromptsTable({ prompts, compare = false }: { prompts: PromptRow[]; compare?: boolean }) {
   return (
@@ -60,6 +90,7 @@ export function PromptsTable({ prompts, compare = false }: { prompts: PromptRow[
           rows={prompts.map((p) => ({
             prompt: p.query_text,
             topic: p.topic,
+            market: p.resolvedCountry,
             intent: p.intent,
             branded: p.is_branded ? "yes" : "no",
             citations: p.citations,
@@ -72,6 +103,7 @@ export function PromptsTable({ prompts, compare = false }: { prompts: PromptRow[
           columns={[
             { key: "prompt", label: "Prompt" },
             { key: "topic", label: "Topic" },
+            { key: "market", label: "Market" },
             { key: "intent", label: "Intent" },
             { key: "branded", label: "Branded" },
             { key: "citations", label: "Citations" },
@@ -89,6 +121,7 @@ export function PromptsTable({ prompts, compare = false }: { prompts: PromptRow[
       >
         <span>Prompt</span>
         <span>Topic</span>
+        <span>Market</span>
         <span className="text-right">Sent.</span>
         <span className="text-right">Pos.</span>
         <span className="text-right">Citations</span>
@@ -117,6 +150,9 @@ export function PromptsTable({ prompts, compare = false }: { prompts: PromptRow[
           </Link>
           <div className="font-serif text-[13px] text-[var(--muted-2)] italic">
             {p.topic ?? "—"}
+          </div>
+          <div>
+            <MarketSelect row={p} />
           </div>
           <div className="text-right font-serif text-[16px]">
             {p.avgSentiment !== null ? Math.round(p.avgSentiment) : "—"}

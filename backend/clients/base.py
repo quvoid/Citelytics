@@ -40,6 +40,13 @@ class EngineClient(ABC):
     name: str
 
     @abstractmethod
-    async def fetch(self, prompt_text: str) -> RawEngineResponse:
-        """Call the engine, return raw response + normalized citations."""
+    async def fetch(self, prompt_text: str, country: str) -> RawEngineResponse:
+        """Call the engine, return raw response + normalized citations.
+
+        `country` is an ISO 3166-1 alpha-2 code, already resolved by the
+        caller (prompt override -> project default -> DEFAULT_COUNTRY), so a
+        client never has to reach back into config for it. How a client
+        applies it is engine-specific: a real request parameter where the API
+        has one (OpenRouter's user_location), prompt-level framing where it
+        doesn't (Gemini)."""
         ...

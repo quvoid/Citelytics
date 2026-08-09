@@ -10,8 +10,6 @@ export type LayoutData = {
   promptCount: number;
   brandCount: number;
   briefCount: number;
-  realCount: number;
-  simCount: number;
 };
 
 /** Everything the sidebar + top bar need, computed once per request in the
@@ -26,30 +24,19 @@ export async function getLayoutData(): Promise<LayoutData> {
     sb.from("prompts").select("id, prompt_type").eq("project_id", projectId),
   ]);
 
-  const promptIds = (prompts ?? []).map((p) => p.id);
   const citationPromptCount = (prompts ?? []).filter((p) => p.prompt_type === "citation").length;
 
-  const [{ count: realCount }, { count: simCount }, { count: brandCount }, { count: briefCount }] =
-    await Promise.all([
-      promptIds.length
-        ? sb
-            .from("citations")
-            .select("id", { count: "exact", head: true })
-            .in("prompt_id", promptIds)
-            .eq("is_simulated", false)
-        : Promise.resolve({ count: 0 }),
-      promptIds.length
-        ? sb
-            .from("citations")
-            .select("id", { count: "exact", head: true })
-            .in("prompt_id", promptIds)
-            .eq("is_simulated", true)
-        : Promise.resolve({ count: 0 }),
-      sb.from("tracked_urls").select("id", { count: "exact", head: true }).eq("project_id", projectId),
-      sb.from("content_briefs").select("id", { count: "exact", head: true }).eq("project_id", projectId),
-    ]);
+  const [{ count: brandCount }, { count: briefCount }] = await Promise.all([
+    sb.from("tracked_urls").select("id", { count: "exact", head: true }).eq("project_id", projectId),
+    sb.from("content_briefs").select("id", { count: "exact", head: true }).eq("project_id", projectId),
+  ]);
 
-  const fallback: Project = { id: projectId, name: "Untitled brand", domain: "" };
+  const fallback: Project = {
+    id: projectId,
+    name: "Untitled brand",
+    domain: "",
+    default_country: "IN",
+  };
   const current = projects.find((p) => p.id === projectId) ?? projects[0] ?? fallback;
 
   return {
@@ -59,7 +46,5 @@ export async function getLayoutData(): Promise<LayoutData> {
     promptCount: citationPromptCount,
     brandCount: brandCount ?? 0,
     briefCount: briefCount ?? 0,
-    realCount: realCount ?? 0,
-    simCount: simCount ?? 0,
   };
 }

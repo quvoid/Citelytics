@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { BACKEND_URL } from "@/lib/constants";
 import { addPrompt } from "@/lib/actions/prompts";
+import { COUNTRIES, countryName } from "@/lib/countries";
 import type { PromptCandidate, PromptResearchResponse } from "@/lib/types";
 
 type State =
@@ -23,9 +24,16 @@ function InterestBadge({ value }: { value: number | null }) {
   );
 }
 
-export function PromptResearchPanel({ projectId }: { projectId: string }) {
+export function PromptResearchPanel({
+  projectId,
+  defaultCountry,
+}: {
+  projectId: string;
+  defaultCountry: string;
+}) {
   const [open, setOpen] = useState(false);
   const [seed, setSeed] = useState("");
+  const [country, setCountry] = useState(defaultCountry);
   const [state, setState] = useState<State>({ phase: "idle" });
   const [tracked, setTracked] = useState<Set<string>>(new Set());
   const [isPending, startTransition] = useTransition();
@@ -39,7 +47,7 @@ export function PromptResearchPanel({ projectId }: { projectId: string }) {
       const res = await fetch(`${BACKEND_URL}/api/projects/${projectId}/prompt-research`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ seed: term }),
+        body: JSON.stringify({ seed: term, country }),
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
@@ -60,6 +68,10 @@ export function PromptResearchPanel({ projectId }: { projectId: string }) {
       const formData = new FormData();
       formData.set("query_text", candidate.prompt_text);
       formData.set("prompt_type", "citation");
+      // Track it in the market it was researched for — otherwise the Trends
+      // score that justified adding it describes a different country than
+      // the one the prompt will actually be run against.
+      formData.set("country", country);
       await addPrompt(formData);
       setTracked((prev) => new Set(prev).add(candidate.prompt_text));
       router.refresh();
@@ -83,18 +95,42 @@ export function PromptResearchPanel({ projectId }: { projectId: string }) {
 
       {open && (
         <section className="border-b border-[var(--rule)] bg-[var(--paper)] px-1 py-6.5">
-          <div className="grid grid-cols-[1fr_auto] items-end gap-5">
+          <div className="grid grid-cols-[1fr_190px_auto] items-end gap-5">
             <div>
-              <label className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+              <label
+                htmlFor="research-seed"
+                className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
+              >
                 Seed term or category
               </label>
               <input
+                id="research-seed"
                 value={seed}
                 onChange={(e) => setSeed(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleResearch()}
                 placeholder="e.g. smartphone"
                 className="mt-2.5 w-full border-0 border-b border-[var(--ink)] bg-transparent py-2 font-serif text-2xl text-[var(--ink)] outline-none placeholder:text-[var(--faint)]"
               />
+            </div>
+            <div>
+              <label
+                htmlFor="research-country"
+                className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
+              >
+                Market
+              </label>
+              <select
+                id="research-country"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="mt-2.5 w-full border-0 border-b border-[var(--ink)] bg-transparent py-2.5 font-sans text-[15px] text-[var(--ink)] outline-none"
+              >
+                {COUNTRIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <button
               onClick={handleResearch}
@@ -106,8 +142,9 @@ export function PromptResearchPanel({ projectId }: { projectId: string }) {
           </div>
           <p className="mt-3 font-serif text-[13px] text-[var(--faint)] italic">
             Candidate prompts are AI-generated (Groq) — a brainstorm, not measured AI traffic.
-            Search interest, where shown, is a real Google Trends relative score for India, not
-            an AI-prompt volume number (no such data exists anywhere).
+            Search interest, where shown, is a real Google Trends relative score for{" "}
+            {countryName(country)}, not an AI-prompt volume number (no such data exists anywhere).
+            Tracking a candidate adds it against {countryName(country)}.
           </p>
 
           {state.phase === "error" && (

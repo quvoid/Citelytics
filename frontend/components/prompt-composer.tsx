@@ -2,6 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { addPrompt } from "@/lib/actions/prompts";
+import { COUNTRIES, countryName } from "@/lib/countries";
 
 type Props = {
   /** Citation prompts are queried by every engine on each fetch run;
@@ -10,11 +11,20 @@ type Props = {
   toggleLabel: string;
   fieldLabel: string;
   placeholder: string;
+  /** The project's home market, shown as the "inherit" option's label so the
+   * default isn't an unexplained blank. */
+  defaultCountry: string;
 };
 
-/** Collapsed button that expands into a single-field composer. Shared by the
- * Prompts and Perception pages — they differ only in copy and prompt_type. */
-export function PromptComposer({ promptType, toggleLabel, fieldLabel, placeholder }: Props) {
+/** Collapsed button that expands into a composer. Shared by the Prompts and
+ * Perception pages — they differ only in copy and prompt_type. */
+export function PromptComposer({
+  promptType,
+  toggleLabel,
+  fieldLabel,
+  placeholder,
+  defaultCountry,
+}: Props) {
   const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
@@ -49,19 +59,48 @@ export function PromptComposer({ promptType, toggleLabel, fieldLabel, placeholde
                 setOpen(false);
               })
             }
-            className="grid grid-cols-[1fr_auto] items-end gap-5"
+            className="grid grid-cols-[1fr_190px_auto] items-end gap-5"
           >
             <div>
-              <label className="font-sans text-[10.5px] font-semibold tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <label
+                htmlFor="prompt-query-text"
+                className="font-sans text-[10.5px] font-semibold tracking-[0.06em] text-[var(--muted-2)] uppercase"
+              >
                 {fieldLabel}
               </label>
               <input
+                id="prompt-query-text"
                 name="query_text"
                 required
                 placeholder={placeholder}
                 className="mt-2.5 w-full rounded-[10px] border border-[var(--rule)] bg-[var(--muted)] px-3.5 py-3 font-sans text-[15px] text-[var(--ink)] outline-none placeholder:text-[var(--faint)] focus:border-[var(--ember)]"
               />
             </div>
+
+            <div>
+              <label
+                htmlFor="prompt-country"
+                className="font-sans text-[10.5px] font-semibold tracking-[0.06em] text-[var(--muted-2)] uppercase"
+              >
+                Market
+              </label>
+              <select
+                id="prompt-country"
+                name="country"
+                defaultValue=""
+                className="mt-2.5 w-full rounded-[10px] border border-[var(--rule)] bg-[var(--muted)] px-3.5 py-3 font-sans text-[15px] text-[var(--ink)] outline-none focus:border-[var(--ember)]"
+              >
+                <option value="">
+                  Project default — {countryName(defaultCountry)}
+                </option>
+                {COUNTRIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <button
               type="submit"
               disabled={isPending}
@@ -70,6 +109,12 @@ export function PromptComposer({ promptType, toggleLabel, fieldLabel, placeholde
               {isPending ? "Adding…" : "Track prompt"}
             </button>
           </form>
+
+          <p className="mt-3.5 font-serif text-[13px] text-[var(--muted-2)] italic">
+            The market is sent to the engine with the prompt — it steers which
+            country&rsquo;s sources, retailers and pricing the answer is built
+            from, so the same question can be tracked separately per market.
+          </p>
         </section>
       )}
     </>

@@ -2,6 +2,8 @@ export type Project = {
   id: string;
   name: string;
   domain: string;
+  /** Home market — inherited by every prompt that doesn't override it. */
+  default_country: string;
 };
 
 export type ContentBrief = {
@@ -35,6 +37,8 @@ export type Prompt = {
   query_text: string;
   active: boolean;
   prompt_type: "citation" | "perception";
+  /** ISO 3166-1 alpha-2, or null to inherit the project's default_country. */
+  country: string | null;
   topic: string | null;
   intent: "Commercial" | "Informational" | "Transactional" | "Navigational" | null;
   is_branded: boolean;
@@ -57,6 +61,9 @@ export type Citation = {
   id: string;
   prompt_id: string;
   engine_id: string;
+  /** The market this citation was fetched under — stamped at fetch time, so
+   * it stays correct even if the prompt's country is changed later. */
+  country: string | null;
   url: string;
   domain: string;
   is_simulated: boolean;
@@ -71,6 +78,7 @@ export type RawResponse = {
   id: string;
   prompt_id: string;
   engine_id: string;
+  country: string | null;
   answer_text: string | null;
   brand_mentioned_in_answer: boolean;
   brand_sentiment_score: number | null;
@@ -95,6 +103,8 @@ export type DailyMetric = {
   id: string;
   project_id: string;
   date: string;
+  /** "" is the all-markets aggregate row; anything else is one market. */
+  country: string;
   visibility_pct: number | null;
   sov_pct: number | null;
   avg_sentiment: number | null;
@@ -120,8 +130,9 @@ export type PromptCandidate = {
   search_query: string;
   intent: string;
   relevance_note: string;
-  /** Real Google Trends relative interest (0-100), scoped to India — never
-   * AI-prompt traffic, no such data exists anywhere. null = unknown. */
+  /** Real Google Trends relative interest (0-100), scoped to the researched
+   * market — never AI-prompt traffic, no such data exists anywhere.
+   * null = unknown. */
   search_interest: number | null;
 };
 

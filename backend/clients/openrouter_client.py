@@ -5,11 +5,11 @@ import httpx
 
 from clients.base import Citation, EngineClient, RateLimitedError, RawEngineResponse
 from config import (
-    ENGINE_LOCALE_COUNTRY,
     OPENROUTER_API_KEY,
     OPENROUTER_ENABLE_WEB_SEARCH,
     OPENROUTER_MODEL,
 )
+from countries import localize_prompt
 from normalize import extract_domain
 
 OPENROUTER_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
@@ -57,7 +57,7 @@ def _parse_url_citations(annotations: list[dict]) -> list[Citation]:
 class OpenRouterClient(EngineClient):
     name = "openrouter"
 
-    async def fetch(self, prompt_text: str) -> RawEngineResponse:
+    async def fetch(self, prompt_text: str, country: str) -> RawEngineResponse:
         """Free-tier text generation via OpenRouter. Real url_citation
         annotations only if OPENROUTER_ENABLE_WEB_SEARCH=true (costs
         OpenRouter credits); otherwise layers clearly-labeled simulated
@@ -67,7 +67,8 @@ class OpenRouterClient(EngineClient):
         `:online` model-suffix plugin) so we can pass a real user_location —
         the model decides whether to call it, OpenRouter executes it
         server-side, and results come back as the same url_citation
-        annotations either way."""
+        annotations either way. user_location steers the search; the
+        localized prompt steers the answer, so both are applied."""
         if not OPENROUTER_API_KEY:
             return RawEngineResponse(
                 engine_name=self.name, status="error", message="OPENROUTER_API_KEY is not configured."
@@ -75,14 +76,14 @@ class OpenRouterClient(EngineClient):
 
         body: dict[str, Any] = {
             "model": OPENROUTER_MODEL,
-            "messages": [{"role": "user", "content": prompt_text}],
+            "messages": [{"role": "user", "content": localize_prompt(prompt_text, country)}],
         }
         if OPENROUTER_ENABLE_WEB_SEARCH:
             body["tools"] = [
                 {
                     "type": "openrouter:web_search",
                     "parameters": {
-                        "user_location": {"type": "approximate", "country": ENGINE_LOCALE_COUNTRY},
+                        "user_location": {"type": "approximate", "country": country},
                         "max_results": 5,
                     },
                 }

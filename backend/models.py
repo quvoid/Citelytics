@@ -1,27 +1,63 @@
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
+
+from countries import is_supported
+
+
+def _validate_country(value: str | None) -> str | None:
+    """Rejects unknown markets at the API boundary rather than letting them
+    reach an engine call, where an unrecognized code degrades silently into a
+    differently-phrased prompt and quietly poisons the comparison."""
+    if value is None or value == "":
+        return None
+    code = value.strip().upper()
+    if not is_supported(code):
+        raise ValueError(f"Unsupported country code: {value}")
+    return code
 
 
 class ProjectCreate(BaseModel):
     name: str
     domain: str
+    # The project's home market — inherited by every prompt that doesn't
+    # override it.
+    default_country: str = "IN"
+
+    @field_validator("default_country")
+    @classmethod
+    def _country(cls, v: str) -> str:
+        return _validate_country(v) or "IN"
 
 
 class ProjectOut(BaseModel):
     id: str
     name: str
     domain: str
+    default_country: str = "IN"
 
 
 class PromptCreate(BaseModel):
     project_id: str
     query_text: str
     prompt_type: Literal["citation", "perception"] = "citation"
+    # null = inherit the project's default_country at fetch time
+    country: str | None = None
+
+    @field_validator("country")
+    @classmethod
+    def _country(cls, v: str | None) -> str | None:
+        return _validate_country(v)
 
 
 class PromptUpdate(BaseModel):
     active: bool | None = None
+    country: str | None = None
+
+    @field_validator("country")
+    @classmethod
+    def _country(cls, v: str | None) -> str | None:
+        return _validate_country(v)
 
 
 class PromptOut(BaseModel):
@@ -30,6 +66,7 @@ class PromptOut(BaseModel):
     query_text: str
     active: bool
     prompt_type: str
+    country: str | None = None
     topic: str | None = None
     intent: str | None = None
     is_branded: bool = False
@@ -102,6 +139,18 @@ class ContentBriefOut(BaseModel):
 
 class PromptResearchRequest(BaseModel):
     seed: str
+    # null = research the project's home market
+    country: str | None = None
+
+    @field_validator("country")
+    @classmethod
+    def _country(cls, v: str | None) -> str | None:
+        return _validate_country(v)
+
+
+class CountryOut(BaseModel):
+    code: str
+    name: str
 
 
 class PromptCandidateOut(BaseModel):

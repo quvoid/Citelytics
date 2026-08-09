@@ -9,14 +9,32 @@ _PAGE_FETCH_TIMEOUT = 8.0
 _USER_AGENT = "Mozilla/5.0 (compatible; CitelyticsBot/1.0; +https://example.com/bot)"
 
 
-def text_mentions_brand(text: str | None) -> bool:
+def brand_keywords_for(own: dict | None) -> list[str]:
+    """The strings that count as naming a project's own brand.
+
+    Derived per project from its tracked brand row rather than read from the
+    global BRAND_KEYWORDS env var. That var is one list shared by every
+    project, so once there is more than one project it is necessarily wrong
+    for all but one of them — Motorola's cited pages were being searched for
+    "Bajaj", which made mentions_brand false for the entire project. The env
+    var survives only as the fallback for a project with no own-brand row.
+    """
+    if not own:
+        return BRAND_KEYWORDS
+    label = own["url"].split("//")[-1].removeprefix("www.").split(".")[0]
+    return sorted({own["name"], label} - {""})
+
+
+def text_mentions_brand(text: str | None, keywords: list[str]) -> bool:
     if not text:
         return False
     lowered = text.lower()
-    return any(kw.lower() in lowered for kw in BRAND_KEYWORDS)
+    return any(kw.lower() in lowered for kw in keywords)
 
 
-async def _check_one(client: httpx.AsyncClient, semaphore: asyncio.Semaphore, url: str) -> bool | None:
+async def _check_one(
+    client: httpx.AsyncClient, semaphore: asyncio.Semaphore, url: str, keywords: list[str]
+) -> bool | None:
     """Fetches a cited page and checks whether it mentions the brand.
     Returns None (unknown) if the page can't be fetched — e.g. blocked,
     times out, or errors — rather than assuming a false negative."""
@@ -32,14 +50,16 @@ async def _check_one(client: httpx.AsyncClient, semaphore: asyncio.Semaphore, ur
             return None
         if resp.status_code >= 400:
             return None
-        return text_mentions_brand(resp.text)
+        return text_mentions_brand(resp.text, keywords)
 
 
-async def check_brand_mentions(urls: list[str]) -> list[bool | None]:
+async def check_brand_mentions(urls: list[str], keywords: list[str]) -> list[bool | None]:
     """Checks each URL's page content for a brand mention, in parallel
     with bounded concurrency so we don't hammer target sites."""
     if not urls:
         return []
     semaphore = asyncio.Semaphore(_MAX_CONCURRENT_PAGE_FETCHES)
     async with httpx.AsyncClient() as client:
-        return await asyncio.gather(*(_check_one(client, semaphore, url) for url in urls))
+        return await asyncio.gather(
+            *(_check_one(client, semaphore, url, keywords) for url in urls)
+        )

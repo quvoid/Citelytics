@@ -7,12 +7,17 @@ from db import get_supabase
 from normalize import classify_content_type
 
 
-async def enrich_citations(citations: list[Citation]) -> list[dict[str, Any]]:
+async def enrich_citations(
+    citations: list[Citation], brand_keywords: list[str]
+) -> list[dict[str, Any]]:
     """Per-citation enrichment applied before insert: whether the cited page
     itself names the brand (real citations only — checking simulated URLs'
-    pages would tell us nothing), plus a free heuristic content-type label."""
+    pages would tell us nothing), plus a free heuristic content-type label.
+
+    brand_keywords is the calling project's, not a global — see
+    brand_check.brand_keywords_for."""
     real_urls = [c.url for c in citations if not c.is_simulated]
-    mentions_by_url = dict(zip(real_urls, await check_brand_mentions(real_urls)))
+    mentions_by_url = dict(zip(real_urls, await check_brand_mentions(real_urls, brand_keywords)))
 
     return [
         {

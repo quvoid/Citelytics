@@ -4,9 +4,11 @@ import { PromptResearchPanel } from "@/components/prompt-research-panel";
 import { PromptsTable, type PromptRow } from "@/components/prompts-table";
 import { TopicRollupTable, type TopicRow } from "@/components/topic-rollup-table";
 import { getCurrentProjectId } from "@/lib/current-project";
+import { COUNTRIES, countryName } from "@/lib/countries";
 import {
   getAnswerBrandMentions,
   getCitations,
+  getProject,
   getPrompts,
   getRawResponses,
   getTrackedUrls,
@@ -21,10 +23,11 @@ function inWindow(iso: string, start: number, end: number): boolean {
   return t >= start && t < end;
 }
 
-function buildHref(params: { view?: string; compare?: string }): string {
+function buildHref(params: { view?: string; compare?: string; country?: string }): string {
   const qs = new URLSearchParams();
   if (params.view) qs.set("view", params.view);
   if (params.compare) qs.set("compare", params.compare);
+  if (params.country) qs.set("country", params.country);
   const s = qs.toString();
   return s ? `/prompts?${s}` : "/prompts";
 }
@@ -32,19 +35,30 @@ function buildHref(params: { view?: string; compare?: string }): string {
 export default async function PromptsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ view?: string; compare?: string }>;
+  searchParams: Promise<{ view?: string; compare?: string; country?: string }>;
 }) {
-  const { view, compare: compareParam } = await searchParams;
+  const { view, compare: compareParam, country: countryParam } = await searchParams;
   const isTopicView = view === "topic";
   const compare = compareParam === "1";
+  const country = COUNTRIES.some((c) => c.code === countryParam) ? countryParam : undefined;
 
-  const [prompts, citations, rawResponses, ownBrand, projectId] = await Promise.all([
-    getPrompts("citation"),
+  const projectId = await getCurrentProjectId();
+  const [allPrompts, citations, rawResponses, ownBrand, project] = await Promise.all([
+    getPrompts("citation", projectId),
     getCitations(),
     getRawResponses(),
     getTrackedUrls({ ownOnly: true }),
-    getCurrentProjectId(),
+    getProject(projectId),
   ]);
+  const defaultCountry = project?.default_country ?? "IN";
+
+  // Chips are built from the unfiltered set, so selecting a market never
+  // removes the other markets' chips and strands the user there.
+  const marketsInUse = [...new Set(allPrompts.map((p) => p.country ?? defaultCountry))].sort();
+  const prompts = country
+    ? allPrompts.filter((p) => (p.country ?? defaultCountry) === country)
+    : allPrompts;
+
   const ownId = ownBrand[0]?.id ?? null;
   const mentions = await getAnswerBrandMentions(rawResponses.map((r) => r.id));
 
@@ -111,6 +125,10 @@ export default async function PromptsPage({
     const s = stats.get(p.id) ?? emptyStats();
     return {
       ...p,
+      // What the fetch will actually use — the table shows the effective
+      // market, not a blank for every prompt that inherits.
+      resolvedCountry: p.country ?? defaultCountry,
+      inheritsCountry: p.country === null,
       citations: s.citations,
       mentions: s.mentions,
       real: s.real,
@@ -180,7 +198,8 @@ export default async function PromptsPage({
           </h1>
           <p className="mt-2.5 font-serif text-[16px] text-[var(--muted-2)] italic">
             {rows.length} prompts, {rows.filter((r) => r.active).length} active — queried on each
-            &ldquo;Fetch citations&rdquo; run.
+            &ldquo;Fetch citations&rdquo; run
+            {country ? ` in ${countryName(country)}` : ""}.
           </p>
         </div>
       </section>
@@ -190,8 +209,42 @@ export default async function PromptsPage({
         toggleLabel="Add a prompt"
         fieldLabel="New prompt"
         placeholder="e.g. is almond oil good for hair growth"
+        defaultCountry={defaultCountry}
       />
-      <PromptResearchPanel projectId={projectId} />
+      <PromptResearchPanel projectId={projectId} defaultCountry={defaultCountry} />
+
+      <section className="flex flex-wrap items-center gap-1.5 pt-4.5">
+        <span className="mr-1 font-sans text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+          Market
+        </span>
+        <Link
+          href={buildHref({ view, compare: compareParam })}
+          className="border px-3 py-1.5 font-sans text-[11px] tracking-[0.04em] no-underline"
+          style={{
+            borderColor: !country ? "var(--ink)" : "var(--rule)",
+            background: !country ? "var(--ink)" : "transparent",
+            color: !country ? "var(--cream)" : "var(--muted-2)",
+          }}
+        >
+          All
+        </Link>
+        {/* Only markets actually in use — the full 40-country list as chips
+            would bury the two or three a project really tracks. */}
+        {marketsInUse.map((code) => (
+          <Link
+            key={code}
+            href={buildHref({ view, compare: compareParam, country: code })}
+            className="border px-3 py-1.5 font-sans text-[11px] tracking-[0.04em] no-underline"
+            style={{
+              borderColor: country === code ? "var(--ink)" : "var(--rule)",
+              background: country === code ? "var(--ink)" : "transparent",
+              color: country === code ? "var(--cream)" : "var(--muted-2)",
+            }}
+          >
+            {countryName(code)}
+          </Link>
+        ))}
+      </section>
 
       <section className="flex items-center justify-between gap-6 pt-4.5">
         <div className="flex gap-1">

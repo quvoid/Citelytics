@@ -8,6 +8,7 @@ from db import get_supabase
 from models import (
     ContentBriefCreate,
     ContentBriefOut,
+    CountryOut,
     FetchBatchStatusResponse,
     FetchTaskStatus,
     FetchTriggerResponse,
@@ -24,6 +25,8 @@ from models import (
     TrackedUrlCreate,
     TrackedUrlOut,
 )
+import store
+from countries import COUNTRIES
 from perception import run_perception_fetch
 from prompt_research import research_prompts
 from tasks import create_fetch_batch
@@ -56,6 +59,16 @@ async def health() -> HealthResponse:
     return HealthResponse(status=status, supabase_connected=supabase_connected, redis_connected=redis_connected)
 
 
+# --- Countries ----------------------------------------------------------
+
+@app.get("/api/countries", response_model=list[CountryOut])
+async def list_countries() -> list[CountryOut]:
+    """The markets a project or prompt may target. The backend validates
+    against this list, so anything driving the API (the UI, a script, a bulk
+    import) can read the accepted set from here rather than guessing."""
+    return [CountryOut(code=code, name=name) for code, name in COUNTRIES.items()]
+
+
 # --- Projects -----------------------------------------------------------
 
 @app.post("/api/projects", response_model=ProjectOut)
@@ -71,7 +84,7 @@ async def create_project(body: ProjectCreate) -> ProjectOut:
 @app.get("/api/projects", response_model=list[ProjectOut])
 async def list_projects() -> list[ProjectOut]:
     sb = get_supabase()
-    rows = sb.table("projects").select("id, name, domain").execute().data
+    rows = sb.table("projects").select("id, name, domain, default_country").execute().data
     return [ProjectOut(**row) for row in rows]
 
 
@@ -90,7 +103,10 @@ async def create_prompt(body: PromptCreate) -> PromptOut:
 @app.patch("/api/prompts/{prompt_id}", response_model=PromptOut)
 async def update_prompt(prompt_id: str, body: PromptUpdate) -> PromptOut:
     sb = get_supabase()
-    updates = {k: v for k, v in body.model_dump().items() if v is not None}
+    # exclude_unset (not "drop the Nones") so `country: null` is a real
+    # instruction to clear the override and fall back to the project's market,
+    # rather than being indistinguishable from "field not sent".
+    updates = body.model_dump(exclude_unset=True)
     if not updates:
         raise HTTPException(status_code=400, detail="No fields to update.")
     try:
@@ -218,9 +234,13 @@ async def prompt_research(project_id: str, body: PromptResearchRequest) -> Promp
     )
     brand_name = own[0]["name"] if own else "the brand"
     domain = own[0]["url"] if own else ""
+    # Research the market the caller asked about, defaulting to the project's
+    # home market — otherwise Trends scores and the suggested phrasing come
+    # back for a country the user isn't tracking.
+    country = body.country or store.project_default_country(project_id)
 
     try:
-        candidates = await research_prompts(body.seed, brand_name, domain)
+        candidates = await research_prompts(body.seed, brand_name, domain, country)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Prompt research failed: {exc}") from exc
 

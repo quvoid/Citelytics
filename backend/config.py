@@ -10,13 +10,19 @@ SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 # Check https://ai.google.dev/gemini-api/docs/models for the current
 # Flash-tier model before relying on this — slugs are periodically retired.
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+# gemini-2.5-flash is closed to keys created after ~mid-2026 ("no longer
+# available to new users", HTTP 404), so a rotated key cannot use it even
+# though it still appears in ListModels. 3.x Flash is the current free-tier
+# generation. Note that google_search grounding is a paid-tier-only feature
+# regardless of model — see clients/gemini_client.py.
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.6-flash")
 
-# Both engine clients bias answers toward this market — see gemini_client.py
-# (prompt-level instruction; the Gemini API exposes no country/locale param
-# for google_search grounding, only lat/lng for Maps-style local queries)
-# and openrouter_client.py (real user_location on the web_search server tool).
-ENGINE_LOCALE_COUNTRY = os.environ.get("ENGINE_LOCALE_COUNTRY", "IN")
+# Last-resort market, used only when a prompt has no country AND its project
+# has no default_country. Targeting now lives in the database
+# (prompts.country -> projects.default_country), so this is a floor for
+# pre-migration rows, not the knob you turn to change markets — see
+# countries.py and store.resolve_country.
+DEFAULT_COUNTRY = os.environ.get("ENGINE_LOCALE_COUNTRY", "IN")
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 # GPT-OSS 120B is Groq's currently-recommended general model (llama-3.3-70b

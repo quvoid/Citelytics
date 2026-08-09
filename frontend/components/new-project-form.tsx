@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { createProject } from "@/lib/actions/projects";
+import { COUNTRIES } from "@/lib/countries";
 
 export function NewProjectForm() {
   const [isPending, startTransition] = useTransition();
@@ -32,6 +33,31 @@ export function NewProjectForm() {
           placeholder="marico.com"
           className="mt-3 w-full border-0 border-b border-[var(--ink)] bg-transparent py-1.5 font-serif text-[30px] text-[var(--ink)] outline-none placeholder:text-[var(--faint)]"
         />
+      </div>
+
+      <div className="mt-9">
+        <label
+          htmlFor="project-default-country"
+          className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
+        >
+          Home market
+        </label>
+        <select
+          id="project-default-country"
+          name="default_country"
+          defaultValue="IN"
+          className="mt-3 w-full border-0 border-b border-[var(--ink)] bg-transparent py-2.5 font-serif text-[30px] text-[var(--ink)] outline-none"
+        >
+          {COUNTRIES.map((c) => (
+            <option key={c.code} value={c.code}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+        <p className="mt-2.5 font-serif text-[13px] text-[var(--faint)] italic">
+          Every prompt inherits this unless it sets its own — change a single
+          prompt&rsquo;s market from the Prompts table.
+        </p>
       </div>
 
       <div className="mt-11 grid grid-cols-2 gap-px border border-[var(--rule)] bg-[var(--rule)]">

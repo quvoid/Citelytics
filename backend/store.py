@@ -9,6 +9,7 @@ from functools import lru_cache
 from typing import Any
 
 from clients.base import RawEngineResponse
+from config import DEFAULT_COUNTRY
 from db import get_supabase
 
 
@@ -24,12 +25,33 @@ def get_prompt(prompt_id: str) -> dict[str, Any]:
     return (
         get_supabase()
         .table("prompts")
-        .select("id, project_id, query_text, topic")
+        .select("id, project_id, query_text, topic, country")
         .eq("id", prompt_id)
         .single()
         .execute()
         .data
     )
+
+
+def project_default_country(project_id: str) -> str:
+    row = (
+        get_supabase()
+        .table("projects")
+        .select("default_country")
+        .eq("id", project_id)
+        .maybe_single()
+        .execute()
+        .data
+    )
+    return (row or {}).get("default_country") or DEFAULT_COUNTRY
+
+
+def resolve_country(prompt: dict[str, Any]) -> str:
+    """prompt override -> project home market -> env floor. Resolved once per
+    fetch and then carried on the response/citation rows, so changing a
+    prompt's country later never silently relabels the history it already
+    produced."""
+    return prompt.get("country") or project_default_country(prompt["project_id"])
 
 
 def get_tracked_urls(project_id: str) -> list[dict[str, Any]]:
@@ -106,6 +128,7 @@ def save_fetch_result(
     *,
     prompt_id: str,
     engine_name: str,
+    country: str,
     result: RawEngineResponse,
     classification: dict[str, Any],
     citation_rows: list[dict[str, Any]],
@@ -128,6 +151,7 @@ def save_fetch_result(
             {
                 "prompt_id": prompt_id,
                 "engine_id": engine_id,
+                "country": country,
                 "raw_response": result.raw_json,
                 "answer_text": result.answer_text,
                 "brand_mentioned_in_answer": own_mentioned,
@@ -146,6 +170,7 @@ def save_fetch_result(
                     "prompt_id": prompt_id,
                     "engine_id": engine_id,
                     "raw_response_id": raw_response_id,
+                    "country": country,
                     "position": i + 1,  # order the engine itself returned citations in
                     **row,
                 }

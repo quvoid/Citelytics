@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { EngineLabel } from "@/components/engine-icons";
 import { MentionMark, ProvenanceLabel } from "@/components/marks";
+import { Sparkline } from "@/components/sparkline";
+import { TrendChart } from "@/components/trend-chart";
 import {
   getCitations,
   getDailyMetrics,
@@ -12,15 +14,6 @@ import {
 import type { Citation } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
-
-const TINTS = [
-  { bg: "var(--tint-lavender)", fg: "var(--tint-lavender-fg)" },
-  { bg: "var(--tint-mint)", fg: "var(--tint-mint-fg)" },
-  { bg: "var(--tint-sky)", fg: "var(--tint-sky-fg)" },
-  { bg: "var(--tint-peach)", fg: "var(--tint-peach-fg)" },
-  { bg: "var(--tint-rose)", fg: "var(--tint-rose-fg)" },
-  { bg: "var(--muted)", fg: "var(--ink)" },
-];
 
 async function getOverviewData() {
   const [prompts, engines, citations, rawResponses, dailyMetrics, ownBrand] = await Promise.all([
@@ -34,13 +27,26 @@ async function getOverviewData() {
   return { prompts, engines, citations, rawResponses, dailyMetrics, ownBrand };
 }
 
-function fmtDelta(latest: number | null, prev: number | null, suffix = ""): { text: string; color: string } {
-  if (latest === null || prev === null) return { text: "", color: "var(--faint)" };
+type Delta = { text: string; color: string; arrow: string };
+
+/** Separates two things the previous version conflated: the arrow says which
+ * way the number moved, the colour says whether that is good. Position forces
+ * the distinction — #2 -> #1 is a fall in value and a win, and used to render
+ * red purely because the number got smaller. */
+function fmtDelta(
+  latest: number | null,
+  prev: number | null,
+  suffix = "",
+  lowerIsBetter = false
+): Delta | null {
+  if (latest === null || prev === null) return null;
   const diff = Math.round((latest - prev) * 10) / 10;
-  if (diff === 0) return { text: "±0", color: "var(--faint)" };
+  if (diff === 0) return { text: "±0", color: "var(--faint)", arrow: "" };
+  const improved = lowerIsBetter ? diff < 0 : diff > 0;
   return {
     text: `${diff > 0 ? "+" : ""}${diff}${suffix}`,
-    color: diff > 0 ? "var(--green)" : "var(--red)",
+    color: improved ? "var(--green)" : "var(--red)",
+    arrow: diff > 0 ? "▲" : "▼",
   };
 }
 
@@ -61,33 +67,62 @@ export default async function OverviewPage() {
 
   const domainCounts = new Map<string, number>();
   const domainOwned = new Set<string>();
+  const byDay = new Map<string, number>();
+  const byDayNaming = new Map<string, number>();
   for (const c of citations) {
     domainCounts.set(c.domain, (domainCounts.get(c.domain) ?? 0) + 1);
     if (c.mentions_brand) domainOwned.add(c.domain);
+    const day = c.fetched_at.slice(0, 10);
+    byDay.set(day, (byDay.get(day) ?? 0) + 1);
+    if (c.mentions_brand) byDayNaming.set(day, (byDayNaming.get(day) ?? 0) + 1);
   }
 
-  const kpis = [
-    { label: "Cited pages", value: String(totalCitations), delta: null as null | { text: string; color: string } },
-    { label: "Pages naming you", value: String(citationsMentioningBrand), delta: null },
+  const chartDays = Array.from(byDay.entries()).sort(([a], [b]) => a.localeCompare(b));
+  // getDailyMetrics returns newest-first; sparklines read left-to-right in time.
+  const metricsChrono = [...dailyMetrics].reverse();
+
+  const kpis: {
+    label: string;
+    value: string;
+    delta: Delta | null;
+    series: (number | null)[];
+  }[] = [
+    {
+      label: "Cited pages",
+      value: String(totalCitations),
+      delta: null,
+      series: chartDays.map(([, v]) => v),
+    },
+    {
+      label: "Pages naming you",
+      value: String(citationsMentioningBrand),
+      delta: null,
+      series: chartDays.map(([day]) => byDayNaming.get(day) ?? 0),
+    },
     {
       label: "Visibility",
       value: latestMetric?.visibility_pct != null ? `${latestMetric.visibility_pct}%` : "—",
       delta: fmtDelta(latestMetric?.visibility_pct ?? null, prevMetric?.visibility_pct ?? null, " pts"),
+      series: metricsChrono.map((m) => m.visibility_pct),
     },
     {
       label: "Share of voice",
       value: latestMetric?.sov_pct != null ? `${latestMetric.sov_pct}%` : "—",
       delta: fmtDelta(latestMetric?.sov_pct ?? null, prevMetric?.sov_pct ?? null, " pts"),
+      series: metricsChrono.map((m) => m.sov_pct),
     },
     {
       label: "Sentiment",
       value: latestMetric?.avg_sentiment != null ? String(Math.round(latestMetric.avg_sentiment)) : "—",
       delta: fmtDelta(latestMetric?.avg_sentiment ?? null, prevMetric?.avg_sentiment ?? null),
+      series: metricsChrono.map((m) => m.avg_sentiment),
     },
     {
       label: "Position",
       value: latestMetric?.avg_position != null ? `#${latestMetric.avg_position}` : "—",
-      delta: fmtDelta(latestMetric?.avg_position ?? null, prevMetric?.avg_position ?? null),
+      // lower is better: #2 -> #1 is an improvement, not a decline
+      delta: fmtDelta(latestMetric?.avg_position ?? null, prevMetric?.avg_position ?? null, "", true),
+      series: metricsChrono.map((m) => m.avg_position),
     },
   ];
 
@@ -98,14 +133,6 @@ export default async function OverviewPage() {
     list.push(c);
     citationsByRawResponse.set(c.raw_response_id, list);
   }
-
-  const byDay = new Map<string, number>();
-  for (const c of citations) {
-    const day = c.fetched_at.slice(0, 10);
-    byDay.set(day, (byDay.get(day) ?? 0) + 1);
-  }
-  const chartDays = Array.from(byDay.entries()).sort(([a], [b]) => a.localeCompare(b));
-  const chartMax = Math.max(1, ...chartDays.map(([, v]) => v));
 
   const topDomains = Array.from(domainCounts.entries())
     .sort(([, a], [, b]) => b - a)
@@ -133,36 +160,31 @@ export default async function OverviewPage() {
       </div>
 
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        {kpis.map((k, i) => (
+        {kpis.map((k) => (
           <div
             key={k.label}
-            className="rounded-[var(--radius-xl)] p-4"
-            style={{ background: TINTS[i % TINTS.length].bg }}
+            className="flex flex-col justify-between overflow-hidden rounded-[var(--radius-xl)] bg-[var(--card)] pt-4"
+            style={{ boxShadow: "var(--shadow-card)" }}
           >
-            <div
-              className="font-sans text-[11px] font-medium tracking-[0.01em]"
-              style={{ color: TINTS[i % TINTS.length].fg, opacity: 0.75 }}
-            >
-              {k.label}
-            </div>
-            <div className="mt-2 flex items-baseline gap-1.5">
-              <span
-                className="font-sans text-[22px] leading-none font-bold tabular-nums"
-                style={{ color: TINTS[i % TINTS.length].fg }}
-              >
+            <div className="px-4">
+              <div className="font-sans text-[11px] font-medium tracking-[0.01em] text-[var(--muted-2)]">
+                {k.label}
+              </div>
+              {/* proportional figures, not tabular: equal-width digits make a
+                  large standalone value look loose at display size */}
+              <div className="mt-1.5 font-sans text-[26px] leading-none font-semibold tracking-[-0.025em]">
                 {k.value}
-              </span>
+              </div>
+              <div
+                className="mt-1.5 h-[17px] font-sans text-[11.5px] font-medium whitespace-nowrap"
+                style={{ color: k.delta?.color ?? "var(--faint)" }}
+              >
+                {k.delta ? `${k.delta.arrow} ${k.delta.text}`.trim() : latestMetric ? "" : "needs a fetch"}
+              </div>
             </div>
-            {k.delta?.text && (
-              <div className="mt-1.5 font-sans text-[11.5px] font-medium" style={{ color: k.delta.color }}>
-                {k.delta.color === "var(--green)" ? "▲" : k.delta.color === "var(--red)" ? "▼" : ""} {k.delta.text}
-              </div>
-            )}
-            {!latestMetric && !k.delta && i >= 2 && (
-              <div className="mt-1.5 font-sans text-[11px] opacity-60" style={{ color: TINTS[i % TINTS.length].fg }}>
-                needs a fetch
-              </div>
-            )}
+            <div className="mt-3">
+              <Sparkline values={k.series} height={34} />
+            </div>
           </div>
         ))}
       </section>
@@ -176,29 +198,7 @@ export default async function OverviewPage() {
           <span className="font-sans text-[12.5px] text-[var(--muted-2)]">citations captured per fetch day</span>
         </div>
         {chartDays.length ? (
-          <>
-            <div className="flex h-[180px] items-end gap-2">
-              {chartDays.map(([day, count], i) => (
-                <div key={day} className="flex h-full flex-1 flex-col items-center justify-end gap-2">
-                  <div className="font-sans text-[12px] font-medium text-[var(--muted-2)] tabular-nums">{count}</div>
-                  <div
-                    className="w-full max-w-[52px] rounded-t-[8px]"
-                    style={{
-                      height: `${Math.max(6, Math.round((count / chartMax) * 140))}px`,
-                      background: i === chartDays.length - 1 ? "var(--ember)" : "var(--tint-peach)",
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="mt-3 flex gap-2 border-t border-[var(--rule)] pt-2.5">
-              {chartDays.map(([day]) => (
-                <div key={day} className="flex-1 text-center font-sans text-[11px] text-[var(--faint)]">
-                  {day.slice(5)}
-                </div>
-              ))}
-            </div>
-          </>
+          <TrendChart points={chartDays.map(([day, value]) => ({ day, value }))} unit="citations" />
         ) : (
           <p className="font-sans text-[14px] text-[var(--muted-2)]">
             No citations yet — click &ldquo;Fetch citations now&rdquo; above to run the first pull.

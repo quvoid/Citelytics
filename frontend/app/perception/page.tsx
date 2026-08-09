@@ -1,7 +1,14 @@
 import { PromptComposer } from "@/components/prompt-composer";
 import { FetchPerceptionButton } from "@/components/fetch-perception-button";
 import { getCurrentProjectId } from "@/lib/current-project";
-import { getBrandAttributes, getPrompts, getRawResponses, getTrackedUrls } from "@/lib/queries";
+import { countryName } from "@/lib/countries";
+import {
+  getBrandAttributes,
+  getProject,
+  getPrompts,
+  getRawResponses,
+  getTrackedUrls,
+} from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -17,11 +24,13 @@ function polarPoint(index: number, total: number, value: number) {
 }
 
 export default async function PerceptionPage() {
-  const [brands, perceptionPrompts, projectId] = await Promise.all([
+  const projectId = await getCurrentProjectId();
+  const [brands, perceptionPrompts, project] = await Promise.all([
     getTrackedUrls(),
     getPrompts("perception"),
-    getCurrentProjectId(),
+    getProject(projectId),
   ]);
+  const defaultCountry = project?.default_country ?? "IN";
 
   // Perception answers live on perception-type prompts only, so scope the
   // raw-response lookup to each of them rather than the whole project.
@@ -93,6 +102,7 @@ export default async function PerceptionPage() {
         toggleLabel="Add a perception prompt"
         fieldLabel="Open brand-description prompt"
         placeholder="e.g. How would you describe Bajaj Almond Drops as a brand?"
+        defaultCountry={defaultCountry}
       />
 
       <section className="grid grid-cols-1 gap-16 py-11 md:grid-cols-2">
@@ -204,8 +214,14 @@ export default async function PerceptionPage() {
           {perceptionPrompts.length} tracked
         </p>
         {perceptionPrompts.map((p) => (
-          <div key={p.id} className="border-b border-[var(--rule-light)] py-3 font-serif text-[15px]">
-            &ldquo;{p.query_text}&rdquo;
+          <div
+            key={p.id}
+            className="flex items-baseline justify-between gap-5 border-b border-[var(--rule-light)] py-3"
+          >
+            <span className="font-serif text-[15px]">&ldquo;{p.query_text}&rdquo;</span>
+            <span className="shrink-0 font-sans text-[10px] tracking-[0.1em] text-[var(--faint)] uppercase">
+              {countryName(p.country ?? defaultCountry)}
+            </span>
           </div>
         ))}
         {!perceptionPrompts.length && (

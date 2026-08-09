@@ -13,6 +13,51 @@ function initialsFor(name: string): string {
   return (parts[0]?.[0] ?? "?") + (parts[1]?.[0] ?? "");
 }
 
+/** Brand logo by convention: public/logos/<domain>.png. Falls back to the
+ * coloured initials mark when a project has no logo file — which is the
+ * normal case for a newly tracked brand, not an error. object-contain keeps
+ * wide wordmarks (Bajaj) undistorted in the same square slot that square
+ * marks (Motorola) fill edge to edge. */
+function BrandMark({
+  name,
+  domain,
+  fallbackColor,
+  className,
+}: {
+  name: string;
+  domain: string;
+  fallbackColor: string;
+  className: string;
+}) {
+  const [failed, setFailed] = useState(false);
+
+  if (!domain || failed) {
+    return (
+      <span
+        className={`${className} flex flex-none items-center justify-center font-semibold text-white`}
+        style={{ background: fallbackColor }}
+      >
+        {initialsFor(name).toUpperCase()}
+      </span>
+    );
+  }
+
+  return (
+    <span
+      className={`${className} flex flex-none items-center justify-center overflow-hidden bg-white`}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element -- static file in
+          public/, no remote host to configure and no layout shift to optimise */}
+      <img
+        src={`/logos/${domain}.png`}
+        alt=""
+        className="h-full w-full object-contain p-[3px]"
+        onError={() => setFailed(true)}
+      />
+    </span>
+  );
+}
+
 export function WorkspaceSwitcher({
   current,
   projects,
@@ -57,12 +102,14 @@ export function WorkspaceSwitcher({
           borderColor: open ? "var(--sb-border)" : "transparent",
         }}
       >
-        <span
-          className="flex h-6.5 w-6.5 flex-none items-center justify-center rounded-[7px] text-[10px] font-semibold tracking-[0.02em] text-white"
-          style={{ background: MARK_COLORS[projects.findIndex((p) => p.id === current.id) % MARK_COLORS.length] }}
-        >
-          {initialsFor(current.name).toUpperCase()}
-        </span>
+        <BrandMark
+          name={current.name}
+          domain={current.domain}
+          fallbackColor={
+            MARK_COLORS[projects.findIndex((p) => p.id === current.id) % MARK_COLORS.length]
+          }
+          className="h-6.5 w-6.5 rounded-[7px] text-[10px] tracking-[0.02em]"
+        />
         <span className="flex-1 overflow-hidden text-left font-sans text-[13.5px] font-medium overflow-ellipsis whitespace-nowrap text-white">
           {current.name}
         </span>
@@ -86,12 +133,12 @@ export function WorkspaceSwitcher({
               className="flex w-full items-center gap-2.5 border-b border-[var(--rule-light)] py-3 pr-3.5 pl-3.5 text-left font-sans transition-colors duration-150 hover:bg-[var(--muted)]"
               style={{ background: p.id === current.id ? "var(--muted)" : "transparent" }}
             >
-              <span
-                className="flex h-7 w-7 flex-none items-center justify-center rounded-[8px] text-[10px] font-semibold text-white"
-                style={{ background: MARK_COLORS[i % MARK_COLORS.length] }}
-              >
-                {initialsFor(p.name).toUpperCase()}
-              </span>
+              <BrandMark
+                name={p.name}
+                domain={p.domain}
+                fallbackColor={MARK_COLORS[i % MARK_COLORS.length]}
+                className="h-7 w-7 rounded-[8px] text-[10px]"
+              />
               <span className="flex-1">
                 <span className="block font-sans text-[14px] font-medium tracking-[-0.005em]">{p.name}</span>
                 <span className="mt-0.5 block text-[11px] text-[var(--muted-2)]">{p.domain}</span>
