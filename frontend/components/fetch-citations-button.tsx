@@ -82,7 +82,7 @@ export function FetchCitationsButton({ projectId }: { projectId: string }) {
       <button
         onClick={handleFetch}
         disabled={isBusy}
-        className="whitespace-nowrap border border-[var(--ink)] bg-[var(--ink)] px-4 py-2.5 font-sans text-xs tracking-[0.06em] text-[var(--cream)] uppercase hover:border-[var(--rust)] hover:bg-[var(--rust)] disabled:opacity-60"
+        className="whitespace-nowrap rounded-full border border-[var(--ink)] bg-[var(--ink)] px-4 py-2.5 font-sans text-xs font-semibold tracking-[0.06em] text-[var(--cream)] uppercase hover:border-[var(--rust)] hover:bg-[var(--rust)] disabled:opacity-60"
       >
         {state.phase === "polling"
           ? "Fetching…"

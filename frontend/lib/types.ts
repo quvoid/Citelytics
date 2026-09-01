@@ -42,6 +42,30 @@ export type Prompt = {
   topic: string | null;
   intent: "Commercial" | "Informational" | "Transactional" | "Navigational" | null;
   is_branded: boolean;
+  /** Raw 0-100 Google Trends interest, set only from a "Track this" research
+   * candidate — a manually-typed prompt has no research behind it and stays
+   * null (unknown, never fabricated). NOT the 1-5 "relative" scale the UI
+   * shows — see lib/prompt-volume.ts's volumeBucket(). */
+  search_volume: number | null;
+  search_volume_checked_at: string | null;
+};
+
+export type ProductTag = {
+  id: string;
+  raw_response_id: string;
+  tag: string;
+};
+
+/** User-created, user-managed prompt label — SEMrush-style. Not AI-generated
+ * (contrast with `topic`/`product_tags`), many-to-many with prompts via the
+ * prompt_tags junction table. */
+export type Tag = {
+  id: string;
+  project_id: string;
+  name: string;
+  /** Migration 0017 — thin grouping label, no separate group entity (matches
+   *  Peec's own API, which has no create-tag-group endpoint). Null = ungrouped. */
+  group_name: string | null;
 };
 
 export type Engine = {
@@ -55,6 +79,22 @@ export type TrackedUrl = {
   url: string;
   name: string;
   is_competitor: boolean;
+  /** Other names this brand gets matched under ("Moto" for "Motorola") —
+   * fed into classifier.py's local name-matching alongside `name`. */
+  aliases: string[];
+};
+
+/** A brand name the classifier noticed but that isn't tracked — see
+ * migration 0015. Only ever populated on answers where a tracked brand was
+ * already detected (piggybacks the sentiment call rather than costing a
+ * new one), so this misses a competitor discussed alone — real, stated
+ * limitation, not a silent gap. */
+export type UnmatchedBrandMention = {
+  id: string;
+  project_id: string;
+  raw_response_id: string;
+  name: string;
+  created_at: string;
 };
 
 export type Citation = {
@@ -86,12 +126,29 @@ export type RawResponse = {
   fetched_at: string;
 };
 
+/** A RawResponse joined with its prompt's query_text/topic — the row shape
+ * the Chats log (`getChats()`) needs and plain `getRawResponses()` doesn't
+ * bother fetching, since most callers already have the prompt loaded. */
+export type ChatRow = RawResponse & {
+  prompt: { query_text: string; topic: string | null } | null;
+};
+
 export type AnswerBrandMention = {
   id: string;
   raw_response_id: string;
   tracked_url_id: string;
   mentioned: boolean;
   position: number | null;
+  /** True if this brand's own domain showed up among the response's
+   * citations — the engine's retrieval step pulled it in — even when
+   * `mentioned` is false (the brand was never named in the visible text).
+   * Only ever richer than `mentioned` for Gemini rows; see migration 0006. */
+  considered: boolean;
+  /** 0-100 tone toward THIS brand in this answer — competitors included, not
+   * just the tracked owner's brand (migration 0010). Null when the answer
+   * never named the brand, or when the row predates per-brand scoring and
+   * hasn't been through the reclassify backfill yet. */
+  sentiment_score: number | null;
 };
 
 export type DomainType = {
@@ -115,6 +172,11 @@ export type QueryFanout = {
   id: string;
   raw_response_id: string;
   query_text: string;
+  /** 1-indexed order this sub-query appeared in the engine's own
+   * webSearchQueries array for that response — its first sub-query is
+   * usually the primary read of intent, later ones are refinements. Null
+   * for rows captured before this was tracked. */
+  position: number | null;
 };
 
 export type BrandAttribute = {
@@ -160,6 +222,12 @@ export type FetchBatchStatusResponse = {
   done: boolean;
 };
 
+export type PerceptionSkippedFetch = { prompt: string; engine: string; reason: string };
+
 export type PerceptionFetchResponse = {
   processed: number;
+  // Previously invisible — a rate-limited or dead-key run looked identical
+  // to "nothing to do" (processed: 0 either way).
+  skipped: PerceptionSkippedFetch[];
+  message: string | null;
 };

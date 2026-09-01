@@ -85,6 +85,23 @@ instance.
 
 ## 3. Get engine API keys
 
+> 📘 **Before adding or budgeting for any engine, read
+> [`docs/ENGINE-APIS.md`](docs/ENGINE-APIS.md).** It documents what every
+> engine's payload actually contains (fan-out queries, citations, which
+> sources were read-but-not-cited, sentence-level source mapping), the exact
+> endpoints, and current verified pricing for Gemini, OpenAI, Perplexity,
+> Grok and DataForSEO — written to be readable without a technical
+> background. Verified 22 Aug 2026 against the official docs and against a
+> real captured Gemini payload.
+>
+> Two findings from it that change decisions:
+> - **Gemini 3.x bills per *search query*, not per prompt.** One question that
+>   fans out to 7 searches costs 7 units. Switching from 2.5 to 3.6 raised our
+>   effective grounding cost roughly 7× for identical prompts.
+> - **`groundingSupports` is the highest-value field we don't parse.** It maps
+>   each sentence of an answer to the sources backing it, and it's already
+>   sitting in our stored `raw_response` JSON — backfillable, no new vendor.
+
 - **Gemini** — [aistudio.google.com/apikey](https://aistudio.google.com/apikey), free, no card required.
   Grounding with Google Search is free within Google's allowance, but
   rate-limited per minute and per day (check current limits before assuming
@@ -92,6 +109,13 @@ instance.
   Celery task catches via `autoretry`-style backoff (`max_retries=3`,
   exponential `countdown`) — it never crashes the batch or retries into a
   silent wall.
+  - ⚠️ **Known blocker (as of 22 Aug 2026):** grounded calls return `429
+    RESOURCE_EXHAUSTED` on this project while ungrounded calls return `200`.
+    Reproduced on two keys across two days. Google's pricing page claims 500
+    free grounded requests/day on the free tier, which contradicts what we
+    observe. Enabling billing on the Google Cloud project is the reliable
+    fix — at our volume (~900 searches/month) it sits inside the included
+    5,000/month block and should cost close to nothing.
 - **OpenRouter** — [openrouter.ai/keys](https://openrouter.ai/keys), free to create.
   - Free (`:free`) models give free **text**, not free **citations** — real
     web-grounded citations need OpenRouter's paid web-search plugin
@@ -309,4 +333,12 @@ supabase/
   migrations/0003_content_briefs.sql  AI-generated content briefs
   migrations/0004_citation_position.sql  Citation order within an answer
   migrations/0005_prompt_country.sql  Per-prompt market targeting
+  migrations/0006_considered_brands.sql  Brands the engine retrieved but never named
+  migrations/0007_fanout_position.sql  Order the engine fired its sub-searches in
+docs/
+  ENGINE-APIS.md              What each engine's payload contains, the exact
+                              endpoints, and verified pricing for Gemini,
+                              OpenAI, Perplexity, Grok and DataForSEO.
+                              Non-technical readable. Read before adding an
+                              engine or estimating cost.
 ```

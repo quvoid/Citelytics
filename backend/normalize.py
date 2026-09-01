@@ -10,6 +10,17 @@ def extract_domain(url: str) -> str:
         return url
 
 
+def domain_matches(citation_domain: str, brand_domain: str) -> bool:
+    """A citation belongs to a brand if its domain IS the brand's domain or a
+    subdomain of it (support.example.com counts for example.com) — but not
+    merely a same-suffix string ("notexample.com" must not count). Same rule
+    frontend/app/brands/page.tsx applies client-side; kept here too since
+    store.py needs it server-side when writing answer_brand_mentions."""
+    a = citation_domain.lower().removeprefix("www.")
+    b = brand_domain.lower().removeprefix("www.")
+    return a == b or a.endswith(f".{b}")
+
+
 _DISCUSSION_DOMAINS = {"reddit.com", "quora.com"}
 _VIDEO_DOMAINS = {"youtube.com", "youtu.be"}
 

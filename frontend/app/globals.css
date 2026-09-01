@@ -7,8 +7,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-source-serif), ui-serif, Georgia, serif;
+  /* Round 4 reskin: one grotesk (Sora) for both roles — see app/layout.tsx.
+     --font-serif keeps existing since every font-serif call site across the
+     app still resolves, just to Sora now instead of a real serif. */
+  --font-sans: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -64,18 +67,21 @@
   --secondary-foreground: #17171b;
   --muted: #f0efec;
   --muted-foreground: #6f6f78;
-  --accent: #e8590c;
+  --accent: #ff6428;
   --accent-foreground: #ffffff;
   --destructive: #dc2626;
   --border: #e9e7e2;
   --input: #e9e7e2;
-  --ring: #e8590c;
+  --ring: #ff6428;
   --radius: 14px;
 
-  /* Direct palette tokens for arbitrary-value utility use */
+  /* Direct palette tokens for arbitrary-value utility use.
+     Ember shifted to schbang.com's exact orange (rgb(255,100,40),
+     extracted live via computed styles) — round 4 reskin. Same role,
+     small hue nudge; every var(--ember) call site repaints for free. */
   --ink: #17171b;
-  --ember: #e8590c;
-  --ember-dark: #b8440a;
+  --ember: #ff6428;
+  --ember-dark: #cc4a15;
   --green: #16a34a;
   --red: #dc2626;
   --bg: #f6f5f2;
@@ -115,6 +121,10 @@
   --tint-sky-fg: #1c7ed6;
   --tint-rose: #fdecee;
   --tint-rose-fg: #d1355a;
+  /* schbang.com's warm stone/tan neutral, extracted live — a fifth KPI tint
+     alongside the pastels above, rounder and warmer than plain --muted. */
+  --tint-stone: #dfdad5;
+  --tint-stone-fg: #6b5f52;
 }
 
 @layer base {

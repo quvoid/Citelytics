@@ -87,8 +87,33 @@ class TrackedUrlOut(BaseModel):
     is_competitor: bool
 
 
+class PerceptionSkippedFetch(BaseModel):
+    prompt: str
+    engine: str
+    reason: str
+
+
 class PerceptionFetchResponse(BaseModel):
     processed: int
+    # Previously invisible: a rate limit or a dead engine key used to look
+    # identical to "nothing to do" — processed=0 either way. This is what
+    # lets the UI say which one actually happened.
+    skipped: list[PerceptionSkippedFetch] = []
+    message: str | None = None
+
+
+class ReclassifyResponse(BaseModel):
+    processed: int
+    # Answers whose classifier call failed for a NON-quota reason (malformed
+    # output, timeout). Skipped rather than written as "not mentioned"; the
+    # next run picks them up.
+    failed: int
+    rows_written: int
+    # Still awaiting scoring after this run. Non-zero is normal, not an error:
+    # Gemini's free tier caps the corpus at ~20 answers/day, so the backfill
+    # converges over several scheduled runs.
+    remaining: int = 0
+    message: str | None = None
 
 
 class FetchTriggerResponse(BaseModel):

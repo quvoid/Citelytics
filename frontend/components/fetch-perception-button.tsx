@@ -8,7 +8,7 @@ import type { PerceptionFetchResponse } from "@/lib/types";
 type State =
   | { phase: "idle" }
   | { phase: "loading" }
-  | { phase: "done"; processed: number }
+  | { phase: "done"; processed: number; skipped: number; message: string | null }
   | { phase: "error"; message: string };
 
 export function FetchPerceptionButton({ projectId }: { projectId: string }) {
@@ -26,7 +26,12 @@ export function FetchPerceptionButton({ projectId }: { projectId: string }) {
         throw new Error(body.detail || `Backend returned ${res.status} ${res.statusText}`);
       }
       const data: PerceptionFetchResponse = await res.json();
-      setState({ phase: "done", processed: data.processed });
+      setState({
+        phase: "done",
+        processed: data.processed,
+        skipped: data.skipped?.length ?? 0,
+        message: data.message,
+      });
       router.refresh();
     } catch (err) {
       setState({
@@ -46,8 +51,13 @@ export function FetchPerceptionButton({ projectId }: { projectId: string }) {
         {state.phase === "loading" ? "Fetching…" : "Fetch perception now"}
       </button>
       {state.phase === "done" && (
-        <span className="font-serif text-[13px] text-[var(--muted-2)] italic">
+        <span
+          className="font-serif text-[13px] italic"
+          style={{ color: state.processed === 0 && state.skipped > 0 ? "var(--rust)" : "var(--muted-2)" }}
+          title={state.message ?? undefined}
+        >
           {state.processed} answer(s) processed
+          {state.skipped > 0 ? `, ${state.skipped} skipped` : ""}
         </span>
       )}
       {state.phase === "error" && (

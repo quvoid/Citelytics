@@ -7,3 +7,9 @@ supabase==2.11.0
 python-dotenv==1.0.1
 pydantic==2.10.5
 pytrends==4.9.2
+
+# Local, free, zero-quota sentiment scoring (round 4) — see local_sentiment.py.
+# torch installed CPU-only; this host has no GPU and inference here is a few
+# short sentences at a time, not worth the CUDA wheel's size/complexity.
+transformers==4.47.1
+torch==2.6.0

@@ -6,11 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:metrics": "node --experimental-strip-types --test lib/metrics/metrics.test.ts lib/metrics/source.test.ts lib/prompt-volume.test.ts lib/engine-details.test.ts lib/fanout-analysis.test.ts lib/referral-surface.test.ts lib/movers.test.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.111.0",
+    "echarts": "^6.1.0",
+    "echarts-for-react": "^3.0.6",
+    "lucide-react": "^1.37.0",
     "next": "16.2.12",
     "react": "19.2.4",
     "react-dom": "19.2.4",

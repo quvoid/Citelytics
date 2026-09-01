@@ -1,0 +1,3890 @@
+[
+  {
+    "prompt": "best foldable phone for someone ready to upgrade from flagship",
+    "ok": true,
+    "elapsed": 24.9,
+    "credits_consumed": 0.23,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 19127,
+      "output_tokens": 946,
+      "input_tokens": 18181,
+      "output_tokens_details": {
+        "reasoning_tokens": 449
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 7,
+    "citation_count": 2,
+    "citations": [
+      "https://www.samsung.com/us/smartphones/galaxy-z-fold8-ultra/?utm_source=openai",
+      "https://store.google.com/us/product/pixel_11_pro_fold_specs?hl=en-US&utm_source=openai"
+    ],
+    "answer_len_chars": 2180,
+    "answer_excerpt": "I’ll compare the current U.S. foldables against flagship-level priorities: cameras, software reliability, durability, battery, and how much the form factor improves daily use. I’ll verify current models and pricing first rather than relying on older foldable advice.**Best overall: Samsung Galaxy Z Fold8 Ultra**\n\nFor someone upgrading from a high-end flagship, it is the closest foldable to a no-com",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "foldable phone with best ai features india 2026",
+    "ok": true,
+    "elapsed": 25.0,
+    "credits_consumed": 0.24,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 19292,
+      "output_tokens": 1061,
+      "input_tokens": 18231,
+      "output_tokens_details": {
+        "reasoning_tokens": 592
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 8,
+    "citation_count": 2,
+    "citations": [
+      "https://store.google.com/in/product/pixel_10_pro_fold?hl=en-in&utm_source=openai",
+      "https://www.samsung.com/in/smartphones/galaxy-z-fold7/buy/?msockid=01458ba848eb68d610e19d2249dc69ae&utm_source=openai"
+    ],
+    "answer_len_chars": 2001,
+    "answer_excerpt": "**Best AI foldable phone in India in 2026: Google Pixel 10 Pro Fold**\n\nIt is the best choice if your priority is **AI assistance, camera intelligence, and Google services**.\n\n| Phone | Best for | Official India price |\n|---|---|---:|\n| **Google Pixel 10 Pro Fold** | Best overall AI experience | From **₹1,72,999** |\n| **Samsung Galaxy Z Fold7** | Best AI productivity and multitasking | From **₹1,74",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Google",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "should i buy motorola razr fold or samsung galaxy z fold 7",
+    "ok": true,
+    "elapsed": 42.5,
+    "credits_consumed": 0.42,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 33199,
+      "output_tokens": 1615,
+      "input_tokens": 31584,
+      "output_tokens_details": {
+        "reasoning_tokens": 843
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 9,
+    "citation_count": 8,
+    "citations": [
+      "https://www.tomsguide.com/phones/motorola-phones/motorola-razr-fold-review",
+      "https://www.tomsguide.com/phones/motorola-phones/motorola-razr-fold-review",
+      "https://www.tomsguide.com/phones/motorola-phones/motorola-razr-fold-review",
+      "https://www.tomsguide.com/phones/motorola-phones/motorola-razr-fold-review",
+      "https://image-us.samsung.com/us/smartphones/galaxy-z-fold7/pdf/Q7_B2B_Spec_Sheet_R3Lc.pdf",
+      "https://www.androidcentral.com/phones/motorola/motorola-razr-fold-vs-samsung-galaxy-z-fold-7",
+      "https://www.tomsguide.com/phones/motorola-phones/motorola-razr-fold-review",
+      "https://www.samsung.com/us/smartphones/galaxy-z-fold8/?utm_source=openai"
+    ],
+    "answer_len_chars": 3148,
+    "answer_excerpt": "**Short answer:** If you are choosing strictly between these two at similar prices, I’d buy the **Motorola Razr Fold** for most people. Choose the **Galaxy Z Fold 7** if you prioritize a lighter, thinner phone and Samsung’s more mature software ecosystem.\n\n| Category | Winner | Why |\n|---|---|---|\n| Battery and charging | **Razr Fold** | 6,000 mAh battery, 80W wired and 50W wireless charging; test",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Samsung"
+      ],
+      "is_branded_query": true,
+      "intent": "Transactional",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "foldable phone with premium build quality india",
+    "ok": true,
+    "elapsed": 30.3,
+    "credits_consumed": 0.33,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 26614,
+      "output_tokens": 1325,
+      "input_tokens": 25289,
+      "output_tokens_details": {
+        "reasoning_tokens": 697
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 7,
+    "citation_count": 5,
+    "citations": [
+      "https://www.samsung.com/in/smartphones/buying-guide/introducing-samsung-z-flip-7-and-z-fold-7/?product1=sm-f966bdbdins&product2=sm-f766bdbains&product3=sm-f761bzkains&utm_source=openai",
+      "https://www.motorola.in/smartphones-razr-family",
+      "https://www.motorola.in/smartphones-razr-family",
+      "https://www.oneplus.in/open/specs",
+      "https://www.samsung.com/in/multistore/in_plus_store/galaxy-z-fold7/buy/"
+    ],
+    "answer_len_chars": 2747,
+    "answer_excerpt": "I’ll compare the premium foldables currently available in India, focusing on hinge/build quality, durability, cameras, software support, and after-sales service rather than just specifications.As of **August 27, 2026**, these are the strongest premium foldable options officially available in India:\n\n| Phone | Best for | Current official price | Build-quality verdict |\n|---|---|---:|---|\n| **Samsun",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Motorola",
+        "OnePlus",
+        "Vivo",
+        "Xiaomi"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "Which foldable smartphone currently offer the best AI features",
+    "ok": true,
+    "elapsed": 41.6,
+    "credits_consumed": 0.47,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 38772,
+      "output_tokens": 1341,
+      "input_tokens": 37431,
+      "output_tokens_details": {
+        "reasoning_tokens": 768
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 8,
+    "citation_count": 4,
+    "citations": [
+      "https://www.samsung.com/us/smartphones/galaxy-z-fold8-ultra/?utm_source=openai",
+      "https://www.techradar.com/phones/google-pixel-phones/google-pixel-11-pro-fold-review",
+      "https://www.motorola.com/us/en/p/phones/razr/razr-ultra-2026/pmipmjk44m3",
+      "https://www.samsung.com/us/smartphones/galaxy-z-fold8-ultra/?utm_source=openai"
+    ],
+    "answer_len_chars": 2685,
+    "answer_excerpt": "I’ll compare the current major foldables on AI capability rather than relying on launch-era specs, focusing on useful on-device assistants, multimodal features, productivity, and software support.As of **August 27, 2026**, the **Samsung Galaxy Z Fold8 Ultra** offers the best overall AI package on a foldable smartphone.\n\n**Best overall: Samsung Galaxy Z Fold8 Ultra**\n- **Now Nudge** proactively sug",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Google",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "foldable phones with best AI features",
+    "ok": true,
+    "elapsed": 34.5,
+    "credits_consumed": 0.34,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 26028,
+      "output_tokens": 1493,
+      "input_tokens": 24535,
+      "output_tokens_details": {
+        "reasoning_tokens": 716
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 11,
+    "citation_count": 6,
+    "citations": [
+      "https://store.google.com/us/product/pixel_11_pro_fold?hl=en-US&utm_source=openai",
+      "https://www.samsung.com/us/smartphones/galaxy-z-fold8/?utm_source=openai",
+      "https://www.samsung.com/us/smartphones/galaxy-z-fold8-ultra/?utm_source=openai",
+      "https://www.motorola.com/us/en/p/phones/razr/razr-ultra-2026/pmipmjk44m3?utm_source=openai",
+      "https://news.samsung.com/us/samsung-galaxy-z-fold8-ultra-fold8-flip8-foldables-perfected-every-way-of-living/?utm_source=openai",
+      "https://store.google.com/us/product/pixel_11_pro_fold?hl=en-US&utm_source=openai"
+    ],
+    "answer_len_chars": 3522,
+    "answer_excerpt": "I’ll compare currently available foldables with the strongest practical AI features, prioritizing U.S. availability, software support, and what the AI can actually do on-device or across apps.As of **August 27, 2026**, these are the foldables with the strongest AI features in the U.S.:\n\n| Phone | Best for | Standout AI features | Starting price |\n|---|---|---|---:|\n| **Google Pixel 11 Pro Fold** |",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Google",
+        "Samsung",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "foldable phones with AI camera",
+    "ok": true,
+    "elapsed": 25.7,
+    "credits_consumed": 0.24,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 19125,
+      "output_tokens": 1072,
+      "input_tokens": 18053,
+      "output_tokens_details": {
+        "reasoning_tokens": 490
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 8,
+    "citation_count": 3,
+    "citations": [
+      "https://www.samsung.com/us/smartphones/galaxy-z-fold7/?msockid=0dfe346bdb3d6e5f2bbf22b9da2d6faf&utm_source=openai",
+      "https://blog.google/products-and-platforms/devices/pixel/google-pixel-10-pro-fold/?utm_source=openai",
+      "https://www.samsung.com/us/smartphones/galaxy-z-flip7/?r=true&utm_source=openai"
+    ],
+    "answer_len_chars": 2589,
+    "answer_excerpt": "I’ll compare current foldable phones that combine strong cameras with built-in AI camera features, focusing on models available in the U.S. and separating true camera assistance from general AI tools.**Best foldable phones with AI camera features in the U.S.**\n\n| Phone | Best for | AI camera features | Main tradeoff |\n|---|---|---|---|\n| **Samsung Galaxy Z Fold7** | Best overall camera + productiv",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Google",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "which foldable phone takes the best photos in 2026",
+    "ok": true,
+    "elapsed": 32.7,
+    "credits_consumed": 0.33,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 27892,
+      "output_tokens": 1029,
+      "input_tokens": 26863,
+      "output_tokens_details": {
+        "reasoning_tokens": 499
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 11,
+    "citation_count": 5,
+    "citations": [
+      "https://www.samsung.com/us/smartphones/galaxy-z-fold8-ultra/?utm_source=openai",
+      "https://9to5google.com/2026/07/31/review-galaxy-z-fold-8-ultra/?utm_source=openai",
+      "https://www.dpreview.com/news/google-pixel-11-pro-fold-announcement/?utm_source=openai",
+      "https://petapixel.com/2026/06/11/honor-magic-v6-review-a-foldable-phone-that-takes-photos-like-a-slab/?utm_source=openai",
+      "https://www.tomsguide.com/phones/android-phones/i-pushed-the-latest-foldables-from-samsung-motorola-and-honor-into-a-no-mercy-battle-royale-and-there-can-be-only-one-winner?utm_source=openai"
+    ],
+    "answer_len_chars": 2529,
+    "answer_excerpt": "I’ll compare the current 2026 foldables using recent camera tests and official specifications, then separate overall photo quality from specialized strengths like zoom, portraits, and low light.As of **August 27, 2026**, the **Samsung Galaxy Z Fold8 Ultra** is the best all-around foldable for photography, especially if you’re buying in the United States.\n\n**Why it wins**\n- **200MP main camera** de",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Google",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "foldable phone that can replace a tablet",
+    "ok": true,
+    "elapsed": 51.9,
+    "credits_consumed": 0.34,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 27944,
+      "output_tokens": 1064,
+      "input_tokens": 26880,
+      "output_tokens_details": {
+        "reasoning_tokens": 465
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 8,
+    "citation_count": 3,
+    "citations": [
+      "https://www.samsung.com/us/smartphones/galaxy-z-trifold/?msockid=13b8b5f1022b6d371231a2f403186c2a",
+      "https://www.samsung.com/us/smartphones/galaxy-z-fold8-ultra/?utm_source=openai",
+      "https://store.google.com/product/pixel_10_pro_fold_specs?hl=en-US&pli=1"
+    ],
+    "answer_len_chars": 2558,
+    "answer_excerpt": "I’ll compare the current large-screen foldables by usable display size, software, battery, durability, and U.S. availability, then give you a short recommendation based on whether you want a true tablet substitute or a normal phone that unfolds larger.If you want a **foldable phone that can genuinely replace a tablet**, my recommendation is:\n\n## Best tablet replacement: Samsung Galaxy Z TriFold\n\n-",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "most durable foldable phone in India",
+    "ok": true,
+    "elapsed": 34.0,
+    "credits_consumed": 0.43,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 35824,
+      "output_tokens": 1180,
+      "input_tokens": 34644,
+      "output_tokens_details": {
+        "reasoning_tokens": 808
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 16,
+    "citation_count": 3,
+    "citations": [
+      "https://www.honor.com/global/news/honor-magic-v6-launch/?utm_source=openai",
+      "https://www.samsung.com/in/smartphones/galaxy-z-fold8/?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-razr-60-ultra/p?utm_source=openai"
+    ],
+    "answer_len_chars": 1539,
+    "answer_excerpt": "As of **August 27, 2026**:\n\n- **Most durable overall:** **HONOR Magic V6**. It has **IP68/IP69** dust and water resistance, a **2800 MPa Super Steel Hinge**, and a claimed **500,000-fold** durability test. However, HONOR’s Indian availability and after-sales support should be confirmed before importing it. ([honor.com](https://www.honor.com/global/news/honor-magic-v6-launch/?utm_source=openai))\n- ",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "how durable are modern foldable phones in 2026",
+    "ok": true,
+    "elapsed": 43.9,
+    "credits_consumed": 0.36,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 26442,
+      "output_tokens": 1740,
+      "input_tokens": 24702,
+      "output_tokens_details": {
+        "reasoning_tokens": 1012
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 11,
+    "citation_count": 5,
+    "citations": [
+      "https://www.samsung.com/us/smartphones/galaxy-z-fold8/?utm_source=openai",
+      "https://9to5google.com/2026/08/11/galaxy-z-fold-8-bend-test-teardown/?utm_source=openai",
+      "https://store.google.com/us/product/pixel_10_pro_fold_specs?hl=en-US&utm_source=openai",
+      "https://www.ifixit.com/News/118647/galaxy-z-fold8-teardown-samsungs-best-foldable-still-has-a-hinge-problem?utm_source=openai",
+      "https://support.google.com/pixelphone/answer/7533279?hl=en&utm_source=openai"
+    ],
+    "answer_len_chars": 3477,
+    "answer_excerpt": "I’ll compare the main durability limits that matter in 2026: hinge and crease wear, inner-screen vulnerability, water/dust resistance, drop behavior, and repairability. I’ll verify the current generation’s published ratings and warranty terms rather than relying on older foldable reputation.As of **August 2026**, modern foldables are **durable enough for normal daily use**, but they are still less",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "foldable phone with strongest hinge",
+    "ok": true,
+    "elapsed": 20.1,
+    "credits_consumed": 0.19,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 19154,
+      "output_tokens": 833,
+      "input_tokens": 18321,
+      "output_tokens_details": {
+        "reasoning_tokens": 414
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 7,
+    "citation_count": 5,
+    "citations": [
+      "https://www.honor.com/global/news/honor-magic-v6-launch/?utm_source=openai",
+      "https://www.digitalcameraworld.com/tech/android-phones/honor-magic-v6-review-the-swiss-army-knife-of-foldables?utm_source=openai",
+      "https://www.techradar.com/phones/honor-magic-v6-review?utm_source=openai",
+      "https://www.samsung.com/us/smartphones/galaxy-z-fold8/?utm_source=openai",
+      "https://www.motorola.com/us/en/p/phones/razr/razr-2026/pmipmjl44m7?utm_source=openai"
+    ],
+    "answer_len_chars": 1988,
+    "answer_excerpt": "I’ll compare current foldables by hinge durability claims, hinge design, water/dust resistance, and independent testing rather than relying on marketing cycle counts alone.**Strongest hinge overall: HONOR Magic V6.**\n\n- **HONOR Super Steel Hinge:** rated for **500,000 folds** and built with steel rated at **2,800 MPa tensile strength**. ([honor.com](https://www.honor.com/global/news/honor-magic-v6",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "phone with 4K 60fps on front camera under 40000",
+    "ok": true,
+    "elapsed": 27.5,
+    "credits_consumed": 0.27,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 25423,
+      "output_tokens": 900,
+      "input_tokens": 24523,
+      "output_tokens_details": {
+        "reasoning_tokens": 528
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 11,
+    "citation_count": 2,
+    "citations": [
+      "https://www.realme.com/in/realme-gt-7t-5g?utm_source=openai",
+      "https://www.realme.com/in/realme-gt-7-5g?from=owbanner1&utm_source=openai"
+    ],
+    "answer_len_chars": 1332,
+    "answer_excerpt": "I’ll check current India-market phones and verify the **front-camera 4K at 60 fps** specification, then filter for models priced below ₹40,000. This feature is uncommon, so I’ll separate true matches from phones that only support 4K on the rear camera.Assuming you mean **₹40,000 in India**, the best confirmed option is:\n\n### Best Pick: realme GT 7T\n- **Front camera:** 4K video at 60 fps\n- **Rear c",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Realme"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "best looking mobile phone",
+    "ok": true,
+    "elapsed": 17.2,
+    "credits_consumed": 0.11,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 10432,
+      "output_tokens": 574,
+      "input_tokens": 9858,
+      "output_tokens_details": {
+        "reasoning_tokens": 270
+      }
+    },
+    "search_calls": 1,
+    "search_queries_total": 4,
+    "citation_count": 5,
+    "citations": [
+      "https://www.techradar.com/phones/the-oppo-find-x9-ultra-is-inspired-by-my-favorite-hasselblad-camera-and-i-think-its-the-most-beautiful-phone-of-2026-so-far?utm_source=openai",
+      "https://www.apple.com/newsroom/2026/07/apple-upgrade-launches-in-the-united-states/?utm_source=openai",
+      "https://www.samsung.com/us/smartphones/galaxy-s26/?utm_source=openai",
+      "https://www.tomsguide.com/best-picks/best-phones?utm_source=openai",
+      "https://www.androidcentral.com/phones/google-pixel/6-phones-to-buy-instead-of-the-google-pixel-11-pro?utm_source=openai"
+    ],
+    "answer_len_chars": 1554,
+    "answer_excerpt": "I’ll compare current flagship designs rather than just specs, focusing on materials, proportions, camera layout, and overall visual coherence.**Best-looking overall:** **OPPO Find X9 Ultra**. Its camera-inspired design is distinctive without looking gimmicky, and current reviewers have called it one of the most beautiful phones of 2026. ([techradar.com](https://www.techradar.com/phones/the-oppo-fi",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Oppo",
+        "Apple",
+        "Samsung",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "best phone for low light selfies under 40000",
+    "ok": true,
+    "elapsed": 27.1,
+    "credits_consumed": 0.27,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 25379,
+      "output_tokens": 943,
+      "input_tokens": 24436,
+      "output_tokens_details": {
+        "reasoning_tokens": 503
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 11,
+    "citation_count": 4,
+    "citations": [
+      "https://www.91mobiles.com/vivo-v60-price-in-india?utm_source=openai",
+      "https://gadgets.beebom.com/mobile/motorola-edge-70-pro?utm_source=openai",
+      "https://www.91mobiles.com/reviews/oneplus-nord-6-camera-review/?utm_source=openai",
+      "https://www.gadgets360.com/mobiles/reviews/google-pixel-9a-review-8986365?utm_source=openai"
+    ],
+    "answer_len_chars": 1814,
+    "answer_excerpt": "Assuming you mean **₹40,000 in India**, the best choice for **low-light selfies** is:\n\n## Best Pick: vivo V60 5G\n\n- **Price:** around ₹36,999–₹39,998, depending on variant and offers\n- **Front camera:** 50MP autofocus selfie camera\n- **Why it suits you:** excellent facial detail, good shadow retention, ZEISS portrait tuning, and 4K selfie video\n- **Trade-off:** low-light processing can sometimes l",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Vivo",
+        "Motorola",
+        "OnePlus",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "good looking phones",
+    "ok": true,
+    "elapsed": 16.3,
+    "credits_consumed": 0.07,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 6421,
+      "output_tokens": 704,
+      "input_tokens": 5717,
+      "output_tokens_details": {
+        "reasoning_tokens": 259
+      }
+    },
+    "search_calls": 1,
+    "search_queries_total": 4,
+    "citation_count": 6,
+    "citations": [
+      "https://www.techradar.com/best/best-cheap-phones?utm_source=openai",
+      "https://www.apple.com/newsroom/2026/07/apple-upgrade-launches-in-the-united-states/?utm_source=openai",
+      "https://www.samsung.com/us/smartphones/?msockid=34565b366c30614b11304dc06d676018&utm_source=openai",
+      "https://www.techradar.com/best/best-cheap-phones?utm_source=openai",
+      "https://www.digitalcameraworld.com/tech/android-phones/google-pixel-11-pro-fold-review?utm_source=openai",
+      "https://www.apple.com/newsroom/2026/07/apple-upgrade-launches-in-the-united-states/?utm_source=openai"
+    ],
+    "answer_len_chars": 2015,
+    "answer_excerpt": "I’ll narrow this to phones that are genuinely distinctive-looking, not just the usual spec-sheet recommendations, and check what is currently available in the US.If looks are the priority, these stand out in the US right now:\n\n- **Nothing Phone (4a) Pro**: Most distinctive. Transparent-inspired styling, clean glyph lighting, and a less generic camera design. Best if you want something different wi",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Nothing",
+        "Apple",
+        "Samsung",
+        "Motorola",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "best smartphone with curved display under 40K",
+    "ok": true,
+    "elapsed": 43.2,
+    "credits_consumed": 0.51,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 40932,
+      "output_tokens": 1594,
+      "input_tokens": 39338,
+      "output_tokens_details": {
+        "reasoning_tokens": 956
+      }
+    },
+    "search_calls": 5,
+    "search_queries_total": 16,
+    "citation_count": 4,
+    "citations": [
+      "https://www.motorola.in/motorola-edge-family/?utm_source=openai",
+      "https://gadgets.beebom.com/reviews/motorola-edge-70-pro-review?utm_source=openai",
+      "https://www.oneplus.in/oneplus-nord-6?utm_source=openai",
+      "https://www.realme.com/in/realme-16-pro-5g/specs?utm_source=openai"
+    ],
+    "answer_len_chars": 2535,
+    "answer_excerpt": "I’ll compare current India pricing, display quality, performance, cameras, software support, and after-sales value for curved-screen phones below ₹40,000, then give you a clear best pick and alternatives.Assuming you mean **₹40,000 in India**, the best curved-display phone right now is:\n\n## **Best Overall: Motorola Edge 70 Pro**\n**Current price:** ₹39,999 for 8/256GB on Motorola India. ([motorola.",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "OnePlus",
+        "Realme"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "premium looking phones under 40K",
+    "ok": true,
+    "elapsed": 36.4,
+    "credits_consumed": 0.43,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 34317,
+      "output_tokens": 1507,
+      "input_tokens": 32810,
+      "output_tokens_details": {
+        "reasoning_tokens": 819
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 16,
+    "citation_count": 5,
+    "citations": [
+      "https://m.store.mi.com/in/accessories/448-0-10-0?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-60-pro/p?skuId=522&utm_source=openai",
+      "https://in.nothing.tech/products/phone-3a-pro?utm_source=openai",
+      "https://www.samsung.com/in/smartphones/galaxy-s24-fe/buy/?utm_source=openai",
+      "https://www.oppo.com/in/store/events/reno14-launch?utm_source=openai"
+    ],
+    "answer_len_chars": 2809,
+    "answer_excerpt": "I’ll shortlist current phones available in India under ₹40,000, prioritizing design, materials, display, cameras, and overall flagship feel rather than raw gaming performance. I’ll verify current pricing before ranking them.Assuming you mean **₹40,000 in India**, these are the best premium-looking options:\n\n| Phone | Approx. price | Why it looks premium | Best for |\n|---|---:|---|---|\n| **Xiaomi 1",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Xiaomi",
+        "Motorola",
+        "Nothing",
+        "Samsung",
+        "Oppo"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Premium Phones"
+    }
+  },
+  {
+    "prompt": "slim flagship phone under 40000 India",
+    "ok": true,
+    "elapsed": 28.3,
+    "credits_consumed": 0.24,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 19446,
+      "output_tokens": 1129,
+      "input_tokens": 18317,
+      "output_tokens_details": {
+        "reasoning_tokens": 501
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 8,
+    "citation_count": 4,
+    "citations": [
+      "https://www.motorola.in/smartphones-motorola-edge-50-ultra/p?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-60-pro/p?skuId=522&utm_source=openai",
+      "https://news.samsung.com/in/galaxy-s24-series-expands-with-s24-fe-a-premium-experience-that-makes-full-galaxy-ai-capabilities-attainable-for-more-users?utm_source=openai",
+      "https://www.oneplus.in/13r/specs?utm_source=openai"
+    ],
+    "answer_len_chars": 2491,
+    "answer_excerpt": "I’ll compare currently available India models under ₹40,000, prioritizing thinness, flagship-level performance, and overall hardware rather than just marketing labels. I’ll verify current prices and dimensions before recommending a shortlist.For a **slim, flagship-style phone under ₹40,000 in India**, my top pick is:\n\n## Best Overall: Motorola Edge 50 Ultra\n- **Price:** ₹39,999\n- **Thickness:** 8.",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Samsung",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "best ultrathin smartphone under 40000 India",
+    "ok": true,
+    "elapsed": 36.7,
+    "credits_consumed": 0.44,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 35786,
+      "output_tokens": 1371,
+      "input_tokens": 34415,
+      "output_tokens_details": {
+        "reasoning_tokens": 889
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 16,
+    "citation_count": 4,
+    "citations": [
+      "https://www.motorola.in/smartphones-moto-edge-70/p?skuId=607&utm_source=openai",
+      "https://www.motorola.in/smartphones-moto-edge-70/p?skuId=607&utm_source=openai",
+      "https://www.motorola.in/motorola-edge-family/?utm_source=openai",
+      "https://www.vivo.com/in/products/param/s2?utm_source=openai"
+    ],
+    "answer_len_chars": 1733,
+    "answer_excerpt": "I’ll compare currently available thin phones in India under ₹40,000, prioritizing actual thickness, weight, battery, cameras, and value rather than headline specs alone.**Best ultrathin smartphone under ₹40,000 in India: Motorola Edge 70**\n\n- **Price:** ₹27,999 for 8GB + 256GB\n- **Thickness:** 5.99mm\n- **Weight:** 159g\n- **Battery:** 5,000mAh\n- **Display:** 6.7-inch pOLED, 120Hz\n- **Cameras:** 50M",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Vivo"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "military grade smartphone under 40000 India",
+    "ok": true,
+    "elapsed": 68.8,
+    "credits_consumed": 0.38,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 29818,
+      "output_tokens": 1522,
+      "input_tokens": 28296,
+      "output_tokens_details": {
+        "reasoning_tokens": 980
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 14,
+    "citation_count": 3,
+    "citations": [
+      "https://news.samsung.com/in/samsung-launches-galaxy-xcover7-its-first-ever-enterprise-exclusive-smartphone-the-perfect-blend-of-military-grade-durability-work-continuity-and-productivity?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-60-fusion/p?skuId=489&utm_source=openai",
+      "https://news.samsung.com/in/samsung-launches-galaxy-xcover7-its-first-ever-enterprise-exclusive-smartphone-the-perfect-blend-of-military-grade-durability-work-continuity-and-productivity?utm_source=openai"
+    ],
+    "answer_len_chars": 2342,
+    "answer_excerpt": "I’ll check current India availability, pricing, and certification claims, then narrow this to the best options under ₹40,000 rather than relying on older model lists.For a **military-grade smartphone under ₹40,000 in India**, these are the strongest options:\n\n| Phone | Approx. price | Durability | Best for |\n|---|---:|---|---|\n| **Samsung Galaxy XCover7** | ₹27,000–₹28,000 | **IP68, MIL-STD-810H, ",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "phone with Gorilla Glass 7i under 40000",
+    "ok": true,
+    "elapsed": 31.0,
+    "credits_consumed": 0.29,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 27357,
+      "output_tokens": 1010,
+      "input_tokens": 26347,
+      "output_tokens_details": {
+        "reasoning_tokens": 585
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 12,
+    "citation_count": 1,
+    "citations": [
+      "https://www.corning.com/gorillaglass/worldwide/en/glass-types/gorilla-glass-7i.html?utm_source=openai"
+    ],
+    "answer_len_chars": 1403,
+    "answer_excerpt": "I’ll check current phone listings and official specifications for models using Gorilla Glass 7i, then filter them to a budget below ₹40,000.Assuming you mean **₹40,000 in India**, these are good current options with **Corning Gorilla Glass 7i**:\n\n| Phone | Approx. price | Best for |\n|---|---:|---|\n| **Motorola Edge 70 Fusion** | **₹28,999** | Best overall value, clean Android, IP68/IP69, 144Hz dis",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Oppo",
+        "Realme"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "most durable phone under 50K India 2026",
+    "ok": true,
+    "elapsed": 31.7,
+    "credits_consumed": 0.33,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 25873,
+      "output_tokens": 1416,
+      "input_tokens": 24457,
+      "output_tokens_details": {
+        "reasoning_tokens": 875
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 11,
+    "citation_count": 4,
+    "citations": [
+      "https://www.motorola.in/smartphones-motorola-edge-60-pro/p?skuId=537&utm_source=openai",
+      "https://store.google.com/in/product/pixel_9a_specs?hl=en-IN&pli=1&utm_source=openai",
+      "https://www.samsung.com/in/smartphones/galaxy-s/galaxy-s25-fe-navy-256gb-sm-s731bdbcins/?msockid=0f63d30509ab6ed62fcec58d08e06f2c&utm_source=openai",
+      "https://www.oneplus.in/13?utm_source=openai"
+    ],
+    "answer_len_chars": 2287,
+    "answer_excerpt": "I’ll compare currently available India models under ₹50,000 on durability factors that matter in practice: ingress protection, materials, drop resistance, repairability, software support, battery longevity, and service coverage.**Best durable phone under ₹50,000 in India (2026): Motorola Edge 60 Pro**\n\nIt is the strongest durability-focused option currently available around this budget:\n\n- **₹37,9",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Google",
+        "Samsung",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best slim phones under 50K",
+    "ok": true,
+    "elapsed": 62.9,
+    "credits_consumed": 0.69,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 58130,
+      "output_tokens": 1872,
+      "input_tokens": 56258,
+      "output_tokens_details": {
+        "reasoning_tokens": 922
+      }
+    },
+    "search_calls": 7,
+    "search_queries_total": 22,
+    "citation_count": 5,
+    "citations": [
+      "https://www.motorola.in/smartphones-moto-edge-70/p?skuId=607&utm_source=openai",
+      "https://www.samsung.com/in/smartphones/galaxy-s/galaxy-s25-fe-jetblack-128gb-sm-s731bzkbins/",
+      "https://www.iqoo.com/in/products/param/iqoo15r?utm_source=openai",
+      "https://support.nothing.tech/hc/en-us/articles/43270507668113-What-are-the-dimensions-weight-of-Phone-4a-Pro?utm_source=openai",
+      "https://www.oneplus.in/nord-6/specs?utm_source=openai"
+    ],
+    "answer_len_chars": 3256,
+    "answer_excerpt": "I’ll compare currently available phones in India under ₹50,000, prioritizing body thickness, weight, performance, cameras, battery, and software support. I’ll verify current prices and dimensions rather than relying on older model knowledge.Assuming you mean **₹50,000 in India**, these are the best slim options as of **August 27, 2026**:\n\n| Phone | Thickness / Weight | Typical price | Best for |\n|",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Samsung",
+        "Nothing",
+        "iQOO",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Motorola Edge 70 Pro Plus vs OnePlus Nord 6 which is better",
+    "ok": true,
+    "elapsed": 25.2,
+    "credits_consumed": 0.22,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 18441,
+      "output_tokens": 978,
+      "input_tokens": 17463,
+      "output_tokens_details": {
+        "reasoning_tokens": 423
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 6,
+    "citation_count": 2,
+    "citations": [
+      "https://www.oneplus.com/by/nord-6/specs?utm_source=openai",
+      "https://en-us.support.motorola.com/app/answers/detail/a_id/192122/~/specifications---moto-edge-70-pro?utm_source=openai"
+    ],
+    "answer_len_chars": 2258,
+    "answer_excerpt": "**Overall, the OnePlus Nord 6 is the better buy for most people.** Choose the Motorola Edge 70 Pro+ mainly if camera versatility, lighter design, and wireless charging matter more than battery life and gaming performance.\n\n| Category | Better phone | Why |\n|---|---|---|\n| Performance/gaming | **OnePlus Nord 6** | Snapdragon 8s Gen 4, up to 165Hz display, bypass charging |\n| Battery life | **OnePlu",
+    "logic_classification": {
+      "mentioned_brands": [
+        "OnePlus",
+        "Motorola"
+      ],
+      "is_branded_query": true,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Motorola Edge 70 Pro Plus vs Xiaomi 17 camera comparison",
+    "ok": true,
+    "elapsed": 29.9,
+    "credits_consumed": 0.26,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 19567,
+      "output_tokens": 1334,
+      "input_tokens": 18233,
+      "output_tokens_details": {
+        "reasoning_tokens": 392
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 7,
+    "citation_count": 9,
+    "citations": [
+      "https://www.mi.com/global/product/xiaomi-17/specs/?utm_source=openai",
+      "https://www.techradar.com/phones/xiaomi-phones/xiaomi-17-review?utm_source=openai",
+      "https://www.techradar.com/phones/xiaomi-phones/xiaomi-17-review?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-70-pro-plus/p?utm_source=openai",
+      "https://www.techadvisor.com/article/3067491/xiaomi-17-review.html?utm_source=openai",
+      "https://www.mi.com/in/product/xiaomi-17/?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-70-pro-plus/p?utm_source=openai",
+      "https://www.techradar.com/phones/xiaomi-phones/xiaomi-17-review?utm_source=openai",
+      "https://www.mi.com/global/product/xiaomi-17/specs/?utm_source=openai"
+    ],
+    "answer_len_chars": 3949,
+    "answer_excerpt": "I’ll verify the current camera specifications and reviews for both phones first, then compare hardware, image processing, zoom, video, and practical shooting results.## Camera Verdict\n\n**Xiaomi 17 is the better overall camera phone**, especially for main-camera quality, low-light photography, portraits, color consistency, and advanced video. **Motorola Edge 70 Pro+ is better for optical zoom reach",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Xiaomi",
+        "Motorola"
+      ],
+      "is_branded_query": true,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Motorola Edge 70 Pro Plus vs Google Pixel 10A which to buy",
+    "ok": true,
+    "elapsed": 27.8,
+    "credits_consumed": 0.23,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 19043,
+      "output_tokens": 975,
+      "input_tokens": 18068,
+      "output_tokens_details": {
+        "reasoning_tokens": 315
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 7,
+    "citation_count": 2,
+    "citations": [
+      "https://blog.google/products-and-platforms/devices/pixel/google-pixel-10a/?utm_source=openai",
+      "https://en-emea.support.motorola.com/app/answers/detail/a_id/192122?utm_source=openai"
+    ],
+    "answer_len_chars": 2650,
+    "answer_excerpt": "**My pick: Google Pixel 10a for most people.** Choose the Motorola Edge 70 Pro Plus only if you prioritize battery, charging, gaming performance, a large display, or zoom photography.\n\n| Category | Winner | Why |\n|---|---|---|\n| Camera quality | **Pixel 10a** | More reliable point-and-shoot results, especially in low light; Google’s computational photography is the stronger bet. |\n| Performance/ga",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Google",
+        "Motorola"
+      ],
+      "is_branded_query": true,
+      "intent": "Transactional",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "which phone has best zoom camera under 50K India",
+    "ok": true,
+    "elapsed": 24.5,
+    "credits_consumed": 0.3,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 27513,
+      "output_tokens": 1008,
+      "input_tokens": 26505,
+      "output_tokens_details": {
+        "reasoning_tokens": 647
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 10,
+    "citation_count": 3,
+    "citations": [
+      "https://in.nothing.tech/products/phone-4a-pro?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-70-pro-plus/p?utm_source=openai",
+      "https://www.vivo.com/in/products/v70-fe?utm_source=openai"
+    ],
+    "answer_len_chars": 1287,
+    "answer_excerpt": "**Best zoom camera under ₹50,000 in India: Nothing Phone (4a) Pro.**\n\n- **Price:** starts around **₹39,999**\n- **Zoom hardware:** 50MP OIS periscope telephoto with **3.5x optical zoom**\n- **Realistic performance:** excellent at **3.5x**, very good up to **7x**, and usable around **15x-20x** in good light. The advertised 140x is mostly digital and not genuinely detailed. ([in.nothing.tech](https://",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Nothing",
+        "Motorola",
+        "Vivo"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "best phone with 4K selfie video under 50K India",
+    "ok": true,
+    "elapsed": 32.2,
+    "credits_consumed": 0.34,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 27658,
+      "output_tokens": 1179,
+      "input_tokens": 26479,
+      "output_tokens_details": {
+        "reasoning_tokens": 768
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 12,
+    "citation_count": 5,
+    "citations": [
+      "https://www.oppo.com/in/newsroom/press/oppo-india-launches-all-new-reno-15-series/?utm_source=openai",
+      "https://www.oppo.com/in/smartphones/series-reno/reno15/specs/?utm_source=openai",
+      "https://gadgets.beebom.com/reviews/oppo-reno-15-review?utm_source=openai",
+      "https://www.oppo.com/in/smartphones/series-reno/reno15/specs/?utm_source=openai",
+      "https://www.oppo.com/in/newsroom/press/oppo-india-launches-reno-15c/?utm_source=openai"
+    ],
+    "answer_len_chars": 1686,
+    "answer_excerpt": "**Best pick under ₹50,000 in India for 4K selfie video: OPPO Reno15 5G**\n\n- **Price:** ₹45,999 for 8GB/256GB; ₹48,999 for 12GB/256GB. ([oppo.com](https://www.oppo.com/in/newsroom/press/oppo-india-launches-all-new-reno-15-series/?utm_source=openai))\n- **Front camera:** 50MP autofocus, 100° ultra-wide field of view.\n- **Selfie video:** **4K at 30/60fps**, with HDR support. ([oppo.com](https://www.op",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Oppo",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "which phone has brightest screen under 50K India",
+    "ok": true,
+    "elapsed": 49.3,
+    "credits_consumed": 0.63,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 51441,
+      "output_tokens": 1642,
+      "input_tokens": 49799,
+      "output_tokens_details": {
+        "reasoning_tokens": 1328
+      }
+    },
+    "search_calls": 6,
+    "search_queries_total": 17,
+    "citation_count": 2,
+    "citations": [
+      "https://www.realme.com/in/realme-gt-7t-5g?utm_source=openai",
+      "https://www.iqoo.com/in/products/neo10?id=64"
+    ],
+    "answer_len_chars": 1139,
+    "answer_excerpt": "I’ll compare currently available phones in India priced below ₹50,000, focusing on verified peak brightness and practical display quality rather than marketing claims alone.**Brightest advertised screen under ₹50,000 in India: realme GT 7T.**\n\n- **Peak brightness:** 6,000 nits local peak\n- **High Brightness Mode:** about 1,800 nits\n- **Display:** 6.8-inch 1.5K AMOLED, 120Hz\n- **Current listed pric",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Realme",
+        "iQOO"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "best phone with AI features under 50K India 2026",
+    "ok": true,
+    "elapsed": 41.2,
+    "credits_consumed": 0.51,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 44034,
+      "output_tokens": 1570,
+      "input_tokens": 42464,
+      "output_tokens_details": {
+        "reasoning_tokens": 866
+      }
+    },
+    "search_calls": 5,
+    "search_queries_total": 12,
+    "citation_count": 5,
+    "citations": [
+      "https://gadgets.beebom.com/best-phones-under-50000",
+      "https://gadgets.beebom.com/best-phones-under-50000",
+      "https://blog.google/intl/en-in/products/hardware/pixel-10a-everything-you-need-at-a-price-youll-love/?utm_source=openai",
+      "https://www.gadgets360.com/samsung-galaxy-s25-fe-price-in-india-134345",
+      "https://shop.iqoo.com/in/product/2068?skuId=8417&utm_source=openai"
+    ],
+    "answer_len_chars": 2839,
+    "answer_excerpt": "**Best AI phone under ₹50,000 in India right now: OnePlus Nord 6**\n\nAs of **August 27, 2026**, the Nord 6 is the strongest all-round buy if your budget is strict. It is available around **₹46,000-₹47,000** and combines strong performance, long battery life, clean software, and useful built-in AI tools. ([gadgets.beebom.com](https://gadgets.beebom.com/best-phones-under-50000))\n\n| Phone | Approx. pr",
+    "logic_classification": {
+      "mentioned_brands": [
+        "OnePlus",
+        "Google",
+        "Samsung",
+        "Motorola",
+        "iQOO"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "best phone with premium finish under 50K India",
+    "ok": true,
+    "elapsed": 63.8,
+    "credits_consumed": 0.32,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 28247,
+      "output_tokens": 1335,
+      "input_tokens": 26912,
+      "output_tokens_details": {
+        "reasoning_tokens": 845
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 12,
+    "citation_count": 5,
+    "citations": [
+      "https://www.flipkart.com/samsung-galaxy-s24-5g-snapdragon-onyx-black-128-gb/p/itm3469a7107606f?utm_source=openai",
+      "https://www.samsung.com/ph/support/mobile-devices/what-material-is-the-galaxy-s24-made-of/?utm_source=openai",
+      "https://www.oneplus.in/13r/specs?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-60-pro/p?skuId=522&utm_source=openai",
+      "https://store.google.com/in/product/pixel_9a?hl=en-IN&utm_source=openai"
+    ],
+    "answer_len_chars": 2055,
+    "answer_excerpt": "I’ll compare current India pricing and build quality, then narrow it to the strongest premium-finish options under ₹50,000 rather than ranking on specs alone.**Best pick for premium finish: Samsung Galaxy S24 (Snapdragon variant)**\n\n- **Current price:** around **₹49,999** for 8GB/128GB on Flipkart; bank offers may reduce it further. ([flipkart.com](https://www.flipkart.com/samsung-galaxy-s24-5g-sn",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "OnePlus",
+        "Motorola",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Premium Phones"
+    }
+  },
+  {
+    "prompt": "phones with IP68 and IP69 rating under 50K India",
+    "ok": true,
+    "elapsed": 50.0,
+    "credits_consumed": 0.55,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 45002,
+      "output_tokens": 1957,
+      "input_tokens": 43045,
+      "output_tokens_details": {
+        "reasoning_tokens": 1041
+      }
+    },
+    "search_calls": 6,
+    "search_queries_total": 18,
+    "citation_count": 10,
+    "citations": [
+      "https://www.realme.com/in/newsroom/realme-7th-anniversary-sale?utm_source=openai",
+      "https://shop.iqoo.com/in/product/2065",
+      "https://www.oppo.com/in/newsroom/press/oppo-f27-pro-5g-ip69-monsoon-phone/?utm_source=openai",
+      "https://shop.vivo.com/in/product/10321?skuId=19261&utm_source=openai",
+      "https://vivonewsroom.in/press-release/stunning-design-superior-photography-and-power-packed-performance-vivo-unveils-v50-starting-inr-34999/?utm_source=openai",
+      "https://vivonewsroom.in/press-release/vivo-v60-boldly-blends-zeiss-optics-iconic-design-and-superior-performance-starting-inr-36999/?utm_source=openai",
+      "https://www.oppo.com/in/newsroom/press/oppo-reno13-skyline-blue-sale/",
+      "https://www.realme.com/in/realme-14-pro-plus-5g?utm_source=openai",
+      "https://shop.iqoo.com/in/products/phone",
+      "https://www.vivo.com/in/products/t4-pro?fromSuggestion=T4+Pro&utm_source=openai"
+    ],
+    "answer_len_chars": 3238,
+    "answer_excerpt": "I’ll check current India pricing and official specifications, then shortlist phones that explicitly carry both IP68 and IP69 ratings under ₹50,000.Here are the best phones in India with **both IP68 and IP69 protection** under **₹50,000**. Prices are official listed/launch prices and can change with offers or stock.\n\n| Phone | Approx. price | Key strengths |\n|---|---:|---|\n| **realme P3 Pro 5G** | ",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Realme",
+        "iQOO",
+        "Oppo",
+        "Vivo"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "best phone for outdoor use under 50K India",
+    "ok": true,
+    "elapsed": 32.9,
+    "credits_consumed": 0.39,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 34229,
+      "output_tokens": 1379,
+      "input_tokens": 32850,
+      "output_tokens_details": {
+        "reasoning_tokens": 783
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 14,
+    "citation_count": 5,
+    "citations": [
+      "https://www.oneplus.in/nord-6/specs?utm_source=openai",
+      "https://www.91mobiles.com/reviews/oneplus-nord-6-review/?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-70-pro-plus/p?utm_source=openai",
+      "https://www.realme.com/in/realme-gt-7-pro?utm_source=openai",
+      "https://www.samsung.com/in/business/smartphones/xcover/galaxy-xcover7-sm-g556bzkdins/?utm_source=openai"
+    ],
+    "answer_len_chars": 2253,
+    "answer_excerpt": "For **outdoor use under ₹50,000 in India**, my top pick is:\n\n## Best Overall: OnePlus Nord 6\n\n**Why it suits outdoor use:**\n- **IP66/IP68/IP69/IP69K** dust and water resistance\n- **MIL-STD-810H** durability rating\n- Very bright **3,600-nit peak display**, useful in direct sunlight\n- Large **9,000mAh battery**, suitable for navigation, travel and field work\n- Strong performance and **217g** weight\n",
+    "logic_classification": {
+      "mentioned_brands": [
+        "OnePlus",
+        "Motorola",
+        "Realme",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "best display phone under 50K India 2026",
+    "ok": true,
+    "elapsed": 30.9,
+    "credits_consumed": 0.34,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 30566,
+      "output_tokens": 1214,
+      "input_tokens": 29352,
+      "output_tokens_details": {
+        "reasoning_tokens": 687
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 3,
+    "citation_count": 6,
+    "citations": [
+      "https://gadgets.beebom.com/best-display-phones-under-50000",
+      "https://gadgets.beebom.com/best-display-phones-under-50000",
+      "https://gadgets.beebom.com/best-display-phones-under-50000",
+      "https://gadgets.beebom.com/best-display-phones-under-50000",
+      "https://gadgets.beebom.com/best-display-phones-under-50000",
+      "https://www.digit.in/mobiles/best-phones-under-50000.html"
+    ],
+    "answer_len_chars": 2048,
+    "answer_excerpt": "I’ll check current India pricing and 2026-available models, then rank them specifically for display quality rather than overall performance.**Best display phone under ₹50,000 in India (as of August 27, 2026): OnePlus Nord 6**\n\n- **Price:** around ₹46,238–₹47,998\n- **Display:** 6.78-inch, 1.5K AMOLED, **165Hz**\n- **Why buy:** sharp, extremely smooth, excellent for gaming, scrolling and video\n- **Do",
+    "logic_classification": {
+      "mentioned_brands": [
+        "OnePlus",
+        "Motorola",
+        "Samsung",
+        "Realme"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "premium looking phones under 50K",
+    "ok": true,
+    "elapsed": 29.6,
+    "credits_consumed": 0.22,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 20147,
+      "output_tokens": 1042,
+      "input_tokens": 19105,
+      "output_tokens_details": {
+        "reasoning_tokens": 359
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 4,
+    "citation_count": 4,
+    "citations": [
+      "https://www.91mobiles.com/list-of-phones/top-10-mobiles-below-50000-in-india",
+      "https://www.91mobiles.com/list-of-phones/top-10-mobiles-below-50000-in-india",
+      "https://www.oneplus.in/13r/specs?utm_source=openai",
+      "https://store.google.com/in/product/pixel_9a?hl=en-IN&utm_source=openai"
+    ],
+    "answer_len_chars": 2772,
+    "answer_excerpt": "I’ll treat “50K” as ₹50,000 in India and check current pricing plus premium design/build, display, cameras, and software support before narrowing the list.Assuming you mean **₹50,000 in India**, these are the best premium-looking options as of **August 27, 2026**:\n\n| Phone | Approx. price | Why it looks premium | Best for |\n|---|---:|---|---|\n| **Motorola Edge 70 Pro+** | ₹46,979 | Very slim desig",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Nothing",
+        "Vivo",
+        "OnePlus",
+        "Google",
+        "Realme"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Premium Phones"
+    }
+  },
+  {
+    "prompt": "phone with IP69 rating under 50K India",
+    "ok": true,
+    "elapsed": 37.0,
+    "credits_consumed": 0.4,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 34117,
+      "output_tokens": 1489,
+      "input_tokens": 32628,
+      "output_tokens_details": {
+        "reasoning_tokens": 775
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 15,
+    "citation_count": 6,
+    "citations": [
+      "https://www.motorola.in/smartphones-motorola-edge-60-pro/p?skuId=522&utm_source=openai",
+      "https://www.realme.com/in/realme-gt-7-pro?utm_source=openai",
+      "https://www.oppo.com/in/newsroom/press/oppo-reno-13-series-launched-india/?utm_source=openai",
+      "https://www.vivo.com/in/products/v60?utm_source=openai",
+      "https://www.91mobiles.com/list-of-phones/ip69-rating-phones?utm_source=openai",
+      "https://www.vivo.com/in/products/v60?utm_source=openai"
+    ],
+    "answer_len_chars": 2639,
+    "answer_excerpt": "I’ll check current India availability and pricing for phones with a genuine IP69/IP69K rating, then narrow the list to models under ₹50,000 and flag any rating or price caveats.**Best IP69 phones under ₹50,000 in India**\n\n| Phone | Current price* | Best for | Key strengths |\n|---|---:|---|---|\n| **Motorola Edge 60 Pro** | ₹33,999–₹37,999 | Best overall value | IP68/IP69, 1.5K 120Hz display, 6000mA",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Realme",
+        "Oppo",
+        "Vivo"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "dustproof and waterproof phones under 50K India",
+    "ok": true,
+    "elapsed": 108.9,
+    "credits_consumed": 0.43,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 36319,
+      "output_tokens": 1570,
+      "input_tokens": 34749,
+      "output_tokens_details": {
+        "reasoning_tokens": 761
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 16,
+    "citation_count": 6,
+    "citations": [
+      "https://www.motorola.in/smartphones-motorola-edge-60-pro/p?skuId=522&utm_source=openai",
+      "https://www.vivo.com/in/products/param/v50?utm_source=openai",
+      "https://www.realme.com/in/realme-gt-7-5g?from=owbanner1&utm_source=openai",
+      "https://store.google.com/in/product/pixel_9a?hl=en-IN&utm_source=openai",
+      "https://www.oppo.com/in/newsroom/press/oppo-f29-durable-champion-launched-india/?utm_source=openai",
+      "https://www.oneplus.in/13r?utm_source=openai"
+    ],
+    "answer_len_chars": 2940,
+    "answer_excerpt": "I’ll check current India pricing and official water/dust ratings, then narrow this to the strongest options under ₹50,000 rather than relying on older launch prices.For **dustproof and water-resistant phones under ₹50,000 in India**, prioritize **IP68** or **IP68 + IP69**. No phone is truly “waterproof,” and liquid damage is commonly excluded from warranty.\n\n| Phone | Approx. price | Rating | Best",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Vivo",
+        "Realme",
+        "Google",
+        "Oppo",
+        "Samsung",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "phones with military grade protection under 50K",
+    "ok": true,
+    "elapsed": 40.5,
+    "credits_consumed": 0.5,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 39539,
+      "output_tokens": 1720,
+      "input_tokens": 37819,
+      "output_tokens_details": {
+        "reasoning_tokens": 896
+      }
+    },
+    "search_calls": 5,
+    "search_queries_total": 13,
+    "citation_count": 4,
+    "citations": [
+      "https://news.samsung.com/in/samsung-launches-galaxy-xcover7-its-first-ever-enterprise-exclusive-smartphone-the-perfect-blend-of-military-grade-durability-work-continuity-and-productivity",
+      "https://www.motorola.in/smartphones-moto-edge-50-neo/p/?utm_source=openai",
+      "https://www.smartprix.com/mobiles/rugged-phones-list",
+      "https://www.hmd.com/en_in/nokia-xr-21?utm_source=openai"
+    ],
+    "answer_len_chars": 3290,
+    "answer_excerpt": "I’ll assume you mean ₹50,000 in India and compare currently available phones with genuine MIL-STD-810H-style durability, IP protection, and practical specs rather than marketing alone.Assuming you mean **₹50,000 in India**, these are the best options with **MIL-STD-810H military-standard testing** and water/dust protection:\n\n| Phone | Approx. price | Protection | Best for |\n|---|---:|---|---|\n| **",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best premium design phones under 30000",
+    "ok": true,
+    "elapsed": 66.2,
+    "credits_consumed": 0.68,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 56135,
+      "output_tokens": 2184,
+      "input_tokens": 53951,
+      "output_tokens_details": {
+        "reasoning_tokens": 1479
+      }
+    },
+    "search_calls": 7,
+    "search_queries_total": 22,
+    "citation_count": 6,
+    "citations": [
+      "https://www.motorola.in/smartphones-motorola-edge-60-pro/p?idsku=523&utm_source=openai",
+      "https://www.motorola.in/smartphones-moto-edge-70/p?skuId=607&utm_source=openai",
+      "https://www.samsung.com/in/smartphones/galaxy-a/galaxy-a36-5g-awesome-black-256gb-sm-a366ezknins/?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-60-fusion/p?skuId=495&utm_source=openai",
+      "https://in.nothing.tech/products/phone-3a-pro?utm_source=openai",
+      "https://www.oneplus.in/nord-5?utm_source=openai"
+    ],
+    "answer_len_chars": 2860,
+    "answer_excerpt": "I’ll treat this as a ₹30,000 budget in India and compare currently available phones on design, materials, display, cameras, and overall value. I’m checking current pricing and official specifications first, since these change frequently.Assuming you mean **₹30,000 in India**, these are the best premium-looking options as of **August 27, 2026**:\n\n| Phone | Why it stands out | Current price/status |",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Samsung",
+        "Nothing",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Premium Phones"
+    }
+  },
+  {
+    "prompt": "Best phones for long-term usage under 30000",
+    "ok": true,
+    "elapsed": 41.2,
+    "credits_consumed": 0.47,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 36978,
+      "output_tokens": 1727,
+      "input_tokens": 35251,
+      "output_tokens_details": {
+        "reasoning_tokens": 1048
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 15,
+    "citation_count": 4,
+    "citations": [
+      "https://news.samsung.com/in/samsung-launches-galaxy-m56-5g-segments-slimmest-smartphone-in-india?utm_source=openai",
+      "https://news.samsung.com/in/galaxy-a26-5g-samsungs-most-affordable-ai-powered-smartphone-launches-in-india-starting-at-just-inr-22999?utm_source=openai",
+      "https://in.nothing.tech/products/phone-3a?utm_source=openai",
+      "https://www.91mobiles.com/list-of-phones/top-10-mobiles-below-30000-in-india?utm_source=openai"
+    ],
+    "answer_len_chars": 2870,
+    "answer_excerpt": "Assuming you mean **₹30,000 in India**, these are the strongest long-term choices as of **August 27, 2026**:\n\n| Phone | Approx. price | Best for | Update support |\n|---|---:|---|---|\n| **Samsung Galaxy M56 5G** | ₹25,000–28,000 | Best overall long-term value | 6 Android upgrades + 6 years security |\n| **Samsung Galaxy A26 5G** | ₹23,000–25,000 | Maximum reliability and updates | 6 Android upgrades",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Nothing",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best phones for daily use under 30000",
+    "ok": true,
+    "elapsed": 26.5,
+    "credits_consumed": 0.22,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 19146,
+      "output_tokens": 1249,
+      "input_tokens": 17897,
+      "output_tokens_details": {
+        "reasoning_tokens": 556
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 7,
+    "citation_count": 6,
+    "citations": [
+      "https://www.91mobiles.com/list-of-phones/top-10-mobiles-below-30000-in-india?utm_source=openai",
+      "https://www.91mobiles.com/reviews/best-phones-under-rs-30000/amp/?utm_source=openai",
+      "https://www.91mobiles.com/reviews/top-5-phones-around-rs-30000-may-2026/?utm_source=openai",
+      "https://www.vivo.com/in/products/param/t4-pro?fromSuggestion=T4+Pro&utm_source=openai",
+      "https://www.realme.com/in/realme-p4-power-5g/specs?utm_source=openai",
+      "https://www.91mobiles.com/reviews/best-phones-under-rs-30000/amp/?utm_source=openai"
+    ],
+    "answer_len_chars": 2866,
+    "answer_excerpt": "I’ll treat this as a ₹30,000 budget in India and compare currently available models on everyday performance, battery, camera, software support, and value.Assuming you mean **₹30,000 in India**, these are the strongest choices for daily use as of **August 27, 2026**:\n\n| Phone | Best for | Why buy it | Main compromise |\n|---|---|---|---|\n| **Motorola Edge 70 Fusion** | **Best overall** | Excellent A",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Samsung",
+        "OnePlus",
+        "Vivo",
+        "Realme"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best display phone under 30000",
+    "ok": true,
+    "elapsed": 33.2,
+    "credits_consumed": 0.39,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 33101,
+      "output_tokens": 1039,
+      "input_tokens": 32062,
+      "output_tokens_details": {
+        "reasoning_tokens": 636
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 10,
+    "citation_count": 3,
+    "citations": [
+      "https://www.motorola.in/smartphones-motorola-edge-70-fusion/p?utm_source=openai",
+      "https://www.iqoo.com/in/products/neo10r?id=60",
+      "https://www.realme.com/in/realme-gt-7t-5g"
+    ],
+    "answer_len_chars": 1419,
+    "answer_excerpt": "I’ll compare current phones under ₹30,000 with the strongest displays, prioritizing panel quality, brightness, refresh rate, HDR support, and real-world value.Assuming you mean **₹30,000 in India**, the best display phone right now is:\n\n## **Motorola Edge 70 Fusion**\n**Price:** ₹28,999  \n**Display:** 6.78-inch 1.5K Extreme AMOLED, 144Hz, HDR10+, 10-bit color, 100% DCI-P3, up to 5,200 nits. ([motor",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "iQOO",
+        "Realme"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best curved display phones under 30000",
+    "ok": true,
+    "elapsed": 117.5,
+    "credits_consumed": 0.35,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 28311,
+      "output_tokens": 1891,
+      "input_tokens": 26420,
+      "output_tokens_details": {
+        "reasoning_tokens": 1099
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 12,
+    "citation_count": 6,
+    "citations": [
+      "https://www.realme.com/in/realme-p4-pro-5g/specs?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-60-fusion/p?skuId=495&utm_source=openai",
+      "https://shop.vivo.com/in/product/10321?skuId=19261&utm_source=openai",
+      "https://www.iqoo.com/in/products/z10r-5g?utm_source=openai",
+      "https://www.realme.com/in/realme-narzo-power-5g/specs?utm_source=openai",
+      "https://gadgetsnow.indiatimes.com/best-products/smartphone/best-curved-display-mobile-phones-under-30000?utm_source=openai"
+    ],
+    "answer_len_chars": 2621,
+    "answer_excerpt": "I’ll treat `30,000` as ₹30,000 in India and verify current prices, curved-display availability, and key trade-offs before ranking the options.Assuming you mean **₹30,000 in India**, these are the best curved-display phones as of **August 27, 2026**:\n\n| Phone | Approx. price | Best for | Key strengths |\n|---|---:|---|---|\n| **realme P4 Pro 5G** | ₹25,000–29,000 | Best overall | Snapdragon 7 Gen 4, ",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Realme",
+        "Motorola",
+        "Vivo",
+        "iQOO"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best clean UI phones under 30000",
+    "ok": true,
+    "elapsed": 38.9,
+    "credits_consumed": 0.32,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 27893,
+      "output_tokens": 1369,
+      "input_tokens": 26524,
+      "output_tokens_details": {
+        "reasoning_tokens": 761
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 12,
+    "citation_count": 3,
+    "citations": [
+      "https://store.google.com/in/product/pixel_9a?hl=en-IN&utm_source=openai",
+      "https://in.nothing.tech/products/phone-3a?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-70-fusion/p?utm_source=openai"
+    ],
+    "answer_len_chars": 2417,
+    "answer_excerpt": "I’ll treat this as a ₹30,000 India budget and compare currently available phones with the cleanest software, while separating true clean UI from heavily skinned Android.Assuming you mean **₹30,000 in India**, these are the best clean-UI options right now:\n\n| Phone | Typical price | Why consider it | Main drawback |\n|---|---:|---|---|\n| **Nothing Phone (3a)** | Around ₹25,000–30,000 | Best balance ",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Nothing",
+        "Motorola",
+        "OnePlus",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best camera phones under 30000",
+    "ok": true,
+    "elapsed": 85.6,
+    "credits_consumed": 0.45,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 34884,
+      "output_tokens": 1716,
+      "input_tokens": 33168,
+      "output_tokens_details": {
+        "reasoning_tokens": 1049
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 15,
+    "citation_count": 5,
+    "citations": [
+      "https://in.nothing.tech/products/phone-3a-pro?utm_source=openai",
+      "https://www.motorola.in/motorola-edge-family?utm_source=openai",
+      "https://www.91mobiles.com/list-of-phones/top-10-camera-mobiles-below-30000-in-india?utm_source=openai",
+      "https://www.findprix.com/mobiles/google-pixel-7a-271?utm_source=openai",
+      "https://shop.vivo.com/in/product/10321?skuId=19261&utm_source=openai"
+    ],
+    "answer_len_chars": 2508,
+    "answer_excerpt": "I’ll compare current camera-focused phones available in India under ₹30,000, prioritizing real camera quality, stabilization, portrait/night performance, and value rather than just megapixels.Assuming you mean **₹30,000 in India**, these are the strongest camera-focused choices as of **August 27, 2026**:\n\n| Phone | Typical price | Best for | Camera verdict |\n|---|---:|---|---|\n| **Nothing Phone (3",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Nothing",
+        "Motorola",
+        "Google",
+        "Vivo"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "Best battery backup phone under 30000",
+    "ok": true,
+    "elapsed": 69.5,
+    "credits_consumed": 0.21,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 18792,
+      "output_tokens": 681,
+      "input_tokens": 18111,
+      "output_tokens_details": {
+        "reasoning_tokens": 370
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 7,
+    "citation_count": 2,
+    "citations": [
+      "https://buy.realme.com/in/ranking?from=pcfunction&utm_source=openai",
+      "https://www.xpertpick.com/mobiles/features/best-battery-phones-under-%E2%82%B930000/?utm_source=openai"
+    ],
+    "answer_len_chars": 1243,
+    "answer_excerpt": "I’ll compare currently available phones under ₹30,000 in India, prioritizing battery life, charging, and real-world efficiency rather than just battery capacity.Assuming you mean **₹30,000 in India**, the best battery-backup phone is:\n\n## **realme P4 Power 5G**\n- **Price:** around ₹27,999 currently\n- **Battery:** **10,001mAh**\n- **Charging:** 80W fast charging\n- **Expected use:** easily 2 days for",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Realme",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best balanced smartphones under 30000",
+    "ok": true,
+    "elapsed": 54.3,
+    "credits_consumed": 0.21,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 19150,
+      "output_tokens": 1172,
+      "input_tokens": 17978,
+      "output_tokens_details": {
+        "reasoning_tokens": 420
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 8,
+    "citation_count": 5,
+    "citations": [
+      "https://www.smartprix.com/bytes/best-all-rounder-phones-under-30000-august-2026/?utm_source=openai",
+      "https://www.smartprix.com/bytes/best-all-rounder-phones-under-30000-august-2026/?utm_source=openai",
+      "https://shop.vivo.com/in/product/10310?hl=en-IN&utm_source=openai",
+      "https://www.realme.com/in/newsroom/realme-P4-Power-5G-with-India%27s-First-Biggest-10001-mAh-battery?utm_source=openai",
+      "https://www.samsung.com/in/explore/brand/best-mobile-phones-under-rs30000-in-india/?utm_source=openai"
+    ],
+    "answer_len_chars": 3109,
+    "answer_excerpt": "I’ll compare currently available phones around ₹30,000 in India across performance, cameras, battery, software support, and reliability, then give you a short ranked list with tradeoffs.Assuming you mean **₹30,000 in India**, these are the most balanced options as of **August 27, 2026**:\n\n| Phone | Best For | Why Consider It | Main Compromise |\n|---|---|---|---|\n| **Motorola Edge 70 Fusion** | **B",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Samsung",
+        "Nothing",
+        "Vivo",
+        "Realme"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best all-rounder smartphones under 30000",
+    "ok": true,
+    "elapsed": 25.3,
+    "credits_consumed": 0.21,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 19890,
+      "output_tokens": 1082,
+      "input_tokens": 18808,
+      "output_tokens_details": {
+        "reasoning_tokens": 415
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 4,
+    "citation_count": 3,
+    "citations": [
+      "https://www.smartprix.com/bytes/best-all-rounder-phones-under-30000-august-2026/",
+      "https://www.91mobiles.com/reviews/best-phones-under-rs-30000/amp/",
+      "https://www.smartprix.com/bytes/best-all-rounder-phones-under-30000-august-2026/"
+    ],
+    "answer_len_chars": 2595,
+    "answer_excerpt": "I’ll compare currently available phones in India under ₹30,000 across performance, cameras, battery, software support, and display, then give a short ranked shortlist with the best fit for different priorities.Assuming you mean **₹30,000 in India**, these are the strongest all-rounders as of **August 27, 2026**:\n\n| Phone | Best for | Why consider it | Main compromise |\n|---|---|---|---|\n| **Motoro",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Samsung",
+        "Nothing",
+        "Realme",
+        "Vivo"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Phones with ultra-wide camera under 30000",
+    "ok": true,
+    "elapsed": 42.7,
+    "credits_consumed": 0.41,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 34596,
+      "output_tokens": 1550,
+      "input_tokens": 33046,
+      "output_tokens_details": {
+        "reasoning_tokens": 970
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 14,
+    "citation_count": 4,
+    "citations": [
+      "https://www.motorola.in/smartphones-motorola-edge-70-fusion/p?utm_source=openai",
+      "https://www.motorola.in/motorola-edge-family?utm_source=openai",
+      "https://in.nothing.tech/products/phone-3a-pro?Capacity=8%2B128GB&Colour=Black%5C&utm_source=openai",
+      "https://www.oneplus.in/nord-ce5?utm_source=openai"
+    ],
+    "answer_len_chars": 2027,
+    "answer_excerpt": "I’ll check current India-market phones priced below ₹30,000 with a real ultrawide rear camera, then narrow them by camera quality and overall value.Assuming you mean **₹30,000 in India**, these are good options with a rear ultrawide camera:\n\n| Phone | Approx. price | Ultrawide camera | Best for |\n|---|---:|---|---|\n| **Motorola Edge 70 Fusion** | ₹28,999 | 13MP, 120° | Best overall camera value |\n",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Nothing",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "Phones with good OIS camera under 30000",
+    "ok": true,
+    "elapsed": 40.6,
+    "credits_consumed": 0.42,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 36317,
+      "output_tokens": 1484,
+      "input_tokens": 34833,
+      "output_tokens_details": {
+        "reasoning_tokens": 810
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 16,
+    "citation_count": 5,
+    "citations": [
+      "https://in.nothing.tech/products/phone-3a-pro?Capacity=8%2B128GB&Colour=Black%5C&utm_source=openai",
+      "https://www.vivo.com/in/products/param/v50?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-70-fusion/p?utm_source=openai",
+      "https://www.motorola.in/motorola-edge-family?utm_source=openai",
+      "https://www.samsung.com/in/smartphones/galaxy-a36/buy/?utm_source=openai"
+    ],
+    "answer_len_chars": 2558,
+    "answer_excerpt": "I’ll check current India pricing and camera specifications, then narrow the list to phones with genuine optical image stabilization under ₹30,000.Assuming you mean **₹30,000 in India**, these are the best OIS-camera phones to consider:\n\n| Phone | Typical price | Camera strengths | Best for |\n|---|---:|---|---|\n| **Nothing Phone (3a) Pro** | Around ₹30,000 during sales | 50MP OIS main camera plus 5",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Nothing",
+        "Vivo",
+        "Motorola",
+        "Google",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "Phones with best low-light camera under 30000",
+    "ok": true,
+    "elapsed": 38.1,
+    "credits_consumed": 0.44,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 37662,
+      "output_tokens": 1593,
+      "input_tokens": 36069,
+      "output_tokens_details": {
+        "reasoning_tokens": 998
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 10,
+    "citation_count": 4,
+    "citations": [
+      "https://www.motorola.in/smartphones-motorola-edge-70-fusion/p?utm_source=openai",
+      "https://www.moneycontrol.com/technology/google-pixel-8a-drops-below-rs-25-000-on-flipkart-but-should-you-buy-it-article-13572023.html?utm_source=openai",
+      "https://www.moneycontrol.com/technology/best-camera-phones-under-rs-30-000-you-can-consider-and-why-each-option-makes-sense-article-13928951.html/amp?utm_source=openai",
+      "https://shop.vivo.com/in/product/10321?skuId=PLACEHOLDER1&utm_source=openai"
+    ],
+    "answer_len_chars": 2468,
+    "answer_excerpt": "I’ll compare currently available India-market phones around ₹30,000, prioritizing night photography, main-sensor quality, stabilization, and usable ultrawide cameras rather than megapixel counts.Assuming you mean **₹30,000 in India**, these are the strongest low-light camera choices:\n\n1. **Motorola Edge 70 Fusion - best overall**\n   - Current official price: **₹28,999**\n   - 50MP Sony LYTIA 710 ma",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Google",
+        "Vivo"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "Phones with cinematic video recording under 30000",
+    "ok": true,
+    "elapsed": 43.4,
+    "credits_consumed": 0.33,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 28312,
+      "output_tokens": 1492,
+      "input_tokens": 26820,
+      "output_tokens_details": {
+        "reasoning_tokens": 783
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 11,
+    "citation_count": 3,
+    "citations": [
+      "https://www.oneplus.in/nord-5/specs?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-70-fusion/p?utm_source=openai",
+      "https://store.google.com/in/product/pixel_8a?hl=en-GB&src=android&utm_source=openai"
+    ],
+    "answer_len_chars": 2731,
+    "answer_excerpt": "I’ll compare currently available phones in India under ₹30,000 with emphasis on video quality: stabilization, 4K recording, HDR/Log options, microphones, and sustained performance.Assuming you mean **₹30,000 in India**, these are the strongest options for cinematic-style video:\n\n| Phone | Typical price | Video strengths | Best for |\n|---|---:|---|---|\n| **OnePlus Nord 5** | ₹29,999 with launch/car",
+    "logic_classification": {
+      "mentioned_brands": [
+        "OnePlus",
+        "Motorola",
+        "Google",
+        "Nothing",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best phones with flagship-style features under 30000",
+    "ok": true,
+    "elapsed": 29.4,
+    "credits_consumed": 0.23,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 20275,
+      "output_tokens": 1217,
+      "input_tokens": 19058,
+      "output_tokens_details": {
+        "reasoning_tokens": 436
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 4,
+    "citation_count": 5,
+    "citations": [
+      "https://www.gadgets360.com/mobiles/best-phone-under-30000/amp",
+      "https://www.gadgets360.com/mobiles/guide/best-mobiles-under-rs-30000-in-india-july-2026-11722054",
+      "https://www.gadgets360.com/mobiles/guide/best-mobiles-under-rs-30000-in-india-july-2026-11722054",
+      "https://www.gadgets360.com/mobiles/guide/best-mobiles-under-rs-30000-in-india-july-2026-11722054",
+      "https://www.samsung.com/in/explore/brand/best-mobile-phones-under-rs30000-in-india/"
+    ],
+    "answer_len_chars": 3436,
+    "answer_excerpt": "I’ll treat this as a ₹30,000 budget in India and compare current phones on display, chipset, cameras, software support, battery, and overall flagship-like experience. I’ll verify current pricing and availability before ranking them.Assuming you mean **₹30,000 in India**, these are the strongest flagship-style options as of **August 27, 2026**:\n\n| Phone | Approx. price | Best for | Flagship-style f",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Realme",
+        "Nothing",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best gaming and camera phone under 30000",
+    "ok": true,
+    "elapsed": 73.4,
+    "credits_consumed": 0.44,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 38277,
+      "output_tokens": 1385,
+      "input_tokens": 36892,
+      "output_tokens_details": {
+        "reasoning_tokens": 790
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 8,
+    "citation_count": 4,
+    "citations": [
+      "https://www.motorola.in/smartphones-motorola-edge-70-fusion/p?utm_source=openai",
+      "https://www.digit.in/top-5-gaming-smartphones-under-rs-30000",
+      "https://www.iqoo.com/in/products/neo10r?id=60&utm_source=openai",
+      "https://www.smartprix.com/bytes/best-all-rounder-phones-under-30000-august-2026/"
+    ],
+    "answer_len_chars": 2110,
+    "answer_excerpt": "I’ll compare current India-market phones around ₹30,000, balancing sustained gaming performance, camera quality, battery, and software support rather than naming a single benchmark winner.Assuming you mean **₹30,000 in India**, my top recommendation is:\n\n## Best Gaming + Camera Phone: Motorola Edge 70 Fusion\n\n**Why it is the best balance:**\n- Price: around **₹28,999**\n- Snapdragon 7s Gen 4\n- 50MP ",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Oppo",
+        "iQOO",
+        "Nothing"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "Phones with flagship-style camera tuning under 30000",
+    "ok": true,
+    "elapsed": 44.4,
+    "credits_consumed": 0.44,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 37403,
+      "output_tokens": 1641,
+      "input_tokens": 35762,
+      "output_tokens_details": {
+        "reasoning_tokens": 932
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 15,
+    "citation_count": 5,
+    "citations": [
+      "https://gadgets.beebom.com/reviews/motorola-edge-60-pro?utm_source=openai",
+      "https://pickryt.com/product/nothing-phone-3a-pro?utm_source=openai",
+      "https://www.indiatoday.in/technology/reviews/story/vivo-v50-review-a-reliable-option-but-2681161-2025-02-17?utm_source=openai",
+      "https://en.wikipedia.org/wiki/Samsung_Galaxy_A56_5G?utm_source=openai",
+      "https://www.smartprix.com/bytes/iqoo-neo-10r-review-best-phone-for-bgmi-gaming-under-%E2%82%B930000/?utm_source=openai"
+    ],
+    "answer_len_chars": 3142,
+    "answer_excerpt": "I’ll treat this as a ₹30,000 budget in India and compare current phones for camera processing, HDR, skin tones, consistency, and video rather than megapixel count alone. I’m checking current pricing and camera reviews before narrowing the list.Assuming you mean **₹30,000 in India**, these are the strongest options if you want **flagship-style processing**, not just high megapixel counts:\n\n| Phone ",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Nothing",
+        "Vivo",
+        "Samsung",
+        "Google",
+        "iQOO"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "What are the top bold-looking phones available on Flipkart right now?",
+    "ok": true,
+    "elapsed": 40.0,
+    "credits_consumed": 0.5,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 43373,
+      "output_tokens": 1493,
+      "input_tokens": 41880,
+      "output_tokens_details": {
+        "reasoning_tokens": 785
+      }
+    },
+    "search_calls": 5,
+    "search_queries_total": 12,
+    "citation_count": 7,
+    "citations": [
+      "https://www.flipkart.com/nothing-phone-3-black-256-gb/p/itmc401ba4a8e8f3",
+      "https://www.flipkart.com/motorola-edge-60-fusion/p/itm8d66468dc2698?utm_source=openai",
+      "https://www.flipkart.com/poco-m8-power-5g-blaze-orange-128-gb/p/itme6ed250ab73df?ov_redirect=true&utm_source=openai",
+      "https://www.flipkart.com/motorola-signature-pantone-martini-olive-256-gb/p/itm945fffeb4a94c?BU=Mobile&param=595003&utm_source=openai",
+      "https://www.flipkart.com/vivo-v70-passion-red-256-gb/p/itmecfa7a31699de?utm_source=openai",
+      "https://www.flipkart.com/oppo-reno15-pro-5g-cocoa-brown-512-gb/p/itm157c5e40707f0?utm_source=openai",
+      "https://www.flipkart.com/apple-iphone-17-pro-max-cosmic-orange-256-gb/p/itm81f3a173391c4?utm_source=openai"
+    ],
+    "answer_len_chars": 3015,
+    "answer_excerpt": "As of **August 27, 2026**, these are the boldest-looking phones I found available on Flipkart. Prices and stock can change by pincode and seller.\n\n| Pick | Why it stands out | Current Flipkart price |\n|---|---|---:|\n| **Nothing Phone (3), Black** | Most distinctive tech aesthetic: transparent-inspired styling, geometric camera layout, and Nothing’s rear light/matrix design. | **₹79,999** for 12 GB",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Nothing",
+        "Motorola",
+        "Vivo",
+        "Oppo",
+        "Apple"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "ai supported phones",
+    "ok": true,
+    "elapsed": 20.9,
+    "credits_consumed": 0.19,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 16917,
+      "output_tokens": 707,
+      "input_tokens": 16210,
+      "output_tokens_details": {
+        "reasoning_tokens": 257
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 7,
+    "citation_count": 6,
+    "citations": [
+      "https://store.google.com/us/product/pixel_11?hl=en-US&utm_source=openai",
+      "https://www.samsung.com/us/support/answer/ANS10001639/?msockid=1b16794e09ca685210f16f3108be69d0&utm_source=openai",
+      "https://support.google.com/android/answer/17499451?hl=en&utm_source=openai",
+      "https://www.apple.com/apple-intelligence/?utm_source=openai",
+      "https://www.apple.com/apple-intelligence/?utm_source=openai",
+      "https://www.samsung.com/us/support/answer/ANS10001639/?msockid=1b16794e09ca685210f16f3108be69d0&utm_source=openai"
+    ],
+    "answer_len_chars": 1978,
+    "answer_excerpt": "If you mean **phones with built-in AI features**, the main options in the U.S. are:\n\n- **Google Pixel 11 series**: strongest for Google Gemini, AI photo editing, camera assistance, call tools, and proactive help. Pixel 10 is also a strong, usually cheaper option. ([store.google.com](https://store.google.com/us/product/pixel_11?hl=en-US&utm_source=openai))\n- **Samsung Galaxy S26 series**: best all-",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Google",
+        "Samsung",
+        "Apple"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Are AI cameras truly worth it, and which phone offers the best AI photography?",
+    "ok": true,
+    "elapsed": 34.4,
+    "credits_consumed": 0.23,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 19602,
+      "output_tokens": 1334,
+      "input_tokens": 18268,
+      "output_tokens_details": {
+        "reasoning_tokens": 525
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 7,
+    "citation_count": 4,
+    "citations": [
+      "https://blog.google/products-and-platforms/devices/pixel/pixel-11-magic-capture/?utm_source=openai",
+      "https://www.techradar.com/news/best-cameraphone?utm_source=openai",
+      "https://www.samsung.com/us/smartphones/galaxy-s26-ultra/?utm_source=openai",
+      "https://www.apple.com/newsroom/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/?utm_source=openai"
+    ],
+    "answer_len_chars": 3620,
+    "answer_excerpt": "**Short answer:** AI camera features are worth paying for if you want consistently good photos with minimal effort. They are less compelling if you already own a recent flagship, shoot RAW, or want authentic images without generative editing.\n\nAI photography is most useful for:\n\n- Combining multiple exposures for better HDR and night shots\n- Selecting the sharpest frame from a burst\n- Improving fa",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Google",
+        "Samsung",
+        "Apple"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "premium looking phones under 30K",
+    "ok": true,
+    "elapsed": 26.7,
+    "credits_consumed": 0.3,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 27530,
+      "output_tokens": 1153,
+      "input_tokens": 26377,
+      "output_tokens_details": {
+        "reasoning_tokens": 550
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 12,
+    "citation_count": 4,
+    "citations": [
+      "https://www.motorola.in/smartphones-motorola-edge-70-fusion/p?utm_source=openai",
+      "https://in.nothing.tech/products/phone-3a-pro?utm_source=openai",
+      "https://shop.iqoo.com/in/product/2061?utm_source=openai",
+      "https://www.oneplus.in/nord-5?utm_source=openai"
+    ],
+    "answer_len_chars": 2284,
+    "answer_excerpt": "I’ll check current India pricing and availability for phones under ₹30,000, then shortlist models that look and feel premium rather than only maximizing specs.Assuming you mean **₹30,000 in India**, these are the best premium-looking options:\n\n| Phone | Typical price | Why it looks premium | Best for |\n|---|---:|---|---|\n| **Motorola Edge 70 Fusion** | ₹28,999 | Curved 1.5K AMOLED display, slim de",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Nothing",
+        "iQOO",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Premium Phones"
+    }
+  },
+  {
+    "prompt": "less expensive smartphone with curved display",
+    "ok": true,
+    "elapsed": 16.7,
+    "credits_consumed": 0.18,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 19203,
+      "output_tokens": 551,
+      "input_tokens": 18652,
+      "output_tokens_details": {
+        "reasoning_tokens": 255
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 3,
+    "citation_count": 2,
+    "citations": [
+      "https://www.motorola.com/us/en/p/phones/motorola-edge/edge-gen-5/pmipmgm36mw?bvstate=pg%3A3%2Fct%3Ar&pn=PB0T0003US&skimoffer=3575276",
+      "https://en-us.support.motorola.com/app/answers/detail/a_id/186716/p/0"
+    ],
+    "answer_len_chars": 1233,
+    "answer_excerpt": "I’ll check current U.S. pricing and availability for affordable phones with genuinely curved-edge displays, then narrow it to the best value options.For an affordable phone with a **true curved-edge display**, I’d recommend the **Motorola Edge (2024)**.\n\n- **Typical price:** about **$240 refurbished/renewed**, sometimes under $300 new\n- **Display:** 6.55-inch curved pOLED, 144Hz\n- **Storage:** 256",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Samsung",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best battery phone under 30000",
+    "ok": true,
+    "elapsed": 25.7,
+    "credits_consumed": 0.19,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 18769,
+      "output_tokens": 835,
+      "input_tokens": 17934,
+      "output_tokens_details": {
+        "reasoning_tokens": 473
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 8,
+    "citation_count": 2,
+    "citations": [
+      "https://www.realme.com/in/newsroom/realme-P4-Power-5G-with-India%27s-First-Biggest-10001-mAh-battery?utm_source=openai",
+      "https://shop.iqoo.com/in/product/2061?utm_source=openai"
+    ],
+    "answer_len_chars": 1296,
+    "answer_excerpt": "I’m checking current India-market phones under ₹30,000, prioritizing battery capacity, charging, and real-world endurance rather than just headline specs.Assuming you mean **₹30,000 in India**, the best battery phone is:\n\n## **realme P4 Power 5G**\n- **Battery:** 10,001 mAh\n- **Charging:** 80W\n- **Price:** ₹25,999 for 8GB/128GB; ₹27,999 for 8GB/256GB\n- **Performance:** Dimensity 7400 Ultra\n- **Weig",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Realme",
+        "iQOO"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Lightweight premium phones under 30000",
+    "ok": true,
+    "elapsed": 41.8,
+    "credits_consumed": 0.39,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 34168,
+      "output_tokens": 1429,
+      "input_tokens": 32739,
+      "output_tokens_details": {
+        "reasoning_tokens": 808
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 14,
+    "citation_count": 3,
+    "citations": [
+      "https://www.motorola.in/smartphones-moto-edge-70/p?skuId=607&utm_source=openai",
+      "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m-black-128gb-sm-m566bzkains/?msockid=068d25ca23aa647819f2337a22636522&utm_source=openai",
+      "https://support.nothing.tech/hc/en-us/articles/33045864045585-What-are-the-dimensions-and-weight-of-the-Phone-3a?utm_source=openai"
+    ],
+    "answer_len_chars": 2552,
+    "answer_excerpt": "I’ll compare currently available phones in India under ₹30,000, prioritizing low weight, premium materials, display quality, cameras, and long-term software support.Assuming you mean **₹30,000 in India**, these are the best lightweight, premium-feeling options as of **August 27, 2026**:\n\n| Phone | Approx. price | Weight | Best for |\n|---|---:|---:|---|\n| **Motorola Edge 70** | Around ₹30,000; ofte",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Samsung",
+        "Nothing"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Premium Phones"
+    }
+  },
+  {
+    "prompt": "Ultra slim smartphones with big battery",
+    "ok": true,
+    "elapsed": 27.1,
+    "credits_consumed": 0.2,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 19194,
+      "output_tokens": 983,
+      "input_tokens": 18211,
+      "output_tokens_details": {
+        "reasoning_tokens": 399
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 8,
+    "citation_count": 4,
+    "citations": [
+      "https://en-us.support.motorola.com/app/answers/detail/a_id/193059/~/specifications---motorola-edge-70?utm_source=openai",
+      "https://www.oneplus.com/us/15/specs?utm_source=openai",
+      "https://news.samsung.com/us/samsung-unveils-galaxy-s26-series-most-intuitive-galaxy-ai-phone-yet/?utm_source=openai",
+      "https://www.apple.com/iphone-air/specs/?utm_source=openai"
+    ],
+    "answer_len_chars": 2262,
+    "answer_excerpt": "I’ll compare currently available thin phones by thickness, battery capacity, and practical US availability, then separate true ultra-slim options from phones that are merely thin for their battery size.For a **thin phone with a genuinely large battery**, these are the strongest options in 2026:\n\n| Phone | Thickness | Battery | Best for |\n|---|---:|---:|---|\n| **Motorola Edge 70** | **5.99 mm** | *",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Samsung",
+        "OnePlus",
+        "Apple"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best phone for content creators",
+    "ok": true,
+    "elapsed": 20.8,
+    "credits_consumed": 0.16,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 16710,
+      "output_tokens": 686,
+      "input_tokens": 16024,
+      "output_tokens_details": {
+        "reasoning_tokens": 247
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 6,
+    "citation_count": 5,
+    "citations": [
+      "https://www.apple.com/iphone-17-pro/specs/?utm_source=openai",
+      "https://www.apple.com/newsroom/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/?utm_source=openai",
+      "https://www.samsung.com/us/support/answer/ANS10010358/?utm_source=openai",
+      "https://store.google.com/us/product/pixel_10_pro_specs?hl=en-US&utm_source=openai",
+      "https://www.apple.com/iphone-17-pro/specs/?utm_source=openai"
+    ],
+    "answer_len_chars": 1740,
+    "answer_excerpt": "**Best overall for content creators: iPhone 17 Pro Max.**\n\nIt is the safest choice if your priority is **high-quality video for TikTok, Instagram, YouTube, and vlogging**. It offers 4K Dolby Vision up to 120 fps, ProRes up to 4K/120 fps with external storage, Apple Log 2, ProRes RAW, strong stabilization, and Dual Capture for recording with the front and rear cameras simultaneously. ([apple.com](h",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Apple",
+        "Samsung",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "What are the top clamshell-style vs book-style foldable phones available in India and how do they compare?",
+    "ok": false,
+    "error": "",
+    "elapsed": 120.01616477966309
+  },
+  {
+    "prompt": "Best phone for Call of Duty",
+    "ok": true,
+    "elapsed": 29.2,
+    "credits_consumed": 0.23,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 19216,
+      "output_tokens": 989,
+      "input_tokens": 18227,
+      "output_tokens_details": {
+        "reasoning_tokens": 570
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 8,
+    "citation_count": 3,
+    "citations": [
+      "https://www.samsung.com/us/smartphones/galaxy-s26-ultra/?page=home&utm_source=openai",
+      "https://global.redmagic.gg/products/redmagic-11-pro?variant=54805462810697&utm_source=openai",
+      "https://www.apple.com/iphone-17-pro/specs/?utm_source=openai"
+    ],
+    "answer_len_chars": 1824,
+    "answer_excerpt": "I’ll compare current gaming phones for Call of Duty, prioritizing sustained performance, touch response, display refresh rate, cooling, battery, and software support rather than peak benchmark scores alone.For **Call of Duty: Mobile**, my top pick is:\n\n## Best overall: Samsung Galaxy S26 Ultra\n- Snapdragon 8 Elite Gen 5 for Galaxy\n- 120Hz display\n- Large vapor chamber for sustained gaming\n- Excell",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Apple"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best phone with telephoto camera under 40000",
+    "ok": true,
+    "elapsed": 34.6,
+    "credits_consumed": 0.32,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 26050,
+      "output_tokens": 1236,
+      "input_tokens": 24814,
+      "output_tokens_details": {
+        "reasoning_tokens": 688
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 11,
+    "citation_count": 3,
+    "citations": [
+      "https://www.vivo.com/in/products/v60?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-edge-60-pro/p?skuId=537&utm_source=openai",
+      "https://in.nothing.tech/products/phone-3a-pro?utm_source=openai"
+    ],
+    "answer_len_chars": 1938,
+    "answer_excerpt": "I’ll compare current India-market phones under ₹40,000 with a true telephoto lens, focusing on camera quality, price, software support, and trade-offs rather than just megapixels.**Best pick: vivo V60 12GB/256GB**\n\nIt is the strongest telephoto-camera phone under ₹40,000 in India as of **August 27, 2026**. Its 50MP ZEISS telephoto camera uses a large Sony IMX882 sensor, OIS, and 3x optical zoom, w",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Vivo",
+        "Motorola",
+        "Nothing",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "What are the top camera phones under 40k in India?",
+    "ok": true,
+    "elapsed": 31.1,
+    "credits_consumed": 0.27,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 20405,
+      "output_tokens": 1340,
+      "input_tokens": 19065,
+      "output_tokens_details": {
+        "reasoning_tokens": 562
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 4,
+    "citation_count": 8,
+    "citations": [
+      "https://www.gadgets360.com/mobiles/features/love-photography-these-are-the-best-camera-phones-under-rs-40000-right-now-11900040",
+      "https://gadgets.beebom.com/best-camera-phones-under-40000",
+      "https://gadgets.beebom.com/best-camera-phones-under-40000",
+      "https://gadgets.beebom.com/best-camera-phones-under-40000",
+      "https://www.91mobiles.com/list-of-phones/top-10-camera-mobiles-below-40000-in-india",
+      "https://www.gadgets360.com/mobiles/features/love-photography-these-are-the-best-camera-phones-under-rs-40000-right-now-11900040",
+      "https://gadgets.beebom.com/best-camera-phones-under-40000",
+      "https://www.gadgets360.com/mobiles/features/love-photography-these-are-the-best-camera-phones-under-rs-40000-right-now-11900040"
+    ],
+    "answer_len_chars": 3321,
+    "answer_excerpt": "As of **August 27, 2026**, these are the strongest camera-phone options under **₹40,000 in India**. Prices can change with sales and bank offers.\n\n| Phone | Approx. price | Best for | Camera strengths | Main compromise |\n|---|---:|---|---|---|\n| **Motorola Edge 70 Pro** | ₹38,800–₹39,999 | Best overall camera package | Strong low-light performance, OIS, capable ultrawide, 4K 60fps video, 50MP self",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Nothing",
+        "Vivo",
+        "Realme"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "Best gaming phone under 20000",
+    "ok": true,
+    "elapsed": 30.2,
+    "credits_consumed": 0.35,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 33319,
+      "output_tokens": 891,
+      "input_tokens": 32428,
+      "output_tokens_details": {
+        "reasoning_tokens": 464
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 6,
+    "citation_count": 4,
+    "citations": [
+      "https://www.realme.com/in/realme-p4-5g/specs?utm_source=openai",
+      "https://www.digit.in/mobiles/best-gaming-phones-under-20000.html",
+      "https://www.digit.in/mobiles/best-gaming-phones-under-20000.html",
+      "https://www.digit.in/mobiles/best-gaming-phones-under-20000.html"
+    ],
+    "answer_len_chars": 1505,
+    "answer_excerpt": "I’ll compare currently available phones in the ₹20,000 range, prioritizing chipset/GPU performance, sustained thermals, display, battery, and software value rather than camera features.Assuming you mean **₹20,000 in India**:\n\n## Best gaming phone: realme P4 5G\n\n- **Chipset:** MediaTek Dimensity 7400 Ultra\n- **Display:** 6.77-inch 144Hz AMOLED\n- **Battery:** 7,000mAh with 80W charging\n- **Storage:*",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Realme",
+        "iQOO",
+        "Oppo"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Gaming Phones"
+    }
+  },
+  {
+    "prompt": "Which foldable phones are best suited for frequent travelers who need compactness and battery life?",
+    "ok": true,
+    "elapsed": 35.2,
+    "credits_consumed": 0.34,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 28743,
+      "output_tokens": 1498,
+      "input_tokens": 27245,
+      "output_tokens_details": {
+        "reasoning_tokens": 584
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 8,
+    "citation_count": 8,
+    "citations": [
+      "https://image-us.samsung.com/us/smartphones/galaxy-z-flip7/pdf/B7_B2B_Spec_Sheet_R3Lc.pdf",
+      "https://store.google.com/us/product/pixel_10_pro_fold_specs?hl=en-US",
+      "https://en-ca.support.motorola.com/app/answers/detail/a_id/187124/~/specifications---motorola-razr-2025?utm_source=openai",
+      "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/2025_4Q_Interim_Report.pdf?utm_source=openai",
+      "https://www.honor.com/sd/phones/honor-magic-v5/?utm_source=openai",
+      "https://image-us.samsung.com/us/smartphones/galaxy-z-flip7/pdf/B7_B2B_Spec_Sheet_R3Lc.pdf",
+      "https://store.google.com/us/product/pixel_10_pro_fold_specs?hl=en-US",
+      "https://en-ca.support.motorola.com/app/answers/detail/a_id/187124/~/specifications---motorola-razr-2025?utm_source=openai"
+    ],
+    "answer_len_chars": 3966,
+    "answer_excerpt": "As of **August 27, 2026**, these are the strongest choices for frequent travelers who prioritize **compactness and battery life**:\n\n| Phone | Best for | Folded size / weight | Battery | Why choose it |\n|---|---|---:|---:|---|\n| **Samsung Galaxy Z Flip7** | Best overall compact travel phone | 85.5 × 75.2 × 13.7 mm; **188 g** | **4,300 mAh**; Samsung rates up to 31 hours of video playback | Extremel",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Google",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "Best AI phone in India",
+    "ok": true,
+    "elapsed": 38.7,
+    "credits_consumed": 0.27,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 26239,
+      "output_tokens": 864,
+      "input_tokens": 25375,
+      "output_tokens_details": {
+        "reasoning_tokens": 414
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 7,
+    "citation_count": 4,
+    "citations": [
+      "https://store.google.com/in/config/pixel_10_pro?hl=en-IN&selections=eyJwcm9kdWN0RmFtaWx5IjoiY0dsNFpXeGZNVEJmY0hKdiJ9&utm_source=openai",
+      "https://www.samsung.com/in/smartphones/galaxy-s/galaxy-s26-ultra-sky-blue-256gb-sm-s948blbbins/buy/?utm_source=openai",
+      "https://store.google.com/in/product/pixel_10_specs?hl=en-IN&pli=1",
+      "https://www.tomsguide.com/phones/samsung-galaxy-s26-ultra-vs-oneplus-15"
+    ],
+    "answer_len_chars": 2042,
+    "answer_excerpt": "I’ll compare the strongest AI-focused smartphones currently available in India, using current pricing, software support, and practical AI features rather than marketing claims.**Best AI phone in India right now: Google Pixel 10 Pro**\n\nIt has the strongest AI-first experience: Gemini integration, **Magic Cue**, Gemini Live with camera, Camera Coach, AI video generation, advanced photo editing, and ",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Google",
+        "Samsung",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "best phone under 40k",
+    "ok": true,
+    "elapsed": 19.6,
+    "credits_consumed": 0.2,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 20216,
+      "output_tokens": 760,
+      "input_tokens": 19456,
+      "output_tokens_details": {
+        "reasoning_tokens": 476
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 4,
+    "citation_count": 1,
+    "citations": [
+      "https://gadgets.beebom.com/best-phones-under-40000"
+    ],
+    "answer_len_chars": 1075,
+    "answer_excerpt": "I’m checking current India pricing and the strongest options below ₹40,000, then I’ll narrow it to one recommendation based on camera, performance, battery, and software support.Assuming you mean **₹40,000 in India**, my top pick is:\n\n## Motorola Edge 70 Pro\n- Around **₹39,999**\n- Strong all-round performance with Dimensity 8500 Extreme\n- Excellent 6.8-inch 144Hz AMOLED display\n- Good cameras, inc",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Vivo",
+        "Google",
+        "Samsung",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best camera phone under 50000",
+    "ok": true,
+    "elapsed": 30.3,
+    "credits_consumed": 0.37,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 34550,
+      "output_tokens": 876,
+      "input_tokens": 33674,
+      "output_tokens_details": {
+        "reasoning_tokens": 459
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 9,
+    "citation_count": 4,
+    "citations": [
+      "https://www.91mobiles.com/reviews/top-phones-under-rs-50000-june-2026/amp/",
+      "https://www.oppo.com/in/newsroom/press/oppo-india-launches-all-new-reno-15-series/?utm_source=openai",
+      "https://gadgets.beebom.com/best-camera-phones-under-50000",
+      "https://www.91mobiles.com/reviews/top-phones-under-rs-50000-june-2026/amp/"
+    ],
+    "answer_len_chars": 1815,
+    "answer_excerpt": "I’ll compare current India-market camera phones under ₹50,000, focusing on real camera performance, not just specifications, and verify current pricing before recommending one.Assuming you mean **₹50,000 in India**, the best camera phone right now is:\n\n## **Nothing Phone (4a) Pro**\n**Price:** Around ₹40,000–₹50,000, depending on variant and offers.\n\nWhy it’s the best camera-focused choice:\n- 50MP ",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Nothing",
+        "Oppo",
+        "Samsung",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "Best phone for BGMI",
+    "ok": true,
+    "elapsed": 27.6,
+    "credits_consumed": 0.27,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 25529,
+      "output_tokens": 906,
+      "input_tokens": 24623,
+      "output_tokens_details": {
+        "reasoning_tokens": 544
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 11,
+    "citation_count": 5,
+    "citations": [
+      "https://www.iqoo.com/in/products/param/iqoo15?utm_source=openai",
+      "https://rog.asus.com/phones/rog-phone-9-pro/spec/?config=90AI00S3-M00030&utm_source=openai",
+      "https://www.oneplus.in/15/specs?utm_source=openai",
+      "https://www.iqoo.com/in/products/param/iqoo13?utm_source=openai",
+      "https://bgmi.helpshift.com/hc/en/6-bgmi/faq/710-guide-on-enabling-120-fps-in-bgmi/?utm_source=openai"
+    ],
+    "answer_len_chars": 1466,
+    "answer_excerpt": "**Best phone for BGMI in 2026: iQOO 15**\n\nWhy it’s the best overall choice in India:\n\n- Snapdragon 8 Elite Gen 5\n- 7,000 mAh battery with 100W charging\n- 8K vapor-chamber cooling\n- 144Hz 2K AMOLED display\n- 3,200Hz touch sampling and bypass charging for gaming\n- Strong performance for long BGMI sessions ([iqoo.com](https://www.iqoo.com/in/products/param/iqoo15?utm_source=openai))\n\n**Alternatives:*",
+    "logic_classification": {
+      "mentioned_brands": [
+        "iQOO",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Which foldable phones in India have the best speakers and audio quality?",
+    "ok": true,
+    "elapsed": 60.2,
+    "credits_consumed": 0.53,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 44035,
+      "output_tokens": 1865,
+      "input_tokens": 42170,
+      "output_tokens_details": {
+        "reasoning_tokens": 1031
+      }
+    },
+    "search_calls": 5,
+    "search_queries_total": 12,
+    "citation_count": 11,
+    "citations": [
+      "https://www.phonearena.com/reviews/google-pixel-10-pro-fold-review_id7731",
+      "https://www.phonearena.com/news/phones-with-best-speakers-sound-quality_id132160",
+      "https://www.whathifi.com/smartphones-tablets/samsung-galaxy-z-fold-7?utm_source=openai",
+      "https://timesofindia.indiatimes.com/technology/reviews/oneplus-open-long-term-review-a-foldable-that-gets-a-lot-right/articleshow/110365506.cms?utm_source=openai",
+      "https://bandicootlab.com/phone/oneplus-open?utm_source=openai",
+      "https://www.techadvisor.com/article/2762212/motorola-razr-60-ultra-review.html?utm_source=openai",
+      "https://www.techadvisor.com/article/2762212/motorola-razr-60-ultra-review.html?utm_source=openai",
+      "https://www.smartprix.com/bytes/vivo-x-fold5-review-with-pros-and-cons-my-first-foldable-left-a-big-impression/?utm_source=openai",
+      "https://timesofindia.indiatimes.com/technology/reviews/vivo-x-fold5-review-it-folds-it-lasts-it-fits/articleshow/123511728.cms?utm_source=openai",
+      "https://www.sammobile.com/samsung/galaxy-z-flip-7/review/?utm_source=openai"
+    ],
+    "answer_len_chars": 4300,
+    "answer_excerpt": "I’ll compare currently available foldables in India using recent reviews and manufacturer specifications, focusing specifically on speaker loudness, stereo balance, bass/detail, Dolby or spatial-audio support, and headphone/Bluetooth options.**Best overall for built-in speakers: Google Pixel 10 Pro Fold**\n\nBased on recent testing and reviews of foldables sold or officially listed in India, these a",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Google",
+        "Samsung",
+        "OnePlus",
+        "Motorola",
+        "Vivo"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "Which foldable phones are best for gaming and high-performance use in India?",
+    "ok": true,
+    "elapsed": 65.3,
+    "credits_consumed": 0.58,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 45120,
+      "output_tokens": 2520,
+      "input_tokens": 42600,
+      "output_tokens_details": {
+        "reasoning_tokens": 1198
+      }
+    },
+    "search_calls": 5,
+    "search_queries_total": 12,
+    "citation_count": 7,
+    "citations": [
+      "https://www.samsung.com/in/smartphones/galaxy-z-fold7/",
+      "https://news.samsung.com/in/samsung-india-begins-pre-orders-for-galaxy-z-fold7-galaxy-z-flip7-the-most-advanced-galaxy-z-series-yet?utm_source=openai",
+      "https://shop.vivo.com/in/product/10316?cid=noPreload&utm_source=openai",
+      "https://www.androidcentral.com/phones/vivo/vivo-x-fold-5-review",
+      "https://www.motorola.in/smartphones-motorola-razr-60-ultra/p?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-razr-60-ultra/p?utm_source=openai",
+      "https://www.oneplus.in/open"
+    ],
+    "answer_len_chars": 5549,
+    "answer_excerpt": "I’ll compare currently available foldables in India on the factors that matter for gaming: chipset/GPU performance, sustained thermals, display refresh rate and aspect ratio, battery/charging, software, durability, and price. I’ll verify current India availability and pricing before ranking them.As of **August 27, 2026**, these are the strongest foldable options you can realistically consider in I",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Vivo",
+        "Motorola",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "Best AI-powered smartphone",
+    "ok": true,
+    "elapsed": 15.9,
+    "credits_consumed": 0.08,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 10453,
+      "output_tokens": 616,
+      "input_tokens": 9837,
+      "output_tokens_details": {
+        "reasoning_tokens": 235
+      }
+    },
+    "search_calls": 1,
+    "search_queries_total": 4,
+    "citation_count": 4,
+    "citations": [
+      "https://www.samsung.com/us/support/answer/ANS10010424/?utm_source=openai",
+      "https://store.google.com/us/product/pixel_10_pro_specs?hl=en-US&utm_source=openai",
+      "https://www.apple.com/apple-intelligence/?utm_source=openai",
+      "https://www.techradar.com/best/best-android-phones?utm_source=openai"
+    ],
+    "answer_len_chars": 1709,
+    "answer_excerpt": "I’ll compare the current flagship phones by AI capability, software support, privacy, camera, and ecosystem rather than treating “AI-powered” as a marketing label.**Best overall AI-powered smartphone: Samsung Galaxy S26 Ultra**\n\nIt currently offers the broadest AI feature set: Gemini integration, real-time call transcription and translation, writing and note assistance, AI photo editing, scam dete",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Google",
+        "Apple"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Can you list the top foldable phones in India for multitasking and productivity?",
+    "ok": true,
+    "elapsed": 51.4,
+    "credits_consumed": 0.45,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 34545,
+      "output_tokens": 1835,
+      "input_tokens": 32710,
+      "output_tokens_details": {
+        "reasoning_tokens": 736
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 15,
+    "citation_count": 6,
+    "citations": [
+      "https://www.samsung.com/in/smartphones/galaxy-z-fold8-ultra/?utm_source=openai",
+      "https://www.samsung.com/us/support/answer/ANS10003235/?utm_source=openai",
+      "https://www.vivo.com/in/products/x-fold5?utm_source=openai",
+      "https://www.samsung.com/in/multistore/in_corporate/feature.SM-F971BZKDINS/?utm_source=openai",
+      "https://store.google.com/in/product/pixel_11_pro_fold?hl=en-IN&utm_source=openai",
+      "https://www.oneplus.in/open?utm_source=openai"
+    ],
+    "answer_len_chars": 4699,
+    "answer_excerpt": "As of **August 27, 2026**, these are the strongest foldable phones officially available in India for multitasking and productivity:\n\n| Rank | Phone | Best For | India Price* |\n|---|---|---|---:|\n| **1** | **Samsung Galaxy Z Fold8 Ultra** | Maximum productivity and large-screen work | From **₹1,99,999** |\n| **2** | **vivo X Fold5** | Battery life, meetings, documents and lighter hardware | **₹1,59,",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Vivo",
+        "Google",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "best designed phone under 40000 India 2026",
+    "ok": true,
+    "elapsed": 33.9,
+    "credits_consumed": 0.37,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 33112,
+      "output_tokens": 1172,
+      "input_tokens": 31940,
+      "output_tokens_details": {
+        "reasoning_tokens": 816
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 9,
+    "citation_count": 4,
+    "citations": [
+      "https://www.motorola.in/motorola-edge-family/?utm_source=openai",
+      "https://gadgets.beebom.com/best-phones-under-40000",
+      "https://gadgets.beebom.com/best-phones-under-40000",
+      "https://www.gadgets360.com/nothing-phone-4a-pro-price-in-india-135856?utm_source=openai"
+    ],
+    "answer_len_chars": 1518,
+    "answer_excerpt": "## Best-designed phone under ₹40,000 in India: **Motorola Edge 70 Pro**\n\n**Price:** ₹39,999 for 8GB/256GB on Motorola India. ([motorola.in](https://www.motorola.in/motorola-edge-family/?utm_source=openai))\n\nWhy it is the best design choice:\n\n- Slim, premium quad-curved body with distinctive Pantone colour options\n- Fabric-inspired and acetate-style finishes that look less generic than typical glas",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Nothing"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "phone that handles multitasking well under 40000",
+    "ok": true,
+    "elapsed": 31.3,
+    "credits_consumed": 0.28,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 25657,
+      "output_tokens": 1173,
+      "input_tokens": 24484,
+      "output_tokens_details": {
+        "reasoning_tokens": 664
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 11,
+    "citation_count": 4,
+    "citations": [
+      "https://www.smartprix.com/mobiles/best-5g-phones-under-40000-list?utm_source=openai",
+      "https://www.iqoo.com/in/products/neo10?id=64&utm_source=openai",
+      "https://www.mi.com/global/product/poco-x8-pro/?utm_source=openai",
+      "https://www.oneplus.in/13r/specs?utm_source=openai"
+    ],
+    "answer_len_chars": 1727,
+    "answer_excerpt": "I’ll compare current phones under ₹40,000 with emphasis on RAM, chipset, thermal stability, display quality, and software behavior during heavy multitasking. I’m assuming you mean ₹40,000 in India; if you meant another currency, say which one.Assuming you mean **₹40,000 in India**, the best choice for multitasking is:\n\n## Best Pick: realme GT 7T, 12GB + 512GB\n\n- **Approx. price:** ₹37,500\n- **Proc",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Realme",
+        "iQOO",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Which specific phone models offer the best low-light photography under 40k?",
+    "ok": true,
+    "elapsed": 36.9,
+    "credits_consumed": 0.44,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 37959,
+      "output_tokens": 1484,
+      "input_tokens": 36475,
+      "output_tokens_details": {
+        "reasoning_tokens": 887
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 8,
+    "citation_count": 6,
+    "citations": [
+      "https://www.91mobiles.com/list-of-phones/top-10-camera-mobiles-below-40000-in-india",
+      "https://www.91mobiles.com/reviews/tecno-camon-50-ultra-review/?utm_source=openai",
+      "https://www.91mobiles.com/hub/vivo-v50-review/",
+      "https://www.gadgets360.com/mobiles/features/love-photography-these-are-the-best-camera-phones-under-rs-40000-right-now-11900040",
+      "https://www.tomsguide.com/phones/live/pixel-9a-review-live-blog-performance-cameras-battery-price",
+      "https://www.gadgets360.com/mobiles/features/love-photography-these-are-the-best-camera-phones-under-rs-40000-right-now-11900040"
+    ],
+    "answer_len_chars": 2638,
+    "answer_excerpt": "Assuming you mean **₹40,000 in India**, these are the strongest low-light camera options currently:\n\n| Phone | Typical price | Best for | Low-light verdict |\n|---|---:|---|---|\n| **Motorola Edge 70 Pro 5G** | About **₹38,800** | Best overall night photography and video | **Top pick**. Its 50MP Sony LYTIA main sensor, OIS, 50MP ultrawide, and strong processing produce clean handheld night shots. It",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Vivo",
+        "Samsung",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "best gaming phone under 40k",
+    "ok": false,
+    "error": "",
+    "elapsed": 120.0108380317688
+  },
+  {
+    "prompt": "What are the pros and cons of current top foldable phones in India for business users?",
+    "ok": false,
+    "error": "",
+    "elapsed": 120.00716805458069
+  },
+  {
+    "prompt": "is a foldable phone practical for daily use india",
+    "ok": true,
+    "elapsed": 27.4,
+    "credits_consumed": 0.21,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 19389,
+      "output_tokens": 1066,
+      "input_tokens": 18323,
+      "output_tokens_details": {
+        "reasoning_tokens": 449
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 8,
+    "citation_count": 2,
+    "citations": [
+      "https://www.samsung.com/in/offer/samsung-care-plus/mobile/?utm_source=openai",
+      "https://news.samsung.com/in/samsung-india-begins-pre-orders-for-galaxy-z-fold7-galaxy-z-flip7-the-most-advanced-galaxy-z-series-yet?utm_source=openai"
+    ],
+    "answer_len_chars": 2888,
+    "answer_excerpt": "I’ll check the current India foldable market, warranty/service considerations, and practical ownership tradeoffs before giving a recommendation.Yes, a foldable phone can be practical for daily use in India, but it is still a **premium convenience**, not the safest or best-value choice for everyone.\n\n**Practical if you:**\n- Want a compact phone in your pocket: choose a flip model such as Galaxy Z F",
+    "logic_classification": {
+      "mentioned_brands": [
+        "OnePlus",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "Best camera phone under 20000",
+    "ok": true,
+    "elapsed": 26.0,
+    "credits_consumed": 0.2,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 20223,
+      "output_tokens": 766,
+      "input_tokens": 19457,
+      "output_tokens_details": {
+        "reasoning_tokens": 386
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 3,
+    "citation_count": 5,
+    "citations": [
+      "https://www.gadgets360.com/mobiles/best-camera-phone-under-20000",
+      "https://mobilepick.in/best-camera-phone-under-20000-inr",
+      "https://www.91mobiles.com/list-of-phones/top-10-camera-mobiles-below-20000-in-india",
+      "https://mobilepick.in/best-camera-phone-under-20000-inr",
+      "https://www.gadgets360.com/mobiles/best-camera-phone-under-20000"
+    ],
+    "answer_len_chars": 1686,
+    "answer_excerpt": "Assuming you mean **₹20,000 in India**, my top pick is:\n\n## Best Camera Phone Under ₹20,000: Honor 200\n\n- **Price:** Around ₹19,998\n- **Cameras:** 50MP main + 50MP telephoto + 12MP ultrawide\n- **Best for:** Portraits, people, daylight photography, and low-light shots\n- **Why:** Its dedicated telephoto camera gives better portrait separation and more useful zoom than most phones in this price range",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Realme",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "best camera phone for night photography under 40000 India 2026",
+    "ok": true,
+    "elapsed": 40.2,
+    "credits_consumed": 0.4,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 35008,
+      "output_tokens": 1420,
+      "input_tokens": 33588,
+      "output_tokens_details": {
+        "reasoning_tokens": 815
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 8,
+    "citation_count": 3,
+    "citations": [
+      "https://www.gadgets360.com/mobiles/features/love-photography-these-are-the-best-camera-phones-under-rs-40000-right-now-11900040",
+      "https://shop.vivo.com/in/product/10312?skuId=19183&utm_source=openai",
+      "https://store.google.com/in/product/pixel_10a?hl=en-IN&utm_source=openai"
+    ],
+    "answer_len_chars": 2293,
+    "answer_excerpt": "**Best pick: Motorola Edge 70 Pro 5G**\n\nAs of **27 August 2026**, the Motorola Edge 70 Pro is my top recommendation for **night photography under ₹40,000 in India**. The 8GB/256GB model is listed at **₹39,999** and combines a 50MP OIS main camera, 50MP ultrawide, strong low-light processing, and 4K 60fps video. Its matching main and ultrawide sensors also give more consistent results when switchin",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Vivo",
+        "Google",
+        "Nothing"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "Which foldable phones in India offer the best value for money for premium buyers?",
+    "ok": true,
+    "elapsed": 67.9,
+    "credits_consumed": 0.62,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 49669,
+      "output_tokens": 2394,
+      "input_tokens": 47275,
+      "output_tokens_details": {
+        "reasoning_tokens": 1010
+      }
+    },
+    "search_calls": 6,
+    "search_queries_total": 14,
+    "citation_count": 10,
+    "citations": [
+      "https://shop.vivo.com/in/product/10316?cid=noPreload&utm_source=openai",
+      "https://www.91mobiles.com/reviews/vivo-x-fold5-review/?utm_source=openai",
+      "https://www.gadgets360.com/mobiles/reviews/motorola-razr-fold-review-11644227",
+      "https://www.gadgets360.com/mobiles/reviews/motorola-razr-fold-review-11644227",
+      "https://news.samsung.com/in/samsung-india-launches-its-all-new-foldable-lineup-galaxy-z-fold8-ultra-fold8-and-flip8-pre-order-now-for-exciting-offers",
+      "https://news.samsung.com/in/samsung-india-launches-its-all-new-foldable-lineup-galaxy-z-fold8-ultra-fold8-and-flip8-pre-order-now-for-exciting-offers",
+      "https://store.google.com/in/product/pixel_11_pro_fold?hl=en-IN&utm_source=openai",
+      "https://www.digitalcameraworld.com/tech/android-phones/google-pixel-11-pro-fold-review?utm_source=openai",
+      "https://news.samsung.com/in/samsung-india-launches-its-all-new-foldable-lineup-galaxy-z-fold8-ultra-fold8-and-flip8-pre-order-now-for-exciting-offers",
+      "https://www.motorola.in/smartphones-razr-family?utm_source=openai"
+    ],
+    "answer_len_chars": 6318,
+    "answer_excerpt": "I’ll compare the current India-market foldables on total ownership value, not just launch price: hardware, software support, durability, cameras, service, and typical street pricing. I’m checking current availability and prices first because this category changes quickly.As of **August 27, 2026**, these are the best-value premium foldables officially available in India:\n\n| Rank | Phone | Current I",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Vivo",
+        "Motorola",
+        "Samsung",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "are foldable phones worth buying in india?",
+    "ok": true,
+    "elapsed": 29.2,
+    "credits_consumed": 0.22,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 19485,
+      "output_tokens": 1238,
+      "input_tokens": 18247,
+      "output_tokens_details": {
+        "reasoning_tokens": 440
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 8,
+    "citation_count": 5,
+    "citations": [
+      "https://news.samsung.com/in/samsung-india-begins-pre-orders-for-galaxy-z-fold7-galaxy-z-flip7-the-most-advanced-galaxy-z-series-yet?utm_source=openai",
+      "https://www.samsung.com/in/support/mobile-devices/what-is-the-foldable-display-and-protective-film-on-my-smartphone/?utm_source=openai",
+      "https://www.samsung.com/in/support/mobile-devices/my-device-is-shattered-and-there-is-a-crack-on-my-screen/?utm_source=openai",
+      "https://www.samsung.com/in/support/mobile-devices/samsung-care-frequently-asked-questions/?utm_source=openai",
+      "https://shop.vivo.com/in/product/10316?cid=noPreload&utm_source=openai"
+    ],
+    "answer_len_chars": 3969,
+    "answer_excerpt": "I’ll compare the current foldable-phone tradeoffs in India, including durability, service support, pricing, and which buyer profiles actually benefit. I’m checking the latest India-specific models and prices before giving a recommendation.**Short answer: foldable phones are worth buying in India only if you have a specific use for the folding form factor.** They are no longer just fragile experime",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Vivo",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "Best phone for night photography",
+    "ok": true,
+    "elapsed": 15.9,
+    "credits_consumed": 0.12,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 10657,
+      "output_tokens": 651,
+      "input_tokens": 10006,
+      "output_tokens_details": {
+        "reasoning_tokens": 291
+      }
+    },
+    "search_calls": 1,
+    "search_queries_total": 4,
+    "citation_count": 4,
+    "citations": [
+      "https://store.google.com/us/product/pixel_10_pro_specs?hl=en-US&utm_source=openai",
+      "https://www.tomsguide.com/phones/i-shot-200-photos-with-galaxy-s26-ultra-vs-pixel-10-pro-xl-heres-the-winner?utm_source=openai",
+      "https://www.tomsguide.com/best-picks/best-phones?utm_source=openai",
+      "https://skiesandscopes.com/best-phones-for-astrophotography/?utm_source=openai"
+    ],
+    "answer_len_chars": 1564,
+    "answer_excerpt": "I’ll check current 2026 camera comparisons and official specs, then give you a practical recommendation by shooting style and budget.**Best for night photography: Google Pixel 10 Pro or Pixel 10 Pro XL.**\n\nWhy:\n- Excellent automatic **Night Sight** processing\n- Dedicated **Astrophotography** mode\n- Strong detail and natural-looking exposure in very dark scenes\n- 5x telephoto and Pro controls for m",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Google",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "which foldable phone is best for someone buying their first foldable india",
+    "ok": true,
+    "elapsed": 49.4,
+    "credits_consumed": 0.44,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 37229,
+      "output_tokens": 1566,
+      "input_tokens": 35663,
+      "output_tokens_details": {
+        "reasoning_tokens": 819
+      }
+    },
+    "search_calls": 5,
+    "search_queries_total": 12,
+    "citation_count": 5,
+    "citations": [
+      "https://www.samsung.com/in/smartphones/galaxy-z-fold8/buy/",
+      "https://www.samsung.com/in/smartphones/galaxy-z-fold8/buy/",
+      "https://www.motorola.in/smartphones-razr-family?utm_source=openai",
+      "https://news.samsung.com/in/samsung-india-launches-its-all-new-foldable-lineup-galaxy-z-fold8-ultra-fold8-and-flip8-pre-order-now-for-exciting-offers",
+      "https://store.google.com/in/product/pixel_10_pro_fold?hl=en-IN&utm_source=openai"
+    ],
+    "answer_len_chars": 3211,
+    "answer_excerpt": "I’ll compare the current India-market foldables on durability, software, cameras, battery, service support, and price, then give one clear first-time-buyer recommendation plus alternatives by budget.**Best first foldable in India: Samsung Galaxy Z Fold8.**\n\nIt is the safest all-round choice for a first-time foldable buyer because it combines Samsung’s mature foldable hardware, strong multitasking ",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Samsung",
+        "Motorola",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "4K video recording phone",
+    "ok": true,
+    "elapsed": 19.6,
+    "credits_consumed": 0.19,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 16673,
+      "output_tokens": 777,
+      "input_tokens": 15896,
+      "output_tokens_details": {
+        "reasoning_tokens": 357
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 7,
+    "citation_count": 4,
+    "citations": [
+      "https://www.apple.com/iphone-17-pro/specs/?utm_source=openai",
+      "https://www.samsung.com/us/support/answer/ANS10010342/?utm_source=openai",
+      "https://store.google.com/us/product/pixel_10_pro_specs?hl=en-US&utm_source=openai",
+      "https://www.apple.com/iphone-17/specs/?utm_source=openai"
+    ],
+    "answer_len_chars": 1755,
+    "answer_excerpt": "I’ll compare current phones with strong 4K video recording, prioritizing stabilization, frame-rate options, audio, and sustained recording rather than just resolution.For **4K video recording**, these are the strongest current choices in the U.S.:\n\n- **Best overall video: iPhone 17 Pro or Pro Max**  \n  Records 4K Dolby Vision up to 120 fps, with excellent stabilization, autofocus, audio, ProRes, a",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Apple",
+        "Samsung",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "Best selfie camera phone",
+    "ok": true,
+    "elapsed": 13.1,
+    "credits_consumed": 0.11,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3712
+      },
+      "total_tokens": 10344,
+      "output_tokens": 491,
+      "input_tokens": 9853,
+      "output_tokens_details": {
+        "reasoning_tokens": 201
+      }
+    },
+    "search_calls": 1,
+    "search_queries_total": 4,
+    "citation_count": 3,
+    "citations": [
+      "https://www.apple.com/iphone-17-pro/specs/?utm_source=openai",
+      "https://store.google.com/us/product/pixel_10_pro_specs?hl=en-US&utm_source=openai",
+      "https://www.tomsguide.com/us/best-phone-cameras%2Creview-2272.html?utm_source=openai"
+    ],
+    "answer_len_chars": 1188,
+    "answer_excerpt": "I’ll compare the current top phones specifically for front-camera image quality, video, autofocus, and portrait performance, with US availability in mind.**Best overall selfie camera phone: iPhone 17 Pro Max.**\n\nWhy:\n- Excellent skin tones and detail\n- Best front-camera video, including 4K HDR\n- New **18MP Center Stage** camera automatically keeps you centered during video calls and recordings\n- V",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Apple",
+        "Google",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "Which foldable phones offer the fastest charging and wireless charging options in India?",
+    "ok": true,
+    "elapsed": 43.8,
+    "credits_consumed": 0.4,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 33879,
+      "output_tokens": 1569,
+      "input_tokens": 32310,
+      "output_tokens_details": {
+        "reasoning_tokens": 885
+      }
+    },
+    "search_calls": 4,
+    "search_queries_total": 15,
+    "citation_count": 5,
+    "citations": [
+      "https://www.vivo.com/in/products/xfold3pro?utm_source=openai",
+      "https://www.vivo.com/in/products/param/x-fold5?utm_source=openai",
+      "https://www.motorola.in/smartphones-motorola-razr-60-ultra/p?utm_source=openai",
+      "https://www.oneplus.in/open/specs?utm_source=openai",
+      "https://news.samsung.com/in/samsung-galaxy-z-fold7-raising-the-bar-for-smartphones?utm_source=openai"
+    ],
+    "answer_len_chars": 2669,
+    "answer_excerpt": "I’ll verify current India availability and charging specifications, then separate the fastest wired-charging foldables from models that also support wireless charging.As of **August 27, 2026**, these are the strongest foldable-phone options officially listed or sold in India for charging speed:\n\n| Phone | Wired charging | Wireless charging | Best for |\n|---|---:|---:|---|\n| **vivo X Fold3 Pro** | ",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Vivo",
+        "Motorola",
+        "OnePlus",
+        "Samsung",
+        "iQOO"
+      ],
+      "is_branded_query": false,
+      "intent": "Transactional",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "Best phone for Instagram reels",
+    "ok": true,
+    "elapsed": 16.3,
+    "credits_consumed": 0.09,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 10354,
+      "output_tokens": 693,
+      "input_tokens": 9661,
+      "output_tokens_details": {
+        "reasoning_tokens": 296
+      }
+    },
+    "search_calls": 1,
+    "search_queries_total": 4,
+    "citation_count": 3,
+    "citations": [
+      "https://www.apple.com/iphone-17-pro/specs/?utm_source=openai",
+      "https://www.samsung.com/ca/business/smartphones/galaxy-s/galaxy-s26-ultra-sm-s948wzdexac/?utm_source=openai",
+      "https://engineering.fb.com/2023/07/17/video-engineering/hdr-video-reels-meta/?utm_source=openai"
+    ],
+    "answer_len_chars": 1799,
+    "answer_excerpt": "I’ll compare the current flagship options specifically for Instagram Reels: front-camera quality, stabilization, portrait video, heat/battery, and how reliably Instagram preserves video quality. I’ll give you a best overall pick plus cheaper alternatives.**Best overall for Instagram Reels: iPhone 17 Pro Max.**\n\nWhy it’s the safest choice:\n\n- Excellent video stabilization and autofocus\n- 18MP autof",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Apple",
+        "Samsung"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "AI photo editing phone",
+    "ok": true,
+    "elapsed": 24.7,
+    "credits_consumed": 0.21,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 19453,
+      "output_tokens": 1025,
+      "input_tokens": 18428,
+      "output_tokens_details": {
+        "reasoning_tokens": 600
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 8,
+    "citation_count": 4,
+    "citations": [
+      "https://store.google.com/product/pixel_11_pro?hl=en-US&utm_source=openai",
+      "https://www.samsung.com/us/smartphones/galaxy-s26-ultra/?utm_source=openai",
+      "https://www.apple.com/apple-intelligence/?os=v&utm_source=openai",
+      "https://www.techradar.com/phones/best-ai-phone?utm_source=openai"
+    ],
+    "answer_len_chars": 1768,
+    "answer_excerpt": "I’ll narrow this to current phones with genuinely useful on-device or built-in AI photo-editing tools, then compare the strongest options by photo quality, editing features, and price tier.If you want a **phone with the best built-in AI photo editing**, choose:\n\n1. **Google Pixel 11 Pro**: Best for AI editing. Google Photos includes Magic Editor, Magic Eraser, Best Take, Photo Unblur, and newer Ge",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Google",
+        "Samsung",
+        "Apple"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "phone with good processor and long battery life under 40000",
+    "ok": true,
+    "elapsed": 26.3,
+    "credits_consumed": 0.28,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 25471,
+      "output_tokens": 1136,
+      "input_tokens": 24335,
+      "output_tokens_details": {
+        "reasoning_tokens": 621
+      }
+    },
+    "search_calls": 3,
+    "search_queries_total": 11,
+    "citation_count": 3,
+    "citations": [
+      "https://www.oneplus.in/nord-6?utm_source=openai",
+      "https://www.realme.com/in/realme-gt-7t-5g?feedback=01&utm_source=openai",
+      "https://www.gadgets360.com/mobiles/best-phone-under-40000?utm_source=openai"
+    ],
+    "answer_len_chars": 1818,
+    "answer_excerpt": "I’ll assume you mean ₹40,000 in India and compare current phones on processor performance, battery endurance, charging, and value. I’ll verify current pricing and specifications before recommending a shortlist.Assuming your budget is **₹40,000 in India**, my top recommendation is:\n\n## Best Overall: OnePlus Nord 6\n\n- **Processor:** Snapdragon 8s Gen 4\n- **Battery:** Massive **9,000mAh**\n- **Chargin",
+    "logic_classification": {
+      "mentioned_brands": [
+        "OnePlus",
+        "Realme"
+      ],
+      "is_branded_query": false,
+      "intent": "Informational",
+      "topic": null
+    }
+  },
+  {
+    "prompt": "best camera phone under 40k",
+    "ok": true,
+    "elapsed": 20.6,
+    "credits_consumed": 0.18,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 18909,
+      "output_tokens": 740,
+      "input_tokens": 18169,
+      "output_tokens_details": {
+        "reasoning_tokens": 345
+      }
+    },
+    "search_calls": 2,
+    "search_queries_total": 7,
+    "citation_count": 4,
+    "citations": [
+      "https://www.gadgets360.com/mobiles/reviews/vivo-v60-review-9168834?utm_source=openai",
+      "https://gadgets.beebom.com/best-camera-phones-under-40000?utm_source=openai",
+      "https://en-in.support.motorola.com/app/answers/detail/a_id/192075/~/specifications---moto-edge-70-pro?utm_source=openai",
+      "https://store.google.com/in/product/pixel_9a_specs?hl=en-IN&utm_source=openai"
+    ],
+    "answer_len_chars": 1623,
+    "answer_excerpt": "I’ll compare current India-market phones around ₹40,000, prioritizing camera hardware, image quality, video, and overall value rather than just megapixels.Assuming you mean **₹40,000 in India**, the best camera phone right now is:\n\n## **Best Overall: Vivo V60**\n- **Price:** starts around ₹36,999\n- **Why:** ZEISS-tuned cameras, strong portraits, useful telephoto zoom, and consistent daylight photog",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Vivo",
+        "Nothing",
+        "Motorola",
+        "Google"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Camera Phones"
+    }
+  },
+  {
+    "prompt": "List the best foldable phones in India for people upgrading from a flagship non-foldable phone",
+    "ok": true,
+    "elapsed": 71.0,
+    "credits_consumed": 0.67,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 50681,
+      "output_tokens": 2967,
+      "input_tokens": 47714,
+      "output_tokens_details": {
+        "reasoning_tokens": 1239
+      }
+    },
+    "search_calls": 6,
+    "search_queries_total": 19,
+    "citation_count": 10,
+    "citations": [
+      "https://news.samsung.com/in/samsung-india-launches-its-all-new-foldable-lineup-galaxy-z-fold8-ultra-fold8-and-flip8-pre-order-now-for-exciting-offers",
+      "https://www.samsung.com/in/smartphones/galaxy-z-fold8-ultra/?utm_source=openai",
+      "https://news.samsung.com/in/samsung-india-launches-its-all-new-foldable-lineup-galaxy-z-fold8-ultra-fold8-and-flip8-pre-order-now-for-exciting-offers",
+      "https://store.google.com/in/product/pixel_10_pro_fold?hl=en-in&utm_source=openai",
+      "https://shop.vivo.com/in/product/10316?cid=noPreload&utm_source=openai",
+      "https://www.androidcentral.com/phones/vivo/vivo-x-fold-5-review?utm_source=openai",
+      "https://www.gadgets360.com/mobiles/reviews/motorola-razr-60-ultra-review-8872825?utm_source=openai",
+      "https://www.gadgets360.com/mobiles/reviews/motorola-razr-60-ultra-review-8872825?utm_source=openai",
+      "https://news.samsung.com/in/samsung-india-launches-its-all-new-foldable-lineup-galaxy-z-fold8-ultra-fold8-and-flip8-pre-order-now-for-exciting-offers",
+      "https://www.samsung.com/in/smartphones/galaxy-z-flip8/?utm_source=openai"
+    ],
+    "answer_len_chars": 8100,
+    "answer_excerpt": "As of **August 27, 2026**, these are the best foldable phones officially available in India for someone moving from a premium non-foldable such as a Galaxy Ultra, iPhone Pro Max, Pixel Pro XL or OnePlus flagship.\n\n**Key distinction:** a book-style foldable is a genuine screen-and-productivity upgrade. A flip foldable is mainly a compactness and style upgrade, with more compromises in battery, came",
+    "logic_classification": {
+      "mentioned_brands": [
+        "OnePlus",
+        "Samsung",
+        "Google",
+        "Vivo",
+        "Motorola"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": "Foldable Phones"
+    }
+  },
+  {
+    "prompt": "which phone has the fastest processor under 40000",
+    "ok": true,
+    "elapsed": 63.5,
+    "credits_consumed": 0.51,
+    "usage": {
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 6784
+      },
+      "total_tokens": 43091,
+      "output_tokens": 1670,
+      "input_tokens": 41421,
+      "output_tokens_details": {
+        "reasoning_tokens": 1271
+      }
+    },
+    "search_calls": 6,
+    "search_queries_total": 20,
+    "citation_count": 4,
+    "citations": [
+      "https://www.motorola.in/motorola-edge-family/?utm_source=openai",
+      "https://www.gadgets360.com/poco-x8-pro-5g-price-in-india-135944?utm_source=openai",
+      "https://www.91mobiles.com/realme-gt-7-price-in-india?utm_source=openai",
+      "https://www.gadgets360.com/oneplus-nord-6-price-in-india-136054?utm_source=openai"
+    ],
+    "answer_len_chars": 1495,
+    "answer_excerpt": "I’ll compare currently available phones around ₹40,000 in India, focusing on chipset performance rather than camera or overall features, and verify current pricing before recommending one.Assuming you mean **₹40,000 in India**, the fastest processor phone currently under the budget is:\n\n## **Motorola Edge 70 Pro**\n- **Price:** about ₹38,959–₹39,999\n- **Processor:** MediaTek Dimensity 8500 Extreme\n",
+    "logic_classification": {
+      "mentioned_brands": [
+        "Motorola",
+        "Realme",
+        "OnePlus"
+      ],
+      "is_branded_query": false,
+      "intent": "Commercial",
+      "topic": null
+    }
+  }
+]

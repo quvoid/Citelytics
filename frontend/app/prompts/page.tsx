@@ -2,6 +2,7 @@ import Link from "next/link";
 import { PromptComposer } from "@/components/prompt-composer";
 import { PromptResearchPanel } from "@/components/prompt-research-panel";
 import { PromptsTable, type PromptRow } from "@/components/prompts-table";
+import { TagManager } from "@/components/tag-manager";
 import { TopicRollupTable, type TopicRow } from "@/components/topic-rollup-table";
 import { getCurrentProjectId } from "@/lib/current-project";
 import { COUNTRIES, countryName } from "@/lib/countries";
@@ -9,10 +10,13 @@ import {
   getAnswerBrandMentions,
   getCitations,
   getProject,
+  getPromptTags,
   getPrompts,
   getRawResponses,
+  getTags,
   getTrackedUrls,
 } from "@/lib/queries";
+import type { Tag } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -23,11 +27,12 @@ function inWindow(iso: string, start: number, end: number): boolean {
   return t >= start && t < end;
 }
 
-function buildHref(params: { view?: string; compare?: string; country?: string }): string {
+function buildHref(params: { view?: string; compare?: string; country?: string; tag?: string }): string {
   const qs = new URLSearchParams();
   if (params.view) qs.set("view", params.view);
   if (params.compare) qs.set("compare", params.compare);
   if (params.country) qs.set("country", params.country);
+  if (params.tag) qs.set("tag", params.tag);
   const s = qs.toString();
   return s ? `/prompts?${s}` : "/prompts";
 }
@@ -35,29 +40,44 @@ function buildHref(params: { view?: string; compare?: string; country?: string }
 export default async function PromptsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ view?: string; compare?: string; country?: string }>;
+  searchParams: Promise<{ view?: string; compare?: string; country?: string; tag?: string }>;
 }) {
-  const { view, compare: compareParam, country: countryParam } = await searchParams;
+  const { view, compare: compareParam, country: countryParam, tag: tagParam } = await searchParams;
   const isTopicView = view === "topic";
+  const isTagView = view === "tag";
   const compare = compareParam === "1";
   const country = COUNTRIES.some((c) => c.code === countryParam) ? countryParam : undefined;
 
   const projectId = await getCurrentProjectId();
-  const [allPrompts, citations, rawResponses, ownBrand, project] = await Promise.all([
+  const [allPrompts, citations, rawResponses, ownBrand, project, tags] = await Promise.all([
     getPrompts("citation", projectId),
     getCitations(),
     getRawResponses(),
     getTrackedUrls({ ownOnly: true }),
     getProject(projectId),
+    getTags(projectId),
   ]);
   const defaultCountry = project?.default_country ?? "IN";
 
-  // Chips are built from the unfiltered set, so selecting a market never
-  // removes the other markets' chips and strands the user there.
+  const promptTagRows = await getPromptTags(allPrompts.map((p) => p.id));
+  const tagsByPrompt = new Map<string, Tag[]>();
+  for (const { prompt_id, tag } of promptTagRows) {
+    const list = tagsByPrompt.get(prompt_id) ?? [];
+    list.push(tag);
+    tagsByPrompt.set(prompt_id, list);
+  }
+
+  // Chips are built from the unfiltered set, so selecting a market/tag never
+  // removes the other chips and strands the user there.
   const marketsInUse = [...new Set(allPrompts.map((p) => p.country ?? defaultCountry))].sort();
-  const prompts = country
+  const tagsInUse = tags.filter((t) => promptTagRows.some((pt) => pt.tag.id === t.id));
+
+  let prompts = country
     ? allPrompts.filter((p) => (p.country ?? defaultCountry) === country)
     : allPrompts;
+  if (tagParam) {
+    prompts = prompts.filter((p) => tagsByPrompt.get(p.id)?.some((t) => t.id === tagParam));
+  }
 
   const ownId = ownBrand[0]?.id ?? null;
   const mentions = await getAnswerBrandMentions(rawResponses.map((r) => r.id));
@@ -137,11 +157,56 @@ export default async function PromptsPage({
       avgPosition: avg(s.positions),
       citeDelta: s.currentCitations - s.priorCitations,
       mentionDelta: s.currentMentions - s.priorMentions,
+      tags: tagsByPrompt.get(p.id) ?? [],
     };
   });
 
-  // --- Topic rollup: current vs prior window, real Share of Voice per topic ---
+  // --- Rollup: current vs prior window, real Share of Voice per GROUP ---
+  // Shared between the topic view (AI-decided, one topic per prompt) and
+  // the tag view (user-decided, a prompt can carry several) — same window
+  // math and Share-of-Voice formula either way, only how prompts get
+  // bucketed into groups differs.
   const rawResponseById = new Map(rawResponses.map((r) => [r.id, r]));
+
+  function rollupByGroup(byGroup: Map<string, { promptIds: Set<string> }>): TopicRow[] {
+    return Array.from(byGroup.entries())
+      .map(([groupLabel, g]) => {
+        const groupRRIds = new Set(
+          rawResponses.filter((r) => g.promptIds.has(r.prompt_id)).map((r) => r.id)
+        );
+        const currentRR = new Set(
+          [...groupRRIds].filter((id) => {
+            const r = rawResponseById.get(id);
+            return r && inWindow(r.fetched_at, currentStart, now);
+          })
+        );
+        const priorRR = new Set(
+          [...groupRRIds].filter((id) => {
+            const r = rawResponseById.get(id);
+            return r && inWindow(r.fetched_at, priorStart, currentStart);
+          })
+        );
+
+        const sovFor = (rrIds: Set<string>) => {
+          const relevant = mentions.filter((m) => rrIds.has(m.raw_response_id) && m.mentioned);
+          const own = ownId ? relevant.filter((m) => m.tracked_url_id === ownId).length : 0;
+          const total = relevant.length;
+          return { own, sov: total ? Math.round((own / total) * 100) : 0 };
+        };
+
+        const current = sovFor(currentRR);
+        const prior = sovFor(priorRR);
+
+        return {
+          topic: groupLabel,
+          mentions: current.own,
+          prior: prior.own,
+          sov: current.sov,
+          sovPrior: prior.sov,
+        };
+      })
+      .sort((a, b) => b.mentions - a.mentions);
+  }
 
   const byTopic = new Map<string, { promptIds: Set<string> }>();
   for (const p of prompts) {
@@ -150,58 +215,38 @@ export default async function PromptsPage({
     g.promptIds.add(p.id);
     byTopic.set(topic, g);
   }
+  const topicRows = rollupByGroup(byTopic);
 
-  const topicRows: TopicRow[] = Array.from(byTopic.entries())
-    .map(([topic, g]) => {
-      const topicRRIds = new Set(
-        rawResponses.filter((r) => g.promptIds.has(r.prompt_id)).map((r) => r.id)
-      );
-      const currentRR = new Set(
-        [...topicRRIds].filter((id) => {
-          const r = rawResponseById.get(id);
-          return r && inWindow(r.fetched_at, currentStart, now);
-        })
-      );
-      const priorRR = new Set(
-        [...topicRRIds].filter((id) => {
-          const r = rawResponseById.get(id);
-          return r && inWindow(r.fetched_at, priorStart, currentStart);
-        })
-      );
-
-      const sovFor = (rrIds: Set<string>) => {
-        const relevant = mentions.filter((m) => rrIds.has(m.raw_response_id) && m.mentioned);
-        const own = ownId ? relevant.filter((m) => m.tracked_url_id === ownId).length : 0;
-        const total = relevant.length;
-        return { own, sov: total ? Math.round((own / total) * 100) : 0 };
-      };
-
-      const current = sovFor(currentRR);
-      const prior = sovFor(priorRR);
-
-      return {
-        topic,
-        mentions: current.own,
-        prior: prior.own,
-        sov: current.sov,
-        sovPrior: prior.sov,
-      };
-    })
-    .sort((a, b) => b.mentions - a.mentions);
+  // A prompt can carry several tags, so it contributes to EVERY tag group it
+  // belongs to — not just one, unlike topic's single-value grouping above.
+  const byTag = new Map<string, { promptIds: Set<string> }>();
+  for (const p of prompts) {
+    const promptTags = tagsByPrompt.get(p.id) ?? [];
+    if (!promptTags.length) {
+      const g = byTag.get("Untagged") ?? { promptIds: new Set<string>() };
+      g.promptIds.add(p.id);
+      byTag.set("Untagged", g);
+      continue;
+    }
+    for (const t of promptTags) {
+      const g = byTag.get(t.name) ?? { promptIds: new Set<string>() };
+      g.promptIds.add(p.id);
+      byTag.set(t.name, g);
+    }
+  }
+  const tagRows = rollupByGroup(byTag);
 
   return (
     <div>
-      <section className="flex items-end justify-between gap-10 border-b border-[var(--ink)] py-9">
-        <div>
-          <h1 className="m-0 font-serif text-[40px] font-normal tracking-[-0.02em]">
-            Tracked prompts
-          </h1>
-          <p className="mt-2.5 font-serif text-[16px] text-[var(--muted-2)] italic">
-            {rows.length} prompts, {rows.filter((r) => r.active).length} active — queried on each
-            &ldquo;Fetch citations&rdquo; run
-            {country ? ` in ${countryName(country)}` : ""}.
-          </p>
-        </div>
+      <section className="border-b border-[var(--border)] py-6">
+        <h1 className="m-0 font-sans text-[26px] font-semibold tracking-[-0.02em]">
+          Tracked prompts
+        </h1>
+        <p className="mt-1.5 font-sans text-[13.5px] text-[var(--muted-2)]">
+          {rows.length} prompts, {rows.filter((r) => r.active).length} active — queried on each
+          &ldquo;Fetch citations&rdquo; run
+          {country ? ` in ${countryName(country)}` : ""}.
+        </p>
       </section>
 
       <PromptComposer
@@ -212,18 +257,19 @@ export default async function PromptsPage({
         defaultCountry={defaultCountry}
       />
       <PromptResearchPanel projectId={projectId} defaultCountry={defaultCountry} />
+      <TagManager tags={tags} />
 
-      <section className="flex flex-wrap items-center gap-1.5 pt-4.5">
-        <span className="mr-1 font-sans text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+      <section className="flex flex-wrap items-center gap-1.5 pt-4">
+        <span className="mr-1.5 font-sans text-[10px] font-medium tracking-[0.08em] text-[var(--faint)] uppercase">
           Market
         </span>
         <Link
-          href={buildHref({ view, compare: compareParam })}
-          className="border px-3 py-1.5 font-sans text-[11px] tracking-[0.04em] no-underline"
+          href={buildHref({ view, compare: compareParam, tag: tagParam })}
+          className="rounded-full border px-3 py-1.5 font-sans text-[12px] font-medium tracking-[0.01em] no-underline"
           style={{
-            borderColor: !country ? "var(--ink)" : "var(--rule)",
+            borderColor: !country ? "var(--ink)" : "var(--border)",
             background: !country ? "var(--ink)" : "transparent",
-            color: !country ? "var(--cream)" : "var(--muted-2)",
+            color: !country ? "var(--paper)" : "var(--muted-2)",
           }}
         >
           All
@@ -233,12 +279,12 @@ export default async function PromptsPage({
         {marketsInUse.map((code) => (
           <Link
             key={code}
-            href={buildHref({ view, compare: compareParam, country: code })}
-            className="border px-3 py-1.5 font-sans text-[11px] tracking-[0.04em] no-underline"
+            href={buildHref({ view, compare: compareParam, country: code, tag: tagParam })}
+            className="rounded-full border px-3 py-1.5 font-sans text-[12px] font-medium tracking-[0.01em] no-underline"
             style={{
-              borderColor: country === code ? "var(--ink)" : "var(--rule)",
+              borderColor: country === code ? "var(--ink)" : "var(--border)",
               background: country === code ? "var(--ink)" : "transparent",
-              color: country === code ? "var(--cream)" : "var(--muted-2)",
+              color: country === code ? "var(--paper)" : "var(--muted-2)",
             }}
           >
             {countryName(code)}
@@ -246,38 +292,82 @@ export default async function PromptsPage({
         ))}
       </section>
 
-      <section className="flex items-center justify-between gap-6 pt-4.5">
-        <div className="flex gap-1">
+      {tagsInUse.length > 0 && (
+        <section className="flex flex-wrap items-center gap-1.5 pt-2.5">
+          <span className="mr-1.5 font-sans text-[10px] font-medium tracking-[0.08em] text-[var(--faint)] uppercase">
+            Tag
+          </span>
           <Link
-            href={buildHref({ compare: compareParam })}
-            className="border px-3.5 py-1.5 font-sans text-[11px] tracking-[0.06em] uppercase no-underline"
+            href={buildHref({ view, compare: compareParam, country })}
+            className="rounded-full border px-3 py-1.5 font-sans text-[12px] font-medium tracking-[0.01em] no-underline"
             style={{
-              borderColor: !isTopicView ? "var(--ink)" : "var(--rule)",
-              background: !isTopicView ? "var(--ink)" : "transparent",
-              color: !isTopicView ? "var(--cream)" : "var(--muted-2)",
+              borderColor: !tagParam ? "var(--ink)" : "var(--border)",
+              background: !tagParam ? "var(--ink)" : "transparent",
+              color: !tagParam ? "var(--paper)" : "var(--muted-2)",
+            }}
+          >
+            All
+          </Link>
+          {tagsInUse.map((t) => (
+            <Link
+              key={t.id}
+              href={buildHref({ view, compare: compareParam, country, tag: t.id })}
+              className="rounded-full border px-3 py-1.5 font-sans text-[12px] font-medium tracking-[0.01em] no-underline"
+              style={{
+                borderColor: tagParam === t.id ? "var(--ink)" : "var(--border)",
+                background: tagParam === t.id ? "var(--ink)" : "transparent",
+                color: tagParam === t.id ? "var(--paper)" : "var(--muted-2)",
+              }}
+            >
+              {t.name}
+            </Link>
+          ))}
+        </section>
+      )}
+
+      <section className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] pt-4 pb-4">
+        <div className="flex flex-wrap gap-1">
+          <Link
+            href={buildHref({ compare: compareParam, country, tag: tagParam })}
+            className="rounded-full border px-3.5 py-1.5 font-sans text-[12px] font-medium tracking-[0.01em] no-underline"
+            style={{
+              borderColor: !isTopicView && !isTagView ? "var(--ink)" : "var(--border)",
+              background: !isTopicView && !isTagView ? "var(--ink)" : "transparent",
+              color: !isTopicView && !isTagView ? "var(--paper)" : "var(--muted-2)",
             }}
           >
             By prompt
           </Link>
           <Link
-            href={buildHref({ view: "topic", compare: compareParam })}
-            className="border px-3.5 py-1.5 font-sans text-[11px] tracking-[0.06em] uppercase no-underline"
+            href={buildHref({ view: "topic", compare: compareParam, country, tag: tagParam })}
+            className="rounded-full border px-3.5 py-1.5 font-sans text-[12px] font-medium tracking-[0.01em] no-underline"
             style={{
-              borderColor: isTopicView ? "var(--ink)" : "var(--rule)",
+              borderColor: isTopicView ? "var(--ink)" : "var(--border)",
               background: isTopicView ? "var(--ink)" : "transparent",
-              color: isTopicView ? "var(--cream)" : "var(--muted-2)",
+              color: isTopicView ? "var(--paper)" : "var(--muted-2)",
             }}
           >
             By topic
           </Link>
+          <Link
+            href={buildHref({ view: "tag", compare: compareParam, country, tag: tagParam })}
+            className="rounded-full border px-3.5 py-1.5 font-sans text-[12px] font-medium tracking-[0.01em] no-underline"
+            style={{
+              borderColor: isTagView ? "var(--ink)" : "var(--border)",
+              background: isTagView ? "var(--ink)" : "transparent",
+              color: isTagView ? "var(--paper)" : "var(--muted-2)",
+            }}
+          >
+            By tag
+          </Link>
         </div>
         <Link
-          href={buildHref({ view, compare: compare ? undefined : "1" })}
-          className="border px-3.5 py-1.5 font-sans text-[11px] tracking-[0.06em] uppercase no-underline"
+          href={buildHref({ view, compare: compare ? undefined : "1", country, tag: tagParam })}
+          className="rounded-full border px-3.5 py-1.5 font-sans text-[12px] font-medium tracking-[0.01em] no-underline"
           style={{
-            borderColor: compare ? "var(--ink)" : "var(--rule)",
+            borderColor: compare ? "var(--ink)" : "var(--border)",
             background: compare ? "var(--ink)" : "transparent",
-            color: compare ? "var(--cream)" : "var(--muted-2)",
+            color: compare ? "var(--paper)" : "var(--muted-2)",
           }}
         >
           vs. preceding week{compare ? " ✓" : ""}
@@ -286,8 +376,10 @@ export default async function PromptsPage({
 
       {isTopicView ? (
         <TopicRollupTable topics={topicRows} compare={compare} />
+      ) : isTagView ? (
+        <TopicRollupTable topics={tagRows} compare={compare} />
       ) : (
-        <PromptsTable prompts={rows} compare={compare} />
+        <PromptsTable prompts={rows} allTags={tags} compare={compare} />
       )}
     </div>
   );

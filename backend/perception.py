@@ -1,14 +1,21 @@
+from typing import Any
+
 import store
 from classifier import classify_attributes
 from clients import RateLimitedError, get_engine_client
 from db import get_supabase
 
 
-async def run_perception_fetch(project_id: str) -> int:
+async def run_perception_fetch(project_id: str) -> dict[str, Any]:
     """Runs every active 'perception'-type prompt against every engine and
     extracts brand-attribute associations. Perception prompts are low
     volume (a handful, added occasionally) — a plain await loop is enough,
-    no need for the Celery batch-tracking machinery the citation flow uses."""
+    no need for the Celery batch-tracking machinery the citation flow uses.
+
+    Returns {processed, skipped} rather than a bare count — the two silent
+    `continue`s below (rate limit, non-success fetch) used to make a Gemini
+    quota exhaustion or a dead engine key indistinguishable from "nothing to
+    do"; a caller reading only `processed=0` couldn't tell which happened."""
     sb = get_supabase()
 
     prompts = (
@@ -21,7 +28,7 @@ async def run_perception_fetch(project_id: str) -> int:
         .data
     )
     if not prompts:
-        return 0
+        return {"processed": 0, "skipped": [], "message": "no active perception prompts"}
 
     tracked = (
         sb.table("tracked_urls")
@@ -31,13 +38,14 @@ async def run_perception_fetch(project_id: str) -> int:
         .data
     )
     if not tracked:
-        return 0
+        return {"processed": 0, "skipped": [], "message": "no tracked brands"}
 
     brand_names = [t["name"] for t in tracked]
     name_to_id = {t["name"]: t["id"] for t in tracked}
     engines = sb.table("engines").select("id, name").execute().data
 
     processed = 0
+    skipped: list[dict[str, str]] = []
     for prompt in prompts:
         # Same resolution order as the citation flow — a perception prompt is
         # market-specific too ("what is Bajaj known for?" reads differently
@@ -48,8 +56,18 @@ async def run_perception_fetch(project_id: str) -> int:
             try:
                 result = await client.fetch(prompt["query_text"], country)
             except RateLimitedError:
-                continue  # skip this engine for now, next manual run will retry
+                skipped.append(
+                    {"prompt": prompt["query_text"], "engine": engine["name"], "reason": "rate limited"}
+                )
+                continue  # next manual run will retry
             if result.status != "success":
+                skipped.append(
+                    {
+                        "prompt": prompt["query_text"],
+                        "engine": engine["name"],
+                        "reason": result.message or result.status,
+                    }
+                )
                 continue
 
             raw_response_id = (
@@ -82,4 +100,9 @@ async def run_perception_fetch(project_id: str) -> int:
 
             processed += 1
 
-    return processed
+    message = None
+    if skipped and not processed:
+        message = f"Every fetch was skipped ({skipped[0]['reason']}) — nothing was processed."
+    elif skipped:
+        message = f"{len(skipped)} fetch(es) skipped; see `skipped` for why."
+    return {"processed": processed, "skipped": skipped, "message": message}

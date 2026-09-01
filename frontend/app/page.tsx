@@ -1,63 +1,128 @@
 import Link from "next/link";
+import { BrandLeaderboard } from "@/components/brand-leaderboard";
+import { ChartCard } from "@/components/chart-card";
 import { EngineLabel } from "@/components/engine-icons";
+import { KpiCard } from "@/components/kpi-card";
 import { MentionMark, ProvenanceLabel } from "@/components/marks";
-import { Sparkline } from "@/components/sparkline";
+import { ModelPerformanceTable, type ModelRow } from "@/components/model-performance-table";
+import { MoversList } from "@/components/movers-list";
+import { ShareOfSearchBars } from "@/components/share-of-search-bars";
+import { MultiTrendChart } from "@/components/multi-trend-chart";
+import { ReferralSurfaceTable } from "@/components/referral-surface-table";
+import { SourceVisibilityTable } from "@/components/source-visibility-table";
 import { TrendChart } from "@/components/trend-chart";
+import { getCurrentProjectId } from "@/lib/current-project";
 import {
   getCitations,
-  getDailyMetrics,
   getEngines,
   getPrompts,
+  getQueryFanouts,
   getRawResponses,
   getTrackedUrls,
 } from "@/lib/queries";
+import {
+  getBrandMetrics,
+  getBrandTimeSeries,
+  getFilterOptions,
+  getSourceMetrics,
+  rangeFromPreset,
+  todayUtc,
+} from "@/lib/metrics";
+import { brandTerms, shareOfSearch } from "@/lib/fanout-analysis";
+import { computeMovers } from "@/lib/movers";
+import { referralSurface } from "@/lib/referral-surface";
 import type { Citation } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
 async function getOverviewData() {
-  const [prompts, engines, citations, rawResponses, dailyMetrics, ownBrand] = await Promise.all([
+  const [prompts, engines, citations, rawResponses, ownBrand] = await Promise.all([
     getPrompts(),
     getEngines(),
     getCitations(),
     getRawResponses(),
-    getDailyMetrics(),
     getTrackedUrls({ ownOnly: true }),
   ]);
-  return { prompts, engines, citations, rawResponses, dailyMetrics, ownBrand };
+  return { prompts, engines, citations, rawResponses, ownBrand };
 }
 
-type Delta = { text: string; color: string; arrow: string };
-
-/** Separates two things the previous version conflated: the arrow says which
- * way the number moved, the colour says whether that is good. Position forces
- * the distinction — #2 -> #1 is a fall in value and a win, and used to render
- * red purely because the number got smaller. */
-function fmtDelta(
-  latest: number | null,
-  prev: number | null,
-  suffix = "",
-  lowerIsBetter = false
-): Delta | null {
-  if (latest === null || prev === null) return null;
-  const diff = Math.round((latest - prev) * 10) / 10;
-  if (diff === 0) return { text: "±0", color: "var(--faint)", arrow: "" };
-  const improved = lowerIsBetter ? diff < 0 : diff > 0;
-  return {
-    text: `${diff > 0 ? "+" : ""}${diff}${suffix}`,
-    color: improved ? "var(--green)" : "var(--red)",
-    arrow: diff > 0 ? "▲" : "▼",
-  };
-}
 
 export default async function OverviewPage() {
-  const { prompts, engines, citations, rawResponses, dailyMetrics, ownBrand } =
-    await getOverviewData();
+  const { prompts, engines, citations, rawResponses, ownBrand } = await getOverviewData();
+
+  // --- Metrics layer: the same sums-first numbers /insights reports, so the
+  // Overview can never disagree with the page it links into. -----------------
+  const projectId = await getCurrentProjectId();
+  const filterOptions = await getFilterOptions(projectId);
+  const filter = {
+    projectId,
+    range: rangeFromPreset("30d", filterOptions.dataRange?.last ?? todayUtc()),
+  };
+
+  const [metrics, sourceMetrics] = await Promise.all([
+    getBrandMetrics(filter),
+    getSourceMetrics(filter),
+  ]);
+  const own = metrics.rows.find((r) => !r.isCompetitor) ?? null;
+
+  // Per-engine performance: one scoped call per engine rather than a new RPC.
+  // Engine count is small (single digits) and this reuses the exact same
+  // finalisation path, so the per-model figures cannot drift from the totals.
+  const modelRows: ModelRow[] = own
+    ? (
+        await Promise.all(
+          metrics.responsesByEngine.map(async (e) => {
+            const m = await getBrandMetrics({ ...filter, engineIds: [e.engineId] });
+            const row = m.rows.find((r) => r.brandId === own.brandId);
+            return row
+              ? {
+                  engineId: e.engineId,
+                  engineName: e.name,
+                  visibility: row.visibility,
+                  sov: row.sov,
+                  mentionCount: row.mentionCount,
+                  position: row.position,
+                  responses: e.responses,
+                }
+              : null;
+          }),
+        )
+      ).filter((r): r is ModelRow => r !== null)
+    : [];
+  modelRows.sort((a, b) => (b.sov.value ?? -1) - (a.sov.value ?? -1));
+
+  // Own brand + top 5 competitors, matching the trend chart on /insights.
+  const trendBrandIds = [
+    ...(own ? [own.brandId] : []),
+    ...metrics.rows
+      .filter((r) => r.isCompetitor)
+      .sort((a, b) => (b.visibility.value ?? -1) - (a.visibility.value ?? -1))
+      .slice(0, 5)
+      .map((r) => r.brandId),
+  ];
+  const trendSeries = trendBrandIds.length
+    ? await getBrandTimeSeries(filter, { metric: "sov", bucket: "week", brandIds: trendBrandIds })
+    : [];
+
+  const ownDomains = new Set(ownBrand.map((b) => b.url));
+
+  // Referral surface: clickable paths into each brand's own site that the
+  // engines actually placed. Uses every tracked brand, not just your own.
+  const allBrands = await getTrackedUrls();
+  const referral = referralSurface(citations, allBrands);
+
+  // Share of search: who the engines went LOOKING for, from their own
+  // sub-queries. Upstream of share of voice — see lib/fanout-analysis.ts.
+  const fanouts = await getQueryFanouts(rawResponses.map((r) => r.id));
+  const sos = shareOfSearch(fanouts, brandTerms(allBrands));
+
+  // Movers reuse the weekly series the trend chart already fetched, so this
+  // costs no extra query.
+  const movers = computeMovers(trendSeries, { limit: 5 });
   const promptById = new Map(prompts.map((p) => [p.id, p.query_text]));
   const engineById = new Map(engines.map((e) => [e.id, e.name]));
   const brandName = ownBrand[0]?.name ?? "your brand";
 
-  const [latestMetric, prevMetric] = dailyMetrics;
 
   const totalCitations = citations.length;
   const citationsMentioningBrand = citations.filter((c) => c.mentions_brand === true).length;
@@ -78,53 +143,7 @@ export default async function OverviewPage() {
   }
 
   const chartDays = Array.from(byDay.entries()).sort(([a], [b]) => a.localeCompare(b));
-  // getDailyMetrics returns newest-first; sparklines read left-to-right in time.
-  const metricsChrono = [...dailyMetrics].reverse();
 
-  const kpis: {
-    label: string;
-    value: string;
-    delta: Delta | null;
-    series: (number | null)[];
-  }[] = [
-    {
-      label: "Cited pages",
-      value: String(totalCitations),
-      delta: null,
-      series: chartDays.map(([, v]) => v),
-    },
-    {
-      label: "Pages naming you",
-      value: String(citationsMentioningBrand),
-      delta: null,
-      series: chartDays.map(([day]) => byDayNaming.get(day) ?? 0),
-    },
-    {
-      label: "Visibility",
-      value: latestMetric?.visibility_pct != null ? `${latestMetric.visibility_pct}%` : "—",
-      delta: fmtDelta(latestMetric?.visibility_pct ?? null, prevMetric?.visibility_pct ?? null, " pts"),
-      series: metricsChrono.map((m) => m.visibility_pct),
-    },
-    {
-      label: "Share of voice",
-      value: latestMetric?.sov_pct != null ? `${latestMetric.sov_pct}%` : "—",
-      delta: fmtDelta(latestMetric?.sov_pct ?? null, prevMetric?.sov_pct ?? null, " pts"),
-      series: metricsChrono.map((m) => m.sov_pct),
-    },
-    {
-      label: "Sentiment",
-      value: latestMetric?.avg_sentiment != null ? String(Math.round(latestMetric.avg_sentiment)) : "—",
-      delta: fmtDelta(latestMetric?.avg_sentiment ?? null, prevMetric?.avg_sentiment ?? null),
-      series: metricsChrono.map((m) => m.avg_sentiment),
-    },
-    {
-      label: "Position",
-      value: latestMetric?.avg_position != null ? `#${latestMetric.avg_position}` : "—",
-      // lower is better: #2 -> #1 is an improvement, not a decline
-      delta: fmtDelta(latestMetric?.avg_position ?? null, prevMetric?.avg_position ?? null, "", true),
-      series: metricsChrono.map((m) => m.avg_position),
-    },
-  ];
 
   const citationsByRawResponse = new Map<string, Citation[]>();
   for (const c of citations) {
@@ -159,52 +178,123 @@ export default async function OverviewPage() {
         </div>
       </div>
 
-      <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        {kpis.map((k) => (
-          <div
-            key={k.label}
-            className="flex flex-col justify-between overflow-hidden rounded-[var(--radius-xl)] bg-[var(--card)] pt-4"
-            style={{ boxShadow: "var(--shadow-card)" }}
-          >
-            <div className="px-4">
-              <div className="font-sans text-[11px] font-medium tracking-[0.01em] text-[var(--muted-2)]">
-                {k.label}
-              </div>
-              {/* proportional figures, not tabular: equal-width digits make a
-                  large standalone value look loose at display size */}
-              <div className="mt-1.5 font-sans text-[26px] leading-none font-semibold tracking-[-0.025em]">
-                {k.value}
-              </div>
-              <div
-                className="mt-1.5 h-[17px] font-sans text-[11.5px] font-medium whitespace-nowrap"
-                style={{ color: k.delta?.color ?? "var(--faint)" }}
-              >
-                {k.delta ? `${k.delta.arrow} ${k.delta.text}`.trim() : latestMetric ? "" : "needs a fetch"}
-              </div>
-            </div>
-            <div className="mt-3">
-              <Sparkline values={k.series} height={34} />
-            </div>
-          </div>
-        ))}
+      {/* Headline metrics come from the metrics layer, not from daily_metrics,
+          so this page and /insights can never quote different numbers for the
+          same thing. Each carries its own change vs. the preceding period. */}
+      {own && (
+        <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <KpiCard
+            label="Share of voice"
+            metric="sov"
+            cell={own.sov}
+            hint="Your share of every tracked brand mention across this period's answers"
+            sub={`${own.mentionCount} mentions`}
+          />
+          <KpiCard
+            label="Brand visibility"
+            metric="visibility"
+            cell={own.visibility}
+            hint="Share of answers that name your brand"
+            sub={`${own.visibility.support.responses} answers scored`}
+          />
+          <KpiCard
+            label="Sentiment"
+            metric="sentiment"
+            cell={own.sentiment}
+            hint="How the answers portray your brand, 0-100"
+            sub={
+              own.sentiment.support.observations
+                ? `${own.sentiment.support.observations} scored mentions`
+                : undefined
+            }
+          />
+          <KpiCard
+            label="Avg. position"
+            metric="position"
+            cell={own.position}
+            hint="Where you rank among named brands, when you are named. Lower is better."
+            sub={`${own.position.support.observations} ranked mentions`}
+          />
+        </section>
+      )}
+
+      <section className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <ChartCard
+          title="Share of voice over time"
+          subtitle="You against your top competitors, week by week"
+        >
+          <MultiTrendChart series={trendSeries} metric="sov" />
+        </ChartCard>
+
+        <ChartCard
+          title="Performance by model"
+          subtitle="How each answer engine treats you — bars compare engines against each other"
+        >
+          <ModelPerformanceTable rows={modelRows} />
+        </ChartCard>
       </section>
 
-      <section
-        className="mt-5 rounded-[var(--radius-xl)] bg-[var(--card)] p-6"
-        style={{ boxShadow: "var(--shadow-card)" }}
-      >
-        <div className="mb-6 flex items-baseline justify-between">
-          <h2 className="m-0 font-sans text-[16px] font-bold tracking-[-0.005em]">Citation volume</h2>
-          <span className="font-sans text-[12.5px] text-[var(--muted-2)]">citations captured per fetch day</span>
-        </div>
-        {chartDays.length ? (
-          <TrendChart points={chartDays.map(([day, value]) => ({ day, value }))} unit="citations" />
-        ) : (
-          <p className="font-sans text-[14px] text-[var(--muted-2)]">
-            No citations yet — click &ldquo;Fetch citations now&rdquo; above to run the first pull.
-          </p>
-        )}
+      <section className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <ChartCard
+          title="Most cited sources"
+          subtitle="The domains answers actually draw on, and how much of the period each reaches"
+        >
+          <SourceVisibilityTable rows={sourceMetrics.rows} ownDomains={ownDomains} />
+        </ChartCard>
+
+        <ChartCard
+          title="Citation volume"
+          subtitle="Citations captured per fetch day"
+        >
+          <TrendChart points={chartDays.map(([day, value]) => ({ day, value }))} />
+        </ChartCard>
       </section>
+
+      <section className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <ChartCard
+          title="Brand leaderboard"
+          subtitle="Every tracked brand ranked by share of voice — who is actually winning these answers"
+        >
+          <BrandLeaderboard rows={metrics.rows} />
+        </ChartCard>
+
+        <ChartCard
+          title="What moved"
+          subtitle="Biggest share-of-voice changes between the last two periods that have data"
+        >
+          <MoversList movers={movers} />
+        </ChartCard>
+      </section>
+
+      <section className="mt-5">
+        <ChartCard
+          title="Share of search"
+          subtitle="Who the engines went looking for in their own background sub-searches — upstream of share of voice, which counts who they ended up recommending"
+        >
+          <ShareOfSearchBars
+            rows={sos.rows}
+            totalSearches={sos.totalSearches}
+            brandedSearches={sos.brandedSearches}
+          />
+        </ChartCard>
+      </section>
+
+      <section className="mt-5">
+        <ChartCard
+          title="Referral surface"
+          subtitle="Clickable paths into each brand's own site that AI answers actually placed — the observable counterpart to a competitor traffic estimate"
+        >
+          <ReferralSurfaceTable
+            rows={referral.rows}
+            totalBrandCitations={referral.totalBrandCitations}
+            taggedTotal={referral.taggedTotal}
+          />
+        </ChartCard>
+      </section>
+
+      {/* The legacy "Citation volume" section rendered here was an exact
+          duplicate of the ChartCard above — same TrendChart, same data,
+          twice on one page. Removed; the card above is the one. */}
 
       <section className="mt-5 grid grid-cols-1 items-start gap-5 lg:grid-cols-[1fr_1.5fr]">
         <div

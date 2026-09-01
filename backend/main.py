@@ -1,3 +1,5 @@
+import asyncio
+
 import redis
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,12 +24,14 @@ from models import (
     PromptResearchRequest,
     PromptResearchResponse,
     PromptUpdate,
+    ReclassifyResponse,
     TrackedUrlCreate,
     TrackedUrlOut,
 )
 import store
 from countries import COUNTRIES
 from perception import run_perception_fetch
+from reclassify import reclassify_project
 from prompt_research import research_prompts
 from tasks import create_fetch_batch
 
@@ -186,10 +190,35 @@ async def trigger_perception_fetch(project_id: str) -> PerceptionFetchResponse:
     """Runs every active 'perception'-type prompt synchronously (low volume,
     unlike the citation flow — no Celery batch tracking needed here)."""
     try:
-        processed = await run_perception_fetch(project_id)
+        result = await run_perception_fetch(project_id)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Perception fetch failed: {exc}") from exc
-    return PerceptionFetchResponse(processed=processed)
+    return PerceptionFetchResponse(**result)
+
+
+# --- Re-classification / backfill -------------------------------------------
+
+@app.post("/api/projects/{project_id}/reclassify", response_model=ReclassifyResponse)
+async def trigger_reclassify(
+    project_id: str, only_missing: bool = True, limit: int | None = None
+) -> ReclassifyResponse:
+    """Re-scores stored answers against the CURRENT tracked-brand list.
+
+    Run this after adding a competitor: it gives the new brand real history
+    from answers already on disk, instead of leaving it at a fake 0% for every
+    day before you started tracking it. Also fills per-brand sentiment for
+    rows written before migration 0010.
+
+    Gemini's free tier allows only ~20 classifier calls per DAY, so one call
+    scores a capped batch and reports how many remain; the scheduled job in
+    celery_beat_schedule.py finishes the rest over the following days. Pass
+    ?only_missing=false to force a full re-score after a CLASSIFIER_VERSION
+    bump, and ?limit=N to override the per-run cap."""
+    try:
+        result = await asyncio.to_thread(reclassify_project, project_id, only_missing, limit)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Reclassify failed: {exc}") from exc
+    return ReclassifyResponse(**result)
 
 
 # --- Content briefs ----------------------------------------------------

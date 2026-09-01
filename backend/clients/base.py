@@ -14,6 +14,13 @@ class Citation(BaseModel):
     url: str
     domain: str
     is_simulated: bool = False
+    # Whether the engine's visible answer text actually drew from this source
+    # (vs. retrieving it into context but never referencing it) — Peec calls
+    # this the difference between "real attribution" and "quiet influence".
+    # None = unknown (the engine's response shape doesn't expose this, or
+    # this citation predates the column existing) — never coerce to False,
+    # "unknown" and "confirmed not cited in text" are different claims.
+    cited_in_text: bool | None = None
 
 
 class RawEngineResponse(BaseModel):

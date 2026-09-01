@@ -72,6 +72,11 @@ export function PromptResearchPanel({
       // score that justified adding it describes a different country than
       // the one the prompt will actually be run against.
       formData.set("country", country);
+      // Was rendered as a badge and then dropped on the floor here — this is
+      // the one place a search_volume score exists to persist.
+      if (candidate.search_interest !== null) {
+        formData.set("search_volume", String(candidate.search_interest));
+      }
       await addPrompt(formData);
       setTracked((prev) => new Set(prev).add(candidate.prompt_text));
       router.refresh();

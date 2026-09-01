@@ -1,0 +1,96 @@
+{
+  "brands": [
+    {
+      "brand": "Samsung",
+      "grounded": 11,
+      "ungrounded": 11,
+      "groundedPct": 50.0,
+      "sources": {
+        "youtube.com": 3,
+        "hi-network.com": 2,
+        "brandcompare.io": 2,
+        "91mobiles.com": 1,
+        "samsung.com": 5,
+        "beforebuychudandii.com": 2,
+        "reliancedigital.in": 1,
+        "yournavi.com": 1,
+        "xda-developers.com": 2,
+        "wirefly.com": 1,
+        "ubergizmo.com": 2,
+        "gadgets360.com": 5,
+        "cashify.in": 1,
+        "smartprix.com": 2,
+        "indiatimes.com": 3,
+        "bajajfinserv.in": 1
+      }
+    },
+    {
+      "brand": "Motorola",
+      "grounded": 44,
+      "ungrounded": 47,
+      "groundedPct": 48.4,
+      "sources": {
+        "quora.com": 2,
+        "cashify.in": 7,
+        "hi-network.com": 5,
+        "brandcompare.io": 1,
+        "beforebuychudandii.com": 3,
+        "yournavi.com": 3,
+        "sportskeeda.com": 5,
+        "91mobiles.com": 7,
+        "smartprix.com": 1,
+        "youtube.com": 15,
+        "suprememobiles.in": 4,
+        "bajajfinserv.in": 7,
+        "zestmoney.in": 1,
+        "gadgets360.com": 10,
+        "beebom.com": 1,
+        "indiatoday.in": 1,
+        "androidpolice.com": 1,
+        "indiatimes.com": 1,
+        "xda-developers.com": 1,
+        "ubergizmo.com": 1,
+        "reddit.com": 1,
+        "lenovo.com": 1,
+        "androidupdatetracker.com": 4,
+        "croma.com": 1,
+        "androidauthority.com": 1,
+        "wondershare.com": 2,
+        "imobie.com": 2
+      }
+    }
+  ],
+  "examples": {
+    "Motorola": [
+      {
+        "sentence": "It also features a 120Hz pOLED display and a 5000mAh battery with 33W fast charging",
+        "sources": [
+          "quora.com"
+        ]
+      },
+      {
+        "sentence": "*   **Motorola Edge 20 Fusion:** Priced at ₹19,999, this phone features a 6.7-inch OLED screen with a 90Hz refresh rate, a MediaTek Dimensity 800U processor, a 108MP triple camera setup, and a 5000 mAh battery with 30W Turbo Power charging",
+        "sources": [
+          "cashify.in"
+        ]
+      }
+    ],
+    "Samsung": [
+      {
+        "sentence": "*   **Mid-Range Standouts:** Models like the Motorola Edge 60 Fusion, priced competitively at around ₹20,999, have been highlighted for their impressive displays, camera capabilities, AI features, and overall value, often outperforming similarly priced or even more expensive Samsung counterparts in comparisons.",
+        "sources": [
+          "youtube.com"
+        ]
+      },
+      {
+        "sentence": "*   **Software Support and Ecosystem:** Samsung typically provides stronger and longer software support, with many devices receiving up to four years of OS updates and even seven years for flagships, ensuring long-term usability and security.",
+        "sources": [
+          "hi-network.com",
+          "brandcompare.io",
+          "91mobiles.com"
+        ]
+      }
+    ]
+  },
+  "sampleSize": 28
+}

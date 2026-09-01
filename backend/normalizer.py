@@ -26,6 +26,10 @@ async def enrich_citations(
             "is_simulated": c.is_simulated,
             "mentions_brand": mentions_by_url.get(c.url),
             "content_type": classify_content_type(c.url),
+            # Set on the Citation itself at extraction time (gemini_client.py
+            # parses groundingSupports; openrouter_client.py's citations are
+            # always in-text by construction) — just carried through here.
+            "cited_in_text": c.cited_in_text,
         }
         for c in citations
     ]

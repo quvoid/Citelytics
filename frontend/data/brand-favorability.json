@@ -1,0 +1,179 @@
+{
+  "geminiKie": {
+    "sampleSize": 71,
+    "brands": [
+      {
+        "brand": "Motorola",
+        "mentions": 53,
+        "visibilityPct": 74.6,
+        "avgPosition": 2.64
+      },
+      {
+        "brand": "Samsung",
+        "mentions": 46,
+        "visibilityPct": 64.8,
+        "avgPosition": 2.65
+      },
+      {
+        "brand": "OnePlus",
+        "mentions": 36,
+        "visibilityPct": 50.7,
+        "avgPosition": 2.69
+      },
+      {
+        "brand": "Vivo",
+        "mentions": 32,
+        "visibilityPct": 45.1,
+        "avgPosition": 2.59
+      },
+      {
+        "brand": "Google",
+        "mentions": 29,
+        "visibilityPct": 40.8,
+        "avgPosition": 2.31
+      },
+      {
+        "brand": "Realme",
+        "mentions": 26,
+        "visibilityPct": 36.6,
+        "avgPosition": 2.58
+      },
+      {
+        "brand": "Nothing",
+        "mentions": 21,
+        "visibilityPct": 29.6,
+        "avgPosition": 3.0
+      },
+      {
+        "brand": "Xiaomi",
+        "mentions": 12,
+        "visibilityPct": 16.9,
+        "avgPosition": 3.33
+      },
+      {
+        "brand": "Oppo",
+        "mentions": 11,
+        "visibilityPct": 15.5,
+        "avgPosition": 3.36
+      },
+      {
+        "brand": "Apple",
+        "mentions": 9,
+        "visibilityPct": 12.7,
+        "avgPosition": 2.44
+      },
+      {
+        "brand": "iQOO",
+        "mentions": 9,
+        "visibilityPct": 12.7,
+        "avgPosition": 2.67
+      }
+    ]
+  },
+  "chatGptKie": {
+    "sampleSize": 97,
+    "brands": [
+      {
+        "brand": "Motorola",
+        "mentions": 67,
+        "visibilityPct": 69.1,
+        "avgPosition": 1.87
+      },
+      {
+        "brand": "Samsung",
+        "mentions": 64,
+        "visibilityPct": 66.0,
+        "avgPosition": 2.2
+      },
+      {
+        "brand": "Google",
+        "mentions": 44,
+        "visibilityPct": 45.4,
+        "avgPosition": 2.66
+      },
+      {
+        "brand": "OnePlus",
+        "mentions": 33,
+        "visibilityPct": 34.0,
+        "avgPosition": 2.82
+      },
+      {
+        "brand": "Vivo",
+        "mentions": 30,
+        "visibilityPct": 30.9,
+        "avgPosition": 2.73
+      },
+      {
+        "brand": "Nothing",
+        "mentions": 26,
+        "visibilityPct": 26.8,
+        "avgPosition": 2.27
+      },
+      {
+        "brand": "Realme",
+        "mentions": 24,
+        "visibilityPct": 24.7,
+        "avgPosition": 2.5
+      },
+      {
+        "brand": "iQOO",
+        "mentions": 14,
+        "visibilityPct": 14.4,
+        "avgPosition": 3.07
+      },
+      {
+        "brand": "Apple",
+        "mentions": 13,
+        "visibilityPct": 13.4,
+        "avgPosition": 2.38
+      },
+      {
+        "brand": "Oppo",
+        "mentions": 11,
+        "visibilityPct": 11.3,
+        "avgPosition": 2.82
+      },
+      {
+        "brand": "Xiaomi",
+        "mentions": 3,
+        "visibilityPct": 3.1,
+        "avgPosition": 2.33
+      }
+    ]
+  },
+  "historicalGeminiDirect": {
+    "sampleSize": 28,
+    "brands": [
+      {
+        "brand": "Motorola",
+        "mentions": 23,
+        "visibilityPct": 82.1,
+        "avgPosition": 1.96
+      },
+      {
+        "brand": "OnePlus",
+        "mentions": 16,
+        "visibilityPct": 57.1,
+        "avgPosition": 1.69
+      },
+      {
+        "brand": "Samsung",
+        "mentions": 10,
+        "visibilityPct": 35.7,
+        "avgPosition": 1.6
+      },
+      {
+        "brand": "Vivo",
+        "mentions": 10,
+        "visibilityPct": 35.7,
+        "avgPosition": 2.1
+      },
+      {
+        "brand": "Oppo",
+        "mentions": 1,
+        "visibilityPct": 3.6,
+        "avgPosition": 4.0
+      }
+    ]
+  }
+}

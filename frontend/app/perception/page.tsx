@@ -1,5 +1,9 @@
 import { PromptComposer } from "@/components/prompt-composer";
+import { BarList } from "@/components/bar-list";
+import { ChartCard } from "@/components/chart-card";
 import { FetchPerceptionButton } from "@/components/fetch-perception-button";
+import { FilterBar, type FilterState } from "@/components/filter-bar";
+import { SegmentHeatmap } from "@/components/segment-heatmap";
 import { getCurrentProjectId } from "@/lib/current-project";
 import { countryName } from "@/lib/countries";
 import {
@@ -9,13 +13,26 @@ import {
   getRawResponses,
   getTrackedUrls,
 } from "@/lib/queries";
+import { getFilterOptions, parseMetricsFilter, resolveFilterScope } from "@/lib/metrics";
+import type { SegmentMatrix } from "@/lib/metrics/types";
+
+// Below this, a prevalence rate is noise — one association out of two
+// answers isn't a real pattern yet. Same discipline as
+// lib/metrics/finalize.ts's MIN_OBS_FOR_MEAN, applied locally since
+// perception has no RPC rollup to enforce it centrally.
+const MIN_RESPONSES_FOR_PROMINENCE = 3;
 
 export const dynamic = "force-dynamic";
 
 const RADAR_SIZE = 340;
 const RADAR_CENTER = RADAR_SIZE / 2;
 const RADAR_RADIUS = RADAR_SIZE / 2 - 46;
-const SERIES_COLORS = ["var(--rust)", "#8C8478", "#4A6FA5"];
+/** Three-series categorical set, assigned in fixed order so a brand keeps its
+ * colour when the competitor set changes. The previous trio failed on two
+ * counts: #8C8478 sat at chroma 0.02 (reads as grey, so it did no identity
+ * work at all) and its worst pair cleared only ΔE 14 for full-colour readers.
+ * These clear all-pairs CVD at ΔE 9.0 protan / 12.9 tritan and 28.6 normal. */
+const SERIES_COLORS = ["var(--ember)", "var(--tint-lavender-fg)", "var(--tint-mint-fg)"];
 
 function polarPoint(index: number, total: number, value: number) {
   const angle = -Math.PI / 2 + index * ((2 * Math.PI) / total);
@@ -23,21 +40,47 @@ function polarPoint(index: number, total: number, value: number) {
   return { x: RADAR_CENTER + r * Math.cos(angle), y: RADAR_CENTER + r * Math.sin(angle) };
 }
 
-export default async function PerceptionPage() {
+export default async function PerceptionPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const sp = await searchParams;
   const projectId = await getCurrentProjectId();
-  const [brands, perceptionPrompts, project] = await Promise.all([
+  const filterOptions = await getFilterOptions(projectId);
+  const parsed = parseMetricsFilter(sp, projectId, filterOptions);
+  // 'perception' explicitly — metrics_scoped_prompts defaults to 'citation',
+  // and this page's prompts are never that. See resolveFilterScope's doc.
+  const scope = await resolveFilterScope(parsed, "perception");
+
+  const [brands, allPerceptionPrompts, project] = await Promise.all([
     getTrackedUrls(),
     getPrompts("perception"),
     getProject(projectId),
   ]);
   const defaultCountry = project?.default_country ?? "IN";
 
+  const scopedIds = new Set(scope.promptIds);
+  const perceptionPrompts = allPerceptionPrompts.filter((p) => scopedIds.has(p.id));
+
+  const state: FilterState = {
+    preset: parsed.preset,
+    models: parsed.engineIds,
+    tag: parsed.tagIds,
+    tagMode: parsed.tagMode,
+    topic: parsed.topicIds,
+    country: parsed.countries,
+  };
+
   // Perception answers live on perception-type prompts only, so scope the
-  // raw-response lookup to each of them rather than the whole project.
-  const rawResponsesByPrompt = await Promise.all(
-    perceptionPrompts.map((p) => getRawResponses(p.id))
-  );
-  const rawResponseIds = rawResponsesByPrompt.flat().map((r) => r.id);
+  // raw-response lookup to the FilterBar-scoped prompt set above, in one
+  // batched call rather than one query per prompt.
+  const rawResponses = await getRawResponses(undefined, {
+    promptIds: perceptionPrompts.map((p) => p.id),
+    fromDate: scope.resolvedRange.from,
+    toDate: scope.resolvedRange.to,
+  });
+  const rawResponseIds = rawResponses.map((r) => r.id);
   const attributes = await getBrandAttributes(rawResponseIds);
 
   const own = brands.find((b) => !b.is_competitor) ?? null;
@@ -84,6 +127,58 @@ export default async function PerceptionPage() {
     )
   );
 
+  // Prominence score: occurrences of (brand, attribute) / total perception
+  // responses analyzed × 100 — a plain prevalence rate. The denominator is
+  // shared across brands on purpose: every perception answer is a real
+  // "opportunity" for any brand to have been associated with any attribute,
+  // so "in what % of all perception answers was X associated with Y" is an
+  // honest, comparable question even though citation-style per-brand
+  // response counts don't exist here (perception.py bypasses
+  // store.save_fetch_result's per-brand mention rows entirely).
+  const totalPerceptionResponses = rawResponseIds.length;
+  const matrixBrands = brandTotals.slice(0, 8).map((x) => x.brand);
+  const matrixAttributes = Array.from(overallCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([attr]) => attr);
+
+  const perceptionMatrix: SegmentMatrix = {
+    metric: "visibility", // reused purely for formatMetric's "%" rendering — not a real brand-visibility value
+    brandId: own?.id ?? "",
+    rowAxis: "brand",
+    colAxis: "attribute",
+    rowKeys: matrixBrands.map((b) => ({
+      key: b.id,
+      label: b.name,
+      promptCount: countsByBrand.get(b.id)?.size ?? 0,
+    })),
+    colKeys: matrixAttributes.map((attr) => ({
+      key: attr,
+      label: attr,
+      promptCount: brands.filter((b) => (countsByBrand.get(b.id)?.get(attr) ?? 0) > 0).length,
+    })),
+    cells: matrixBrands.flatMap((b) =>
+      matrixAttributes.map((attr) => {
+        const count = countsByBrand.get(b.id)?.get(attr) ?? 0;
+        const suppressed = totalPerceptionResponses < MIN_RESPONSES_FOR_PROMINENCE;
+        const value =
+          count === 0 || suppressed || totalPerceptionResponses === 0
+            ? null
+            : Math.round((count / totalPerceptionResponses) * 100);
+        return {
+          rowKey: b.id,
+          colKey: attr,
+          value: {
+            value,
+            support: { responses: totalPerceptionResponses, observations: count, daysWithData: 0 },
+            suppressed,
+          },
+        };
+      }),
+    ),
+    ratesOnly: true,
+  };
+
   return (
     <div>
       <section className="flex items-end justify-between gap-10 border-b border-[var(--ink)] py-11">
@@ -96,6 +191,15 @@ export default async function PerceptionPage() {
         </div>
         <FetchPerceptionButton projectId={projectId} />
       </section>
+
+      <FilterBar
+        basePath="/perception"
+        state={state}
+        options={filterOptions}
+        resolvedRange={scope.resolvedRange}
+        previousRange={null}
+        hideSystem
+      />
 
       <PromptComposer
         promptType="perception"
@@ -113,21 +217,24 @@ export default async function PerceptionPage() {
           <p className="m-0 mb-6 font-serif text-[14px] text-[var(--muted-2)] italic">
             Top attributes when AI is asked about {own?.name ?? "your brand"}
           </p>
-          {ownAttributes.map(([attribute, count]) => (
-            <div
-              key={attribute}
-              className="flex items-center justify-between gap-4 border-b border-[var(--rule-light)] py-3"
-            >
-              <span className="text-[14px] text-[var(--ink)]">{attribute}</span>
-              <span className="font-serif text-[18px] text-[var(--muted-2)]">{count}</span>
-            </div>
-          ))}
-          {!ownAttributes.length && (
-            <p className="font-serif text-[15px] text-[var(--muted-2)] italic">
-              No perception data yet — add a prompt above and click &ldquo;Fetch perception
-              now.&rdquo;
-            </p>
-          )}
+          <BarList
+            items={ownAttributes.map(([attribute, count]) => ({
+              label: attribute,
+              value: count,
+              sublabel:
+                totalPerceptionResponses >= MIN_RESPONSES_FOR_PROMINENCE
+                  ? `${Math.round((count / totalPerceptionResponses) * 100)}% of answers`
+                  : undefined,
+            }))}
+            unit="mentions"
+            emptyLabel={
+              perceptionPrompts.length === 0
+                ? "No perception prompts yet — add one below, then click “Fetch perception now.”"
+                : rawResponseIds.length === 0
+                  ? "Prompts exist but none have been fetched yet — click “Fetch perception now” above."
+                  : "No attributes extracted from the answers fetched so far."
+            }
+          />
         </div>
 
         <div>
@@ -205,6 +312,17 @@ export default async function PerceptionPage() {
           )}
         </div>
       </section>
+
+      {matrixBrands.length > 0 && matrixAttributes.length > 0 && (
+        <section className="border-t border-[var(--rule)] py-9">
+          <ChartCard
+            title="Attribute × brand"
+            subtitle="Prominence score: how often each attribute is associated with each brand, as a share of all perception answers analyzed"
+          >
+            <SegmentHeatmap matrix={perceptionMatrix} />
+          </ChartCard>
+        </section>
+      )}
 
       <section className="border-t border-[var(--rule)] py-9">
         <h2 className="m-0 mb-1.5 font-serif text-[24px] font-normal tracking-[-0.01em]">

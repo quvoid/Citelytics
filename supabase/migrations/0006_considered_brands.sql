@@ -1,0 +1,17 @@
+-- "Considered, not named": the engine's own retrieval step pulled a page
+-- from this tracked brand's domain into the response as a citation, even
+-- though the brand's name never made it into the visible answer text. Today
+-- `mentioned` only reflects the classifier's read of the visible prose, so a
+-- brand the engine clearly looked at but didn't narrate was indistinguishable
+-- from a brand it never touched at all — the same "fetched vs. cited" gap
+-- GEO tooling elsewhere tracks, reachable here via the citations we already
+-- capture.
+--
+-- Engine-dependent honesty note: Gemini's groundingChunks genuinely reflect
+-- everything its search step retrieved for the answer, so `considered` can
+-- be true there while `mentioned` is false. OpenRouter's web_search tool
+-- (see clients/openrouter_client.py) only ever returns citations for
+-- passages actually cited in the text, so on openrouter rows `considered`
+-- will in practice never be true without `mentioned` also being true —
+-- that's a real limit of what that API exposes, not a bug in this column.
+alter table answer_brand_mentions add column if not exists considered boolean not null default false;

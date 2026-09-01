@@ -36,7 +36,7 @@ export function AddBrandForm() {
                 setOpen(false);
               })
             }
-            className="grid grid-cols-[1fr_1fr_auto_auto] items-end gap-5"
+            className="grid grid-cols-[1fr_1fr_1fr_auto_auto] items-end gap-5"
           >
             <div>
               <label className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
@@ -56,6 +56,19 @@ export function AddBrandForm() {
                 name="url"
                 required
                 placeholder="e.g. mamaearth.in"
+                className="mt-2.5 w-full border-0 border-b border-[var(--ink)] bg-transparent py-2 font-serif text-2xl text-[var(--ink)] outline-none placeholder:text-[var(--faint)]"
+              />
+            </div>
+            <div>
+              <label
+                className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
+                title="Other names this brand gets called — comma-separated. Matched the same way the brand name is, so 'Moto' or a parent-company name counts as this brand too."
+              >
+                Also known as
+              </label>
+              <input
+                name="aliases"
+                placeholder="e.g. Moto, Lenovo Motorola"
                 className="mt-2.5 w-full border-0 border-b border-[var(--ink)] bg-transparent py-2 font-serif text-2xl text-[var(--ink)] outline-none placeholder:text-[var(--faint)]"
               />
             </div>
@@ -86,7 +99,7 @@ export function AddBrandForm() {
             <button
               type="submit"
               disabled={isPending}
-              className="border border-[var(--rust)] bg-[var(--rust)] px-5 py-2.5 font-sans text-xs tracking-[0.06em] text-[var(--paper)] uppercase disabled:opacity-60"
+              className="rounded-full border border-[var(--rust)] bg-[var(--rust)] px-5 py-2.5 font-sans text-xs font-semibold tracking-[0.06em] text-[var(--paper)] uppercase disabled:opacity-60"
             >
               {isPending ? "Adding…" : "Add brand"}
             </button>

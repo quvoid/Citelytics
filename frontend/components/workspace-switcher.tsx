@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -113,9 +114,13 @@ export function WorkspaceSwitcher({
         <span className="flex-1 overflow-hidden text-left font-sans text-[13.5px] font-medium overflow-ellipsis whitespace-nowrap text-white">
           {current.name}
         </span>
-        <span className="flex-none pl-0.5 text-[8px]" style={{ color: "var(--sb-text)" }}>
-          ▼
-        </span>
+        <ChevronsUpDown
+          size={14}
+          strokeWidth={1.9}
+          aria-hidden="true"
+          className="flex-none"
+          style={{ color: "var(--sb-text)" }}
+        />
       </button>
 
       {open && (

@@ -43,9 +43,12 @@ def _fallback_classification(
     return {
         "mentioned_brands": [own["name"]] if mentioned and own else [],
         "own_brand_sentiment": None,
+        "brand_sentiment": {},
         "topic": None,
         "intent": None,
         "is_branded_query": False,
+        "product_tags": [],
+        "other_brands_mentioned": [],
     }
 
 
@@ -67,6 +70,8 @@ async def _run_fetch(
         answer_text=result.answer_text,
         brand_names=[t["name"] for t in tracked],
         own_brand_name=own["name"] if own else "",
+        known_topics=store.get_topic_names(prompt["project_id"]),
+        aliases={t["name"]: t.get("aliases") or [] for t in tracked},
     )
     if classification is None:
         classification = _fallback_classification(result.answer_text, own, brand_keywords)
@@ -101,6 +106,7 @@ def fetch_citations_task(self, batch_task_id: str, prompt_id: str, engine_name: 
 
         store.save_fetch_result(
             prompt_id=prompt_id,
+            project_id=prompt["project_id"],
             engine_name=engine_name,
             country=country,
             result=outcome.result,
@@ -110,7 +116,9 @@ def fetch_citations_task(self, batch_task_id: str, prompt_id: str, engine_name: 
         )
 
         if not prompt.get("topic") and outcome.classification.get("topic"):
-            store.set_prompt_classification(prompt_id, outcome.classification)
+            store.set_prompt_classification(
+                prompt_id, prompt["project_id"], outcome.classification
+            )
 
         store.update_batch_task_status(
             batch_task_id, "success", citation_count=len(outcome.citation_rows)
@@ -160,3 +168,13 @@ def enqueue_all_projects_fetch() -> None:
             create_fetch_batch(project_id)
         except ValueError:
             continue  # project has no active prompts — nothing to fetch
+
+
+@celery_app.task
+def reclassify_all_projects_task() -> dict:
+    """Spends the day's leftover Gemini quota on the per-brand sentiment
+    backfill. Safe to run every day forever: once the corpus is current it
+    finds nothing to do and returns immediately."""
+    from reclassify import reclassify_all_projects
+
+    return reclassify_all_projects()

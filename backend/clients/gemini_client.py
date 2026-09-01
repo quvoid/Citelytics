@@ -82,16 +82,35 @@ class GeminiClient(EngineClient):
         grounding = candidates[0].get("groundingMetadata", {}) if candidates else {}
         chunks = grounding.get("groundingChunks", [])
 
-        redirect_uris = [uri for chunk in chunks if (uri := (chunk.get("web") or {}).get("uri"))]
+        # groundingChunks is every source Gemini's retrieval step pulled in;
+        # groundingSupports maps specific spans of the VISIBLE answer text
+        # back to specific chunk indices. A chunk that never appears in any
+        # support was retrieved into context but never actually cited in
+        # what the user reads — "quiet influence" vs. real attribution. This
+        # was sitting in the API response unparsed until now (see
+        # backend/backfill_cited_in_text.py for reprocessing already-stored
+        # answers the same way, no re-fetch needed).
+        cited_chunk_indices: set[int] = set()
+        for support in grounding.get("groundingSupports", []):
+            cited_chunk_indices.update(support.get("groundingChunkIndices", []))
+
+        redirect_uris = [
+            (i, uri) for i, chunk in enumerate(chunks) if (uri := (chunk.get("web") or {}).get("uri"))
+        ]
 
         async with httpx.AsyncClient() as client:
             resolved_urls = await asyncio.gather(
-                *(_resolve_redirect(client, uri) for uri in redirect_uris)
+                *(_resolve_redirect(client, uri) for _, uri in redirect_uris)
             )
 
         citations = [
-            Citation(url=resolved, domain=extract_domain(resolved), is_simulated=False)
-            for resolved in resolved_urls
+            Citation(
+                url=resolved,
+                domain=extract_domain(resolved),
+                is_simulated=False,
+                cited_in_text=(i in cited_chunk_indices),
+            )
+            for (i, _), resolved in zip(redirect_uris, resolved_urls)
         ]
 
         return RawEngineResponse(

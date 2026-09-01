@@ -1,3 +1,5 @@
+import { BarList } from "@/components/bar-list";
+import { ChartCard } from "@/components/chart-card";
 import { DownloadCsvButton } from "@/components/download-csv-button";
 import { createBriefFromGap } from "@/lib/actions/briefs";
 import {
@@ -97,6 +99,24 @@ export default async function GapAnalysisPage() {
           </div>
         ))}
       </section>
+
+      {rivalRows.length > 0 && (
+        <section className="py-8">
+          <ChartCard
+            title="Who's named instead"
+            subtitle="Pages you're absent from, by competitor named in the answer"
+          >
+            <BarList
+              items={rivalRows.map((r) => ({
+                label: r.name,
+                value: r.pages,
+                sublabel: `${r.domain} · ${r.citations} citations`,
+              }))}
+              unit="pages"
+            />
+          </ChartCard>
+        </section>
+      )}
 
       {rivalRows.length > 0 && (
         <section className="border-b border-[var(--rule)] py-9">

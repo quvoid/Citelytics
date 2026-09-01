@@ -50,7 +50,14 @@ def _parse_url_citations(annotations: list[dict]) -> list[Citation]:
         url = ann.get("url_citation", {}).get("url") or ann.get("url")
         if not url:
             continue
-        citations.append(Citation(url=url, domain=extract_domain(url), is_simulated=False))
+        # url_citation annotations only exist for spans the model actually
+        # cited inline — there's no "retrieved but never referenced" concept
+        # in this API shape, unlike Gemini's groundingChunks vs
+        # groundingSupports split. So every real citation here is, by
+        # construction, cited in text.
+        citations.append(
+            Citation(url=url, domain=extract_domain(url), is_simulated=False, cited_in_text=True)
+        )
     return citations
 
 
