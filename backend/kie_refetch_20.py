@@ -36,7 +36,10 @@ from normalizer import enrich_citations  # noqa: E402
 KIE_KEY = os.environ.get("kIE_API", "")
 ENDPOINT = "https://api.kie.ai/codex/v1/responses"
 ENGINE_NAME = "chatgpt-kie"
-COUNT = 20
+# Every prompt here spends real kie.ai credits (~0.33 each, measured), so the
+# count is an argument rather than a constant to edit: `python kie_refetch_20.py 3`
+# fetches three. Defaults to the original 20 when run with no argument.
+COUNT = int(sys.argv[1]) if len(sys.argv) > 1 else 20
 CONCURRENCY = 4
 TIMEOUT = 120.0
 
