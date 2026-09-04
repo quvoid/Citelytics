@@ -114,8 +114,18 @@ export function NavigationProgressBar() {
       }, 8000);
     }
 
-    document.addEventListener("click", onClick);
-    return () => document.removeEventListener("click", onClick);
+    // CAPTURE phase, not bubble — this is the actual fix, not a style
+    // choice. Next's <Link> calls e.preventDefault() in its own onClick,
+    // which React delegates at the app's root container (inside <body>).
+    // A bubble-phase listener on `document` sits OUTSIDE that container, so
+    // it only sees the event AFTER Link has already run and prevented it —
+    // meaning the `e.defaultPrevented` bail-out below fired on literally
+    // every internal Link click, every time, and neither the bar nor the
+    // overlay ever showed on a real navigation. Capture fires on the way
+    // DOWN, before Link's handler runs at all, so defaultPrevented is still
+    // false when this reads it.
+    document.addEventListener("click", onClick, { capture: true });
+    return () => document.removeEventListener("click", onClick, { capture: true });
     // pathname isn't read inside onClick via closure staleness risk — it's
     // read fresh off window.location at click time, not from this render.
   }, []);
