@@ -73,6 +73,14 @@ async def call_kie(client: httpx.AsyncClient, prompt_text: str) -> RawEngineResp
                 "model": "gpt-5-6-luna",
                 "input": prompt_text,
                 "tools": [{"type": "web_search"}],
+                # Every page the model READ, not just what it cited inline —
+                # OpenAI's own docs: "the number of sources is often greater
+                # than the number of citations." Without this the response
+                # only carries url_citation annotations, and "retrieved but
+                # never referenced" is unrecoverable after the fact — see
+                # engine-details.ts's parseOpenAI, which only trusts this data
+                # when it sees this key actually present in the response.
+                "include": ["web_search_call.action.sources"],
                 "stream": False,
             },
             timeout=TIMEOUT,

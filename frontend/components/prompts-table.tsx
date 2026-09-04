@@ -189,7 +189,7 @@ export function PromptsTable({
             {prompts.map((p) => (
               <tr
                 key={p.id}
-                className="border-b border-[var(--border)] align-top last:border-b-0 hover:bg-[var(--muted)]"
+                className="border-b border-[var(--border)] align-top transition-colors duration-150 last:border-b-0 hover:bg-[var(--muted)]"
                 style={{ opacity: p.active ? 1 : 0.55 }}
               >
                 <td className="max-w-[320px] px-3 py-3">
@@ -203,10 +203,10 @@ export function PromptsTable({
                   <PromptDetailModal
                     promptId={p.id}
                     queryText={p.query_text}
-                    className="block w-full cursor-pointer text-left"
+                    className="block w-full cursor-pointer text-left transition-transform duration-100 active:scale-[0.985]"
                   >
                     <div
-                      className="truncate font-sans text-[13.5px] font-medium text-[var(--ink)] hover:text-[var(--ember)]"
+                      className="truncate font-sans text-[13.5px] font-medium text-[var(--ink)] transition-colors duration-150 hover:text-[var(--ember)]"
                       title={p.query_text}
                     >
                       {p.query_text}

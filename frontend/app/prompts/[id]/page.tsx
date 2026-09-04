@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { AnswerText } from "@/components/answer-text";
+import { EngineCard, EngineCardSkeleton } from "@/components/engine-answer-card";
 import { EngineLabel } from "@/components/engine-icons";
 import { MentionMark, ProvenanceDot } from "@/components/marks";
+import { getPromptDetail, type PromptDetailPayload } from "@/lib/actions/prompt-detail";
 import type { RankedBrand } from "@/lib/highlight-brands";
 import {
   getAnswerBrandMentions,
@@ -17,6 +20,36 @@ import type { Citation } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
+/** Streams the "Sources & grounding" block in for one engine once
+ *  `getPromptDetail` resolves — it parses a full `raw_response` jsonb blob
+ *  per engine, the heaviest fetch on this page, so it's kept off the main
+ *  `Promise.all` and streamed in behind its own Suspense boundary instead.
+ *  Every engine's boundary shares the SAME in-flight promise (passed down,
+ *  not re-invoked), so this still fires exactly one query no matter how many
+ *  engines answered — Suspense just lets each card reveal independently
+ *  rather than the whole page waiting on the slowest one. */
+async function EngineSourcesSection({
+  detailPromise,
+  engineName,
+}: {
+  detailPromise: Promise<PromptDetailPayload | null>;
+  engineName: string | undefined;
+}) {
+  const promptDetail = await detailPromise;
+  const answerDetail = engineName
+    ? promptDetail?.answers.find((a) => a.engineName === engineName)
+    : undefined;
+  if (!answerDetail) return null;
+  return (
+    <div className="mt-8 border-t border-[var(--rule-light)] pt-8">
+      <div className="mb-3 text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+        Sources &amp; grounding
+      </div>
+      <EngineCard a={answerDetail} />
+    </div>
+  );
+}
+
 export default async function PromptDetailPage({
   params,
 }: {
@@ -26,6 +59,11 @@ export default async function PromptDetailPage({
 
   const prompt = await getPrompt(id);
   if (!prompt) notFound();
+
+  // Not awaited here on purpose — it starts immediately but the rest of the
+  // page (citations, brand mentions, product tags) doesn't wait on it. See
+  // EngineSourcesSection above.
+  const promptDetailPromise = getPromptDetail(id);
 
   const [engines, citations, rawResponses, trackedUrls] = await Promise.all([
     getEngines(),
@@ -143,6 +181,7 @@ export default async function PromptDetailPage({
         const ranked = rrId ? (rankedBrandsByResponse.get(rrId) ?? []) : [];
         const tags = rrId ? tagsByResponse.get(rrId) : undefined;
         const answerText = rrId ? (answerTextByEngine.get(engineId) ?? null) : null;
+        const engineName = engineById.get(engineId);
         return (
           <section key={engineId} className="border-b border-[var(--rule)] py-9">
             {/* The actual AI output — everything below (citations, brand
@@ -305,6 +344,20 @@ export default async function PromptDetailPage({
                 ))}
               </div>
             </div>
+
+            <Suspense
+              fallback={
+                <div className="mt-8 border-t border-[var(--rule-light)] pt-8">
+                  <div className="mb-3 flex items-center gap-2 text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+                    Sources &amp; grounding
+                    <span className="h-[6px] w-[6px] animate-pulse rounded-full bg-[var(--ember)]" />
+                  </div>
+                  <EngineCardSkeleton />
+                </div>
+              }
+            >
+              <EngineSourcesSection detailPromise={promptDetailPromise} engineName={engineName} />
+            </Suspense>
           </section>
         );
       })}

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import {
   ArrowUpRight,
   CircleDollarSign,
@@ -50,6 +51,16 @@ export function SidebarNav({
   briefCount: number;
 }) {
   const pathname = usePathname();
+  // React-tracked, not CSS `:hover` — this project's stylesheet stack has an
+  // UNLAYERED rule somewhere (very likely from the shadcn/tailwind.css
+  // import) that beats any `@layer utilities` class regardless of
+  // specificity, per the CSS Cascade Layers spec (unlayered always wins over
+  // layered). Verified directly: the `.hover\:bg-...:hover` rule really is
+  // in the compiled sheet and really does match on hover, and the background
+  // still never painted. Rather than chase a third-party layer conflict,
+  // hover uses the exact mechanism `active` below already relies on —
+  // inline style, which no stylesheet layer can ever out-rank.
+  const [hoveredHref, setHoveredHref] = useState<string | null>(null);
 
   const counts: Record<string, string> = {
     "/prompts": String(promptCount),
@@ -64,23 +75,29 @@ export function SidebarNav({
           pathname === item.href ||
           (item.href === "/prompts" && pathname.startsWith("/prompts/")) ||
           (item.href === "/briefs" && pathname.startsWith("/briefs/"));
+        const hovered = hoveredHref === item.href;
         const Icon = item.icon;
         return (
           <Link
             key={item.href}
             href={item.href}
             aria-current={active ? "page" : undefined}
-            className="group flex items-center gap-2.5 rounded-[10px] px-3 py-2 font-sans text-[13.5px] no-underline transition-colors duration-150"
+            onMouseEnter={() => setHoveredHref(item.href)}
+            onMouseLeave={() => setHoveredHref((h) => (h === item.href ? null : h))}
+            className="group flex items-center gap-2.5 rounded-[10px] px-3 py-2 font-sans text-[13.5px] no-underline transition-colors duration-150 active:scale-[0.98]"
             style={{
-              background: active ? "var(--sb-active-bg)" : "transparent",
-              color: active ? "var(--sb-text-active)" : "var(--sb-text)",
+              background: active ? "var(--sb-active-bg)" : hovered ? "var(--sb-hover-bg)" : "transparent",
+              color: active ? "var(--sb-text-active)" : hovered ? "var(--sb-text-active)" : "var(--sb-text)",
             }}
           >
             <Icon
               size={16}
               strokeWidth={active ? 2.1 : 1.75}
-              className="flex-none transition-opacity duration-150"
-              style={{ opacity: active ? 1 : 0.72 }}
+              className="flex-none transition-transform duration-150"
+              style={{
+                opacity: active || hovered ? 1 : 0.7,
+                transform: hovered && !active ? "translateX(2px)" : undefined,
+              }}
               aria-hidden="true"
             />
             <span className="flex-1">{item.label}</span>

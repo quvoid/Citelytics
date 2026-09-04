@@ -198,6 +198,13 @@ function parseOpenAI(raw: Json, answerText: string | null): Partial<EngineAnswer
   const nByUrl = new Map<string, number>();
   const groundedSpans: GroundedSpan[] = [];
 
+  // Present only when the request included
+  // `include: ["web_search_call.action.sources"]` — see kie_refetch_20.py.
+  // Older stored answers were fetched without it, so this stays false for
+  // them and the UI says so instead of implying nothing was ever read.
+  let sourcesIncludeRequested = false;
+  const readOnlyUrls: { url: string; title: string | null }[] = [];
+
   for (const item of output) {
     const o = asObj(item);
     if (!o) continue;
@@ -208,6 +215,15 @@ function parseOpenAI(raw: Json, answerText: string | null): Partial<EngineAnswer
       const one = asStr(action?.query);
       const queries = many.length ? many : one ? [one] : [];
       if (queries.length) searchRounds.push({ round: searchRounds.length + 1, queries });
+
+      if (action && "sources" in action) {
+        sourcesIncludeRequested = true;
+        for (const s of asArr(action.sources)) {
+          const so = asObj(s);
+          const url = asStr(so ? so.url : s) ?? (typeof s === "string" ? s : null);
+          if (url) readOnlyUrls.push({ url, title: so ? asStr(so.title) : null });
+        }
+      }
     }
 
     if (o.type === "message") {
@@ -248,14 +264,27 @@ function parseOpenAI(raw: Json, answerText: string | null): Partial<EngineAnswer
     }
   }
 
+  // Any URL the model read but never cited inline. Only reachable when the
+  // request set include: ["web_search_call.action.sources"] — checked above,
+  // not assumed — and only added if it wasn't already picked up as a cited
+  // source (a page can be both read AND cited; that's cited, not read-only).
+  for (const { url, title } of readOnlyUrls) {
+    if (nByUrl.has(url)) continue;
+    const n = sources.length + 1;
+    nByUrl.set(url, n);
+    sources.push({ n, url, domain: domainOf(url), title, citedInText: false });
+  }
+
   const usage = asObj(raw.usage);
   const notes: string[] = [];
   if (searchRounds.length && !sources.length) {
     notes.push("The model ran searches but cited no source inline for this answer.");
   }
-  notes.push(
-    "OpenAI can also return every page it READ (not just cited) via the `web_search_call.action.sources` include — not requested on this fetch, so read-but-uncited pages aren't recoverable here.",
-  );
+  if (!sourcesIncludeRequested) {
+    notes.push(
+      "OpenAI can also return every page it READ (not just cited) via the `web_search_call.action.sources` include — not requested on this fetch, so read-but-uncited pages aren't recoverable here.",
+    );
+  }
 
   return {
     sources,
@@ -336,6 +365,156 @@ export function resolveRedirectSources(
       return { ...s, url: resolved, domain: domainOf(resolved) };
     }),
   };
+}
+
+/** Strips the source markdown syntax out of a short quote for display — bold,
+ *  links, headers, backticks, list bullets. The full ANSWER text is never run
+ *  through this: groundedSpans' startIndex/endIndex are character offsets
+ *  into that original text, and stripping syntax would shift every offset
+ *  after the first match, breaking every highlight downstream. Safe here
+ *  because a Grounding Supports quote is a short, standalone string with
+ *  nothing else depending on its exact characters. */
+export function stripMarkdown(text: string): string {
+  return text
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1") // [text](url) -> text
+    .replace(/\*\*([^*]+)\*\*/g, "$1") // **bold** -> bold
+    .replace(/__([^_]+)__/g, "$1") // __bold__ -> bold
+    .replace(/(?<!\w)\*([^*\n]+)\*(?!\w)/g, "$1") // *italic* -> italic
+    .replace(/`([^`]+)`/g, "$1") // `code` -> code
+    .replace(/^\s{0,3}#{1,6}\s*/gm, "") // # Heading -> Heading
+    .replace(/^\s*[-*+]\s+/gm, "") // - bullet -> (removed)
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export type SentenceExcerpt = {
+  text: string;
+  /** True when the excerpt was cut mid-sentence at that edge — the caller
+   *  should render an ellipsis there rather than let a fragment read as a
+   *  complete, oddly-worded sentence. */
+  truncatedStart: boolean;
+  truncatedEnd: boolean;
+};
+
+/** Is the character at `i` a REAL sentence terminator, as opposed to a period
+ *  that just happens to sit inside a URL, domain, abbreviation, or decimal
+ *  ("apple.com", "e.g.", "4.5")? `!`/`?`/`\n` are unambiguous; a `.` only
+ *  counts when the next character is whitespace or end-of-string — the one
+ *  check that told "https://apple.com)." apart: the mid-URL period (followed
+ *  by "c") is rejected, the real closing period (followed by nothing) isn't. */
+function isSentenceEnd(text: string, i: number): boolean {
+  const ch = text[i];
+  if (ch === "!" || ch === "?" || ch === "\n") return true;
+  if (ch !== ".") return false;
+  const next = text[i + 1];
+  return next === undefined || /\s/.test(next);
+}
+
+/** A groundedSpan's start/endIndex are wherever OpenAI's or Gemini's char
+ *  offsets happened to land, which is very often mid-word ("y for 4K
+ *  video**, buy the **iPhone Pro" was a real one) — an artifact of how the
+ *  span was computed, not a real quote boundary. This widens the window
+ *  outward to the nearest sentence-ending punctuation on each side (capped
+ *  by `maxPad` so one run-on sentence can't swallow the whole answer),
+ *  strips markdown, and reports which edges are still genuinely mid-sentence
+ *  so the caller can mark them rather than present a fragment as whole. */
+export function sentenceExcerpt(
+  fullText: string,
+  startIndex: number,
+  endIndex: number,
+  maxPad = 160,
+): SentenceExcerpt {
+  const lo = Math.max(0, startIndex - maxPad);
+  const hi = Math.min(fullText.length, endIndex + maxPad);
+
+  // Backward scan: find the terminator ending the PRIOR sentence. Recorded
+  // as `foundStart` at the moment of the match — truncation is judged from
+  // this, not from `start`'s final position, which the whitespace-skip below
+  // moves past the terminator itself (checking the character there would
+  // just see the space that separated the two sentences).
+  let start = lo;
+  let foundStart = false;
+  for (let i = startIndex; i > lo; i--) {
+    if (isSentenceEnd(fullText, i - 1)) {
+      start = i;
+      foundStart = true;
+      break;
+    }
+  }
+  while (start < endIndex && /\s/.test(fullText[start] ?? "")) start++;
+
+  let end = hi;
+  let foundEnd = false;
+  for (let i = endIndex; i < hi; i++) {
+    if (isSentenceEnd(fullText, i)) {
+      end = i + 1;
+      foundEnd = true;
+      break;
+    }
+  }
+
+  return {
+    text: stripMarkdown(fullText.slice(start, end)),
+    truncatedStart: start > 0 && !foundStart,
+    truncatedEnd: end < fullText.length && !foundEnd,
+  };
+}
+
+export type GroundingVerdict = {
+  /** null exactly when groundedPct is null — no span data at all, not a claim
+   *  about the content. */
+  groundedPct: number | null;
+  /** Sentences in the answer that overlap at least one grounded span, of the
+   *  total sentence count — a real, computed analog of "claims substantiated",
+   *  not a fabricated ratio. */
+  substantiatedSentences: number;
+  totalSentences: number;
+  verdict:
+    | "well-grounded"
+    | "moderately-grounded"
+    | "lightly-grounded"
+    | "ungrounded"
+    | "unknown";
+};
+
+const SENTENCE_SPLIT = /(?<=[.!?])\s+|\n+/;
+
+/** One label and one number for the whole answer, from data already parsed —
+ *  no new capture, just a summary of groundedSpans against the sentences they
+ *  actually cover. Bucket edges chosen to separate "mostly sourced" (80%+)
+ *  from "meaningfully unsourced" (under 50%) without pretending finer
+ *  precision than a sentence-level count actually supports. */
+export function groundingVerdict(
+  detail: Pick<EngineAnswerDetail, "answerText" | "groundedSpans" | "groundedPct">,
+): GroundingVerdict {
+  const { answerText, groundedSpans, groundedPct } = detail;
+  if (!answerText || groundedPct === null) {
+    return { groundedPct: null, substantiatedSentences: 0, totalSentences: 0, verdict: "unknown" };
+  }
+
+  const sentences: { start: number; end: number }[] = [];
+  let cursor = 0;
+  for (const part of answerText.split(SENTENCE_SPLIT)) {
+    const idx = answerText.indexOf(part, cursor);
+    if (idx === -1 || !part.trim()) continue;
+    sentences.push({ start: idx, end: idx + part.length });
+    cursor = idx + part.length;
+  }
+
+  const substantiated = sentences.filter((sent) =>
+    groundedSpans.some((sp) => sp.startIndex < sent.end && sp.endIndex > sent.start),
+  ).length;
+
+  const verdict: GroundingVerdict["verdict"] =
+    groundedPct >= 80
+      ? "well-grounded"
+      : groundedPct >= 50
+        ? "moderately-grounded"
+        : groundedPct >= 20
+          ? "lightly-grounded"
+          : "ungrounded";
+
+  return { groundedPct, substantiatedSentences: substantiated, totalSentences: sentences.length, verdict };
 }
 
 export function parseEngineDetail(

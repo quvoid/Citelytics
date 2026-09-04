@@ -95,6 +95,11 @@
   --sb-bg: #16161a;
   --sb-border: #232328;
   --sb-active-bg: #212126;
+  /* Between --sb-bg and --sb-active-bg — a real hover state distinct from
+     "this is the current page", set via a class (not JS-computed inline
+     style like --sb-active-bg has to be) specifically so :hover can apply it
+     in pure CSS and transition-colors picks it up for free. */
+  --sb-hover-bg: #1c1c21;
   --sb-text: #9a99a6;
   --sb-text-active: #ffffff;
 
@@ -171,5 +176,52 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Modal entrance — the one authored motion moment for the prompt-detail
+   card. Backdrop fades in flat; the panel gets the same fade plus a small
+   scale+lift so it reads as arriving FROM the trigger, not just appearing.
+   Exponential-feeling ease-out (fast start, settle at the end) rather than
+   linear, on an already-visible starting state (opacity 0 is still painted,
+   never display:none), so the browser has something to animate from frame
+   one instead of popping in on the first tick. */
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Apple HIG (motion.md): "Make motion optional and supplementary" and
+   "respect accessibility settings" — this app had zero reduced-motion
+   handling anywhere before this. Rather than gate every animation call
+   site individually, collapse every keyframe animation and transition to
+   near-instant globally when the OS setting is on: content still changes
+   state (nothing becomes permanently hidden or stuck), it just stops
+   moving to get there. `!important` is deliberate — this must win over
+   every per-component inline `animation`/`transition` style in the app
+   (the modal, the skeletons, the nav overlay), not just Tailwind classes. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -59,18 +59,41 @@ export default async function OverviewPage() {
     range: rangeFromPreset("30d", filterOptions.dataRange?.last ?? todayUtc()),
   };
 
-  const [metrics, sourceMetrics] = await Promise.all([
+  // Everything in this batch is independent of everything else in it —
+  // allBrands and fanouts don't touch `filter` at all, and nothing here
+  // depends on another call's result. It used to be four sequential
+  // `await`s in a row, which is exactly the kind of waterfall that turned a
+  // page that should load in ~1-2s into one taking 10-20s: a real user hit
+  // this and assumed the site had hung, not just that it was slow. Four
+  // network round trips run one after another instead of together is the
+  // actual bug; the loading UI (navigation-progress-bar.tsx, app/loading.tsx)
+  // is the honest fallback for whatever latency is left AFTER this fix, not
+  // a replacement for fixing it.
+  const [metrics, sourceMetrics, allBrands, fanouts] = await Promise.all([
     getBrandMetrics(filter),
     getSourceMetrics(filter),
+    getTrackedUrls(),
+    getQueryFanouts(rawResponses.map((r) => r.id)),
   ]);
   const own = metrics.rows.find((r) => !r.isCompetitor) ?? null;
 
-  // Per-engine performance: one scoped call per engine rather than a new RPC.
-  // Engine count is small (single digits) and this reuses the exact same
-  // finalisation path, so the per-model figures cannot drift from the totals.
-  const modelRows: ModelRow[] = own
-    ? (
-        await Promise.all(
+  // Own brand + top 5 competitors, matching the trend chart on /insights —
+  // computed before the next batch since trendSeries below needs it.
+  const trendBrandIds = [
+    ...(own ? [own.brandId] : []),
+    ...metrics.rows
+      .filter((r) => r.isCompetitor)
+      .sort((a, b) => (b.visibility.value ?? -1) - (a.visibility.value ?? -1))
+      .slice(0, 5)
+      .map((r) => r.brandId),
+  ];
+
+  // Per-engine performance and the trend series both depend on `metrics`
+  // above, but NOT on each other — they used to run one after the other for
+  // no reason. Run together instead.
+  const [modelResults, trendSeries] = await Promise.all([
+    own
+      ? Promise.all(
           metrics.responsesByEngine.map(async (e) => {
             const m = await getBrandMetrics({ ...filter, engineIds: [e.engineId] });
             const row = m.rows.find((r) => r.brandId === own.brandId);
@@ -87,33 +110,25 @@ export default async function OverviewPage() {
               : null;
           }),
         )
-      ).filter((r): r is ModelRow => r !== null)
-    : [];
+      : Promise.resolve([]),
+    trendBrandIds.length
+      ? getBrandTimeSeries(filter, { metric: "sov", bucket: "week", brandIds: trendBrandIds })
+      : Promise.resolve([]),
+  ]);
+  // Per-engine performance: one scoped call per engine rather than a new RPC.
+  // Engine count is small (single digits) and this reuses the exact same
+  // finalisation path, so the per-model figures cannot drift from the totals.
+  const modelRows: ModelRow[] = modelResults.filter((r): r is ModelRow => r !== null);
   modelRows.sort((a, b) => (b.sov.value ?? -1) - (a.sov.value ?? -1));
-
-  // Own brand + top 5 competitors, matching the trend chart on /insights.
-  const trendBrandIds = [
-    ...(own ? [own.brandId] : []),
-    ...metrics.rows
-      .filter((r) => r.isCompetitor)
-      .sort((a, b) => (b.visibility.value ?? -1) - (a.visibility.value ?? -1))
-      .slice(0, 5)
-      .map((r) => r.brandId),
-  ];
-  const trendSeries = trendBrandIds.length
-    ? await getBrandTimeSeries(filter, { metric: "sov", bucket: "week", brandIds: trendBrandIds })
-    : [];
 
   const ownDomains = new Set(ownBrand.map((b) => b.url));
 
   // Referral surface: clickable paths into each brand's own site that the
   // engines actually placed. Uses every tracked brand, not just your own.
-  const allBrands = await getTrackedUrls();
   const referral = referralSurface(citations, allBrands);
 
   // Share of search: who the engines went LOOKING for, from their own
   // sub-queries. Upstream of share of voice — see lib/fanout-analysis.ts.
-  const fanouts = await getQueryFanouts(rawResponses.map((r) => r.id));
   const sos = shareOfSearch(fanouts, brandTerms(allBrands));
 
   // Movers reuse the weekly series the trend chart already fetched, so this

@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { parseEngineDetail, resolveRedirectSources } from "./engine-details.ts";
+import {
+  groundingVerdict,
+  parseEngineDetail,
+  resolveRedirectSources,
+  sentenceExcerpt,
+  stripMarkdown,
+} from "./engine-details.ts";
 
 // Shapes below are trimmed copies of REAL rows read out of raw_responses —
 // not invented fixtures — so a change in what the engines actually send shows
@@ -90,6 +96,90 @@ test("gemini: a retrieved-but-never-cited source is marked as such", () => {
     d.sources.map((s) => s.citedInText),
     [true, true, false],
   );
+});
+
+test("action.sources adds read-but-uncited pages, marked distinctly", () => {
+  const raw = {
+    output: [
+      {
+        type: "web_search_call",
+        action: {
+          query: "q",
+          sources: [
+            { url: "https://gsmarena.com/read-only", title: "GSMArena review" },
+            "https://plain-string-source.com/x",
+          ],
+        },
+      },
+      {
+        type: "message",
+        content: [
+          {
+            type: "output_text",
+            annotations: [
+              { type: "url_citation", url: "https://cited.com/y", start_index: 0, end_index: 4 },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  const d = parseEngineDetail("chatgpt-kie", raw, "0123456789");
+  assert.equal(d.sources.length, 3);
+  const cited = d.sources.find((s) => s.url === "https://cited.com/y")!;
+  const readOnly = d.sources.find((s) => s.url === "https://gsmarena.com/read-only")!;
+  const plain = d.sources.find((s) => s.url === "https://plain-string-source.com/x")!;
+  assert.equal(cited.citedInText, true);
+  assert.equal(readOnly.citedInText, false);
+  assert.equal(readOnly.title, "GSMArena review");
+  assert.equal(plain.citedInText, false);
+  // Requesting the include and getting zero read-only sources back is a real
+  // finding (everything read got cited) — must not print the "not requested" note.
+  assert.ok(!d.notes.some((n) => n.includes("not requested on this fetch")));
+});
+
+test("a page that is BOTH cited and in action.sources counts once, as cited", () => {
+  const raw = {
+    output: [
+      { type: "web_search_call", action: { query: "q", sources: [{ url: "https://both.com/z" }] } },
+      {
+        type: "message",
+        content: [
+          {
+            type: "output_text",
+            annotations: [
+              { type: "url_citation", url: "https://both.com/z", start_index: 0, end_index: 4 },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  const d = parseEngineDetail("chatgpt-kie", raw, "0123456789");
+  assert.equal(d.sources.length, 1);
+  assert.equal(d.sources[0].citedInText, true);
+});
+
+test("without the include, the response says why read-only pages are unrecoverable", () => {
+  const raw = {
+    output: [
+      { type: "web_search_call", action: { query: "q", queries: ["q"] } }, // no `sources` key at all
+      {
+        type: "message",
+        content: [
+          {
+            type: "output_text",
+            annotations: [
+              { type: "url_citation", url: "https://cited.com/y", start_index: 0, end_index: 4 },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  const d = parseEngineDetail("chatgpt-kie", raw, "0123456789");
+  assert.equal(d.sources.length, 1); // only the cited one
+  assert.ok(d.notes.some((n) => n.includes("not requested on this fetch")));
 });
 
 test("openai: each web_search_call is its own round, preserving the search loop", () => {
@@ -196,4 +286,85 @@ test("a missing raw_response says so rather than rendering an empty card", () =>
   const d = parseEngineDetail("gemini", null, "text");
   assert.deepEqual(d.sources, []);
   assert.ok(d.notes[0].includes("No raw engine response"));
+});
+
+test("groundingVerdict: no span data is 'unknown', not a fabricated bucket", () => {
+  const v = groundingVerdict({ answerText: "Some real answer text.", groundedSpans: [], groundedPct: null });
+  assert.equal(v.verdict, "unknown");
+  assert.equal(v.groundedPct, null);
+  assert.equal(v.totalSentences, 0);
+});
+
+test("groundingVerdict: counts sentences that overlap a grounded span, not characters", () => {
+  const text = "Motorola leads on camera. Samsung is pricier. Vivo has a great display.";
+  // Span covers only the first sentence.
+  const spans = [{ text: "Motorola leads on camera.", startIndex: 0, endIndex: 26, sourceNumbers: [1] }];
+  const v = groundingVerdict({ answerText: text, groundedSpans: spans, groundedPct: 33 });
+  assert.equal(v.totalSentences, 3);
+  assert.equal(v.substantiatedSentences, 1);
+  assert.equal(v.verdict, "lightly-grounded");
+});
+
+test("groundingVerdict: buckets follow the stated thresholds", () => {
+  const text = "x.";
+  assert.equal(groundingVerdict({ answerText: text, groundedSpans: [], groundedPct: 85 }).verdict, "well-grounded");
+  assert.equal(groundingVerdict({ answerText: text, groundedSpans: [], groundedPct: 60 }).verdict, "moderately-grounded");
+  assert.equal(groundingVerdict({ answerText: text, groundedSpans: [], groundedPct: 25 }).verdict, "lightly-grounded");
+  assert.equal(groundingVerdict({ answerText: text, groundedSpans: [], groundedPct: 5 }).verdict, "ungrounded");
+});
+
+test("stripMarkdown removes bold, links, headers and backticks", () => {
+  assert.equal(stripMarkdown("Buy the **iPhone 17 Pro Max**"), "Buy the iPhone 17 Pro Max");
+  assert.equal(
+    stripMarkdown("See [apple.com](https://www.apple.com/iphone-17-pro/)"),
+    "See apple.com",
+  );
+  assert.equal(stripMarkdown("### Best pick"), "Best pick");
+  assert.equal(stripMarkdown("Use the `web_search` tool"), "Use the web_search tool");
+  assert.equal(stripMarkdown("- 50MP main\n- 12MP ultrawide"), "50MP main 12MP ultrawide");
+});
+
+test("stripMarkdown leaves a bare asterisk (not italic markup) alone", () => {
+  // A stray "*" — e.g. a footnote marker — must not vanish just because a
+  // naive */* regex would treat it as an unmatched italic delimiter.
+  assert.equal(stripMarkdown("Price* varies by region"), "Price* varies by region");
+});
+
+test("sentenceExcerpt widens a mid-word span out to real sentence boundaries", () => {
+  // The actual broken case from production: a span landing mid-word,
+  // rendering as "y for 4Kvideo**, buy the **iPhone Pro" with raw asterisks.
+  const text =
+    "For anyone shopping for 4K video, buy the iPhone 17 Pro Max. It has the best stabilization.";
+  const midWordStart = text.indexOf("shopping") + 3; // lands inside "shopping"
+  const midWordEnd = text.indexOf("Max.") - 2; // lands inside "Pro"
+  const x = sentenceExcerpt(text, midWordStart, midWordEnd);
+  assert.equal(x.text, "For anyone shopping for 4K video, buy the iPhone 17 Pro Max.");
+  assert.equal(x.truncatedStart, false);
+  assert.equal(x.truncatedEnd, false);
+});
+
+test("sentenceExcerpt strips markdown from the widened quote too", () => {
+  const text = "Intro sentence here. Buy the **iPhone 17 Pro Max** for [more detail](https://apple.com).";
+  const start = text.indexOf("iPhone");
+  const end = start + 6;
+  const x = sentenceExcerpt(text, start, end);
+  assert.equal(x.text, "Buy the iPhone 17 Pro Max for more detail.");
+});
+
+test("sentenceExcerpt marks a genuinely truncated edge (run-on sentence beyond maxPad)", () => {
+  const filler = "word ".repeat(100); // no punctuation anywhere nearby
+  const text = `${filler}TARGET${filler}`;
+  const start = text.indexOf("TARGET");
+  const x = sentenceExcerpt(text, start, start + 6, 20);
+  assert.equal(x.truncatedStart, true);
+  assert.equal(x.truncatedEnd, true);
+});
+
+test("sentenceExcerpt does not falsely mark a real sentence boundary as truncated", () => {
+  const text = "Short one. TARGET sentence here. Another one.";
+  const start = text.indexOf("TARGET");
+  const x = sentenceExcerpt(text, start, start + 6);
+  assert.equal(x.truncatedStart, false);
+  assert.equal(x.truncatedEnd, false);
+  assert.equal(x.text, "TARGET sentence here.");
 });

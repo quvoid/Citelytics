@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Sora } from "next/font/google";
 import "./globals.css";
+import { HapticFeedback } from "@/components/haptic-feedback";
+import { NavigationProgressBar } from "@/components/navigation-progress-bar";
 import { Sidebar } from "@/components/sidebar";
 import { TopBar } from "@/components/top-bar";
 import { getLayoutData } from "@/lib/layout-data";
@@ -49,6 +51,8 @@ export default async function RootLayout({
           creating a scroll container, so sticky keeps resolving against the
           real viewport. */}
       <body className="min-h-screen overflow-x-clip bg-background font-sans text-[15px] text-foreground">
+        <NavigationProgressBar />
+        <HapticFeedback />
         <div className="flex min-h-screen">
           <Sidebar data={data} />
           <div className="flex min-w-0 flex-1 flex-col pb-16">
