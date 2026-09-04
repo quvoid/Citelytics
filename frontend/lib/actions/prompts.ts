@@ -44,16 +44,6 @@ export async function addPrompt(formData: FormData) {
   revalidatePath("/");
 }
 
-export async function setPromptCountry(promptId: string, country: string | null) {
-  const code = country && COUNTRIES.some((c) => c.code === country) ? country : null;
-  const sb = createAnonServerClient();
-  const { error } = await sb.from("prompts").update({ country: code }).eq("id", promptId);
-  if (error) throw new Error(`Failed to update prompt market: ${error.message}`);
-  revalidatePath("/prompts");
-  revalidatePath("/perception");
-  revalidatePath("/");
-}
-
 export async function setPromptActive(promptId: string, active: boolean) {
   const sb = createAnonServerClient();
   const { error } = await sb.from("prompts").update({ active }).eq("id", promptId);

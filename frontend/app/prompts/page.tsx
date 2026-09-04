@@ -145,10 +145,12 @@ export default async function PromptsPage({
     const s = stats.get(p.id) ?? emptyStats();
     return {
       ...p,
-      // What the fetch will actually use — the table shows the effective
-      // market, not a blank for every prompt that inherits.
+      // What the fetch will actually use. In practice this is always the
+      // project's onboarding-chosen default_country now that the per-prompt
+      // market control is gone; `p.country` is only ever non-null on rows
+      // that predate that change, and is still honoured so their historical
+      // answers stay attributed to the market they were actually fetched in.
       resolvedCountry: p.country ?? defaultCountry,
-      inheritsCountry: p.country === null,
       citations: s.citations,
       mentions: s.mentions,
       real: s.real,

@@ -5,15 +5,16 @@ import { DownloadCsvButton } from "@/components/download-csv-button";
 import { EmptyState } from "@/components/empty-state";
 import { PromptDetailModal } from "@/components/prompt-detail-modal";
 import { TagPicker } from "@/components/tag-picker";
-import { setPromptActive, setPromptCountry } from "@/lib/actions/prompts";
-import { COUNTRIES, countryName } from "@/lib/countries";
+import { setPromptActive } from "@/lib/actions/prompts";
 import type { Prompt, Tag } from "@/lib/types";
 
 export type PromptRow = Prompt & {
-  /** The market the next fetch will use — the prompt's own, or the project's
-   * inherited default. */
+  /** The market this prompt's fetches use. Every prompt inherits the
+   * project's `default_country` (chosen during onboarding) — there is no
+   * per-prompt market control any more, so this is effectively the project
+   * market, resolved once by the page. Still carried per row because the CSV
+   * export records which market each row's numbers came from. */
   resolvedCountry: string;
-  inheritsCountry: boolean;
   citations: number;
   mentions: number;
   real: boolean;
@@ -71,34 +72,11 @@ function ToggleButton({ id, active }: { id: string; active: boolean }) {
   );
 }
 
-/** Changing a prompt's market resets its comparability — answers fetched
- * before the change were built from a different country's sources — so this
- * is a deliberate per-row control rather than a bulk action. */
-function MarketSelect({ row }: { row: PromptRow }) {
-  const [isPending, startTransition] = useTransition();
-  return (
-    <select
-      aria-label={`Market for "${row.query_text}"`}
-      value={row.country ?? ""}
-      disabled={isPending}
-      onChange={(e) => startTransition(() => setPromptCountry(row.id, e.target.value || null))}
-      className="w-full max-w-[110px] rounded-[6px] border border-[var(--border)] bg-transparent px-1.5 py-1 font-sans text-[11px] text-[var(--ink)] outline-none focus:border-[var(--ember)] disabled:opacity-60"
-    >
-      <option value="">{countryName(row.resolvedCountry)}</option>
-      {COUNTRIES.map((c) => (
-        <option key={c.code} value={c.code}>
-          {c.name}
-        </option>
-      ))}
-    </select>
-  );
-}
-
 /**
  * A real <table>, matching the dashboard density used everywhere else in
  * this rebuild (top-brands-table, kpi-strip). The previous version rendered
- * each prompt as a 19px serif headline plus an intent line plus a full-width
- * market <select> plus a tag row — five to six lines of type per row, and a
+ * each prompt as a 19px serif headline plus an intent line plus a tag row —
+ * five to six lines of type per row, and a
  * CSS-grid column spec (a `gridTemplateColumns` string) that had no
  * structural guarantee of lining up with the header's own copy of the same
  * string. A <table> makes that guarantee automatic and lets every row sit on
@@ -156,14 +134,11 @@ export function PromptsTable({
           viewport gets a scrollable table instead of one that squeezes every
           column unreadably thin or blows out the document width. */}
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse" style={{ minWidth: 830 }}>
+        <table className="w-full border-collapse" style={{ minWidth: 720 }}>
           <thead>
             <tr className="border-y border-[var(--border)] bg-[var(--muted)]">
               <th className="px-3 py-2 text-left font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Prompt
-              </th>
-              <th className="px-3 py-2 text-left font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
-                Market
               </th>
               <th className="px-3 py-2 text-right font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Sent.
@@ -234,10 +209,6 @@ export function PromptsTable({
                       <TagPicker promptId={p.id} assigned={p.tags} allTags={allTags} />
                     </div>
                   )}
-                </td>
-
-                <td className="px-3 py-3">
-                  <MarketSelect row={p} />
                 </td>
 
                 <td className="px-3 py-3 text-right font-sans text-[13px] tabular-nums">

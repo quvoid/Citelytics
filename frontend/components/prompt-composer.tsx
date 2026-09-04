@@ -2,7 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { addPrompt } from "@/lib/actions/prompts";
-import { COUNTRIES, countryName } from "@/lib/countries";
+import { countryName } from "@/lib/countries";
 
 type Props = {
   /** Citation prompts are queried by every engine on each fetch run;
@@ -77,30 +77,6 @@ export function PromptComposer({
               />
             </div>
 
-            <div>
-              <label
-                htmlFor="prompt-country"
-                className="font-sans text-[10.5px] font-semibold tracking-[0.06em] text-[var(--muted-2)] uppercase"
-              >
-                Market
-              </label>
-              <select
-                id="prompt-country"
-                name="country"
-                defaultValue=""
-                className="mt-2.5 w-full rounded-[10px] border border-[var(--rule)] bg-[var(--muted)] px-3.5 py-3 font-sans text-[15px] text-[var(--ink)] outline-none focus:border-[var(--ember)]"
-              >
-                <option value="">
-                  Project default — {countryName(defaultCountry)}
-                </option>
-                {COUNTRIES.map((c) => (
-                  <option key={c.code} value={c.code}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
             <button
               type="submit"
               disabled={isPending}
@@ -111,9 +87,10 @@ export function PromptComposer({
           </form>
 
           <p className="mt-3.5 font-serif text-[13px] text-[var(--muted-2)] italic">
-            The market is sent to the engine with the prompt — it steers which
-            country&rsquo;s sources, retailers and pricing the answer is built
-            from, so the same question can be tracked separately per market.
+            Fetched from {countryName(defaultCountry)}, this project&rsquo;s home
+            market. The market is sent to the engine with the prompt — it steers
+            which country&rsquo;s sources, retailers and pricing the answer is
+            built from.
           </p>
         </section>
       )}

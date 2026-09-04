@@ -55,8 +55,9 @@ export function NewProjectForm() {
           ))}
         </select>
         <p className="mt-2.5 font-serif text-[13px] text-[var(--faint)] italic">
-          Every prompt inherits this unless it sets its own — change a single
-          prompt&rsquo;s market from the Prompts table.
+          Every prompt in this project is fetched from this market. Answer
+          engines return different sources and rankings per country, so this
+          is what your citations and visibility numbers will reflect.
         </p>
       </div>
 
