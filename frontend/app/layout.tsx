@@ -4,7 +4,6 @@ import "./globals.css";
 import { HapticFeedback } from "@/components/haptic-feedback";
 import { NavigationProgressBar } from "@/components/navigation-progress-bar";
 import { Sidebar } from "@/components/sidebar";
-import { TopBar } from "@/components/top-bar";
 import { getLayoutData } from "@/lib/layout-data";
 
 /** Round 4 reskin: Sora, matching schbang.com's actual typeface (confirmed
@@ -55,8 +54,7 @@ export default async function RootLayout({
         <HapticFeedback />
         <div className="flex min-h-screen">
           <Sidebar data={data} />
-          <div className="flex min-w-0 flex-1 flex-col pb-16">
-            <TopBar data={data} />
+          <div className="flex min-w-0 flex-1 flex-col pt-8 pb-16">
             <main className="min-w-0 max-w-[1240px] px-8">{children}</main>
             <footer className="mt-14 flex max-w-[1240px] justify-between px-8 pt-5 font-sans text-[12.5px] text-[var(--faint)]">
               <span>Citelytics · real citations from Gemini &amp; ChatGPT</span>
