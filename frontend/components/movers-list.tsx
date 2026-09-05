@@ -36,7 +36,7 @@ export function MoversList({ movers }: { movers: Mover[] }) {
               {m.name}
               {m.isOwn && (
                 <span
-                  className="ml-1.5 rounded-full px-1.5 py-0.5 font-sans text-[9px] font-semibold tracking-[0.06em] uppercase"
+                  className="ml-1.5 rounded-full px-1.5 py-0.5 font-sans text-[11px] font-semibold tracking-[0.06em] uppercase"
                   style={{ background: "var(--tint-peach)", color: "var(--tint-peach-fg)" }}
                 >
                   you

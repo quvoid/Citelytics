@@ -27,7 +27,7 @@ export function TagPicker({
       {assigned.map((t) => (
         <span
           key={t.id}
-          className="flex items-center gap-1 border border-[var(--rule)] px-1.5 py-0.5 text-[10px] tracking-[0.03em] text-[var(--muted-2)]"
+          className="flex items-center gap-1 border border-[var(--rule)] px-1.5 py-0.5 text-[11px] tracking-[0.03em] text-[var(--muted-2)]"
         >
           {t.name}
           <button
@@ -74,7 +74,7 @@ function TagAddSelect({
         startTransition(() => addTagToPrompt(promptId, tagId));
         setValue("");
       }}
-      className="border border-dashed border-[var(--rule)] bg-transparent px-1 py-0.5 text-[10px] text-[var(--faint)] outline-none"
+      className="border border-dashed border-[var(--rule)] bg-transparent px-1 py-0.5 text-[11px] text-[var(--faint)] outline-none"
     >
       <option value="">+ tag</option>
       {available.map((t) => (

@@ -42,10 +42,10 @@ function formatFetchedAt(iso: string): string {
 }
 
 function Delta({ value }: { value: number }) {
-  if (value === 0) return <span className="font-sans text-[10.5px] text-[var(--faint)]">±0</span>;
+  if (value === 0) return <span className="font-sans text-[11px] text-[var(--faint)]">±0</span>;
   return (
     <span
-      className="font-sans text-[10.5px] font-medium"
+      className="font-sans text-[11px] font-medium"
       style={{ color: value > 0 ? "var(--green)" : "var(--red)" }}
     >
       {value > 0 ? "+" : "−"}
@@ -60,7 +60,7 @@ function ToggleButton({ id, active }: { id: string; active: boolean }) {
     <button
       onClick={() => startTransition(() => setPromptActive(id, !active))}
       disabled={isPending}
-      className="rounded-full border px-2 py-0.5 font-sans text-[9.5px] font-medium tracking-[0.04em] uppercase disabled:opacity-60"
+      className="rounded-full border px-2 py-0.5 font-sans text-[11px] font-medium tracking-[0.04em] uppercase disabled:opacity-60"
       style={{
         borderColor: active ? "var(--green)" : "var(--border)",
         background: active ? "var(--green)" : "transparent",
@@ -137,25 +137,25 @@ export function PromptsTable({
         <table className="w-full border-collapse" style={{ minWidth: 720 }}>
           <thead>
             <tr className="border-y border-[var(--border)] bg-[var(--muted)]">
-              <th className="px-3 py-2 text-left font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-2 text-left font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Prompt
               </th>
-              <th className="px-3 py-2 text-right font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Sent.
               </th>
-              <th className="px-3 py-2 text-right font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Pos.
               </th>
-              <th className="px-3 py-2 text-right font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Citations
               </th>
-              <th className="px-3 py-2 text-right font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Mentions
               </th>
-              <th className="px-3 py-2 text-left font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-2 text-left font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Last fetched
               </th>
-              <th className="px-3 py-2 text-right font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 State
               </th>
             </tr>
@@ -196,7 +196,7 @@ export function PromptsTable({
                       )}
                       {p.is_branded && (
                         <span
-                          className="rounded-full px-1.5 py-0.5 text-[9px] font-semibold tracking-[0.04em] uppercase"
+                          className="rounded-full px-1.5 py-0.5 text-[11px] font-semibold tracking-[0.04em] uppercase"
                           style={{ background: "var(--tint-peach)", color: "var(--tint-peach-fg)" }}
                         >
                           branded
@@ -230,7 +230,7 @@ export function PromptsTable({
                   >
                     {p.mentions}
                   </div>
-                  <div className="font-sans text-[10.5px] text-[var(--faint)] tabular-nums">
+                  <div className="font-sans text-[11px] text-[var(--faint)] tabular-nums">
                     {p.citations ? `${Math.round((p.mentions / p.citations) * 100)}%` : "—"}
                   </div>
                   {compare && <Delta value={p.mentionDelta} />}
@@ -242,7 +242,7 @@ export function PromptsTable({
                   </div>
                   {p.lastFetched && (
                     <div
-                      className="mt-0.5 flex items-center gap-1 font-sans text-[10.5px]"
+                      className="mt-0.5 flex items-center gap-1 font-sans text-[11px]"
                       style={{ color: p.real ? "var(--green)" : "var(--faint)" }}
                     >
                       <span

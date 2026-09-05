@@ -5,3 +5,7 @@ backend/.env
 frontend/.env.local
 frontend/.env
 backend/*.log
+
+# puppeteer (installed locally for the Impeccable skill's live browser-scan
+# detector) bundles its own Chromium — a few hundred MB, never belongs in git.
+.claude/skills/impeccable/node_modules/

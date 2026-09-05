@@ -40,7 +40,7 @@ export function ReferralSurfaceTable({
               {["Brand", "Links to their site", "Pages cited", "Answers", "Share"].map((h, i) => (
                 <th
                   key={h}
-                  className={`px-3 py-2 font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${
+                  className={`px-3 py-2 font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${
                     i === 0 ? "text-left" : "text-right"
                   } ${i > 0 ? "border-l border-[var(--border)]" : ""}`}
                 >
@@ -62,7 +62,7 @@ export function ReferralSurfaceTable({
                     </span>
                     {r.isOwn && (
                       <span
-                        className="flex-none rounded-full px-1.5 py-0.5 font-sans text-[9px] font-semibold tracking-[0.06em] uppercase"
+                        className="flex-none rounded-full px-1.5 py-0.5 font-sans text-[11px] font-semibold tracking-[0.06em] uppercase"
                         style={{ background: "var(--tint-peach)", color: "var(--tint-peach-fg)" }}
                       >
                         you
@@ -100,7 +100,10 @@ export function ReferralSurfaceTable({
           </tbody>
         </table>
       </div>
-      <p className="mt-3 mb-0 max-w-[76ch] font-sans text-[11.5px] leading-[1.55] text-[var(--faint)]">
+      {/* text-[11.5px] was under the 12px "tiny body text" floor for real
+          prose (distinct from the 11px label/meta floor); max-w tightened
+          too — measured 86 real chars/line at the old 66ch (Impeccable audit). */}
+      <p className="mt-3 mb-0 max-w-[54ch] font-sans text-[12.5px] leading-[1.55] text-[var(--faint)]">
         Links placed, not visits received — visits to a domain you don&apos;t own cannot be
         measured, only estimated. {taggedTotal} of {totalBrandCitations} of these carry an explicit
         AI referral tag (ChatGPT tags its links; Gemini does not), so the tag is a floor on

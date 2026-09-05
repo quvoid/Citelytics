@@ -68,7 +68,7 @@ export function TrendChart({ points, unit = "citations" }: { points: TrendPoint[
           const frac = t / TICKS;
           return (
             <div key={t} className="absolute inset-x-0 flex items-center" style={{ top: `${frac * 100}%` }}>
-              <span className="w-9 shrink-0 pr-2 text-right font-sans text-[10.5px] text-[var(--faint)] tabular-nums">
+              <span className="w-9 shrink-0 pr-2 text-right font-sans text-[11px] text-[var(--faint)] tabular-nums">
                 {Math.round(max * (1 - frac))}
               </span>
               <span className="h-px flex-1" style={{ background: "var(--rule-light)" }} />
@@ -193,7 +193,7 @@ export function TrendChart({ points, unit = "citations" }: { points: TrendPoint[
                 </span>
                 <span className="font-sans text-[11px] text-[var(--muted-2)]">{unit}</span>
               </div>
-              <div className="mt-0.5 font-sans text-[10.5px] text-[var(--faint)] tabular-nums">
+              <div className="mt-0.5 font-sans text-[11px] text-[var(--faint)] tabular-nums">
                 {activePoint.day}
               </div>
             </div>

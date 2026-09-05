@@ -29,7 +29,7 @@ export default async function BriefsPage() {
       </section>
 
       <section>
-        <div className="grid grid-cols-[1fr_110px_150px] gap-6 border-b border-[var(--rule)] py-3.5 text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+        <div className="grid grid-cols-[1fr_110px_150px] gap-6 border-b border-[var(--rule)] py-3.5 text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
           <span>Prompt / topic</span>
           <span className="text-right">Score</span>
           <span className="text-right">Created</span>

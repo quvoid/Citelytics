@@ -22,7 +22,7 @@ export function Section({
   return (
     <div className="border-t border-[var(--rule-light)] pt-3.5">
       <div className="mb-2 flex items-baseline gap-2">
-        <span className="font-sans text-[10px] font-semibold tracking-[0.11em] text-[var(--muted-2)] uppercase">
+        <span className="font-sans text-[11px] font-semibold tracking-[0.11em] text-[var(--muted-2)] uppercase">
           {title}
         </span>
         {count !== undefined && (
@@ -73,6 +73,9 @@ export function GroundedAnswer({ text, spans }: { text: string; spans: GroundedS
             title={`Backed by source ${nums.map((n) => `†${n}`).join(", ")}`}
           >
             {chunk}
+            {/* text-[9px] below is exempt from the 11px functional-text
+                floor — a footnote-style <sup> marker (†1) is expected to
+                render small; that's the whole point of <sup>. */}
             {nums.length > 0 && (
               <sup className="ml-0.5 font-sans text-[9px] font-semibold text-[var(--tint-mint-fg)]">
                 {nums.map((n) => `†${n}`).join("")}
@@ -192,7 +195,7 @@ export function GroundingSupportsList({ a }: { a: EngineAnswerDetail }) {
               {it.text}
               {it.truncatedEnd && <span className="text-[var(--faint)]"> …</span>}
             </p>
-            <p className="m-0 mt-1 font-sans text-[10.5px] text-[var(--faint)]">
+            <p className="m-0 mt-1 font-sans text-[11px] text-[var(--faint)]">
               {nums.map((n) => `†${n}`).join(" ")}
               {domains.length > 0 && <span className="ml-1">{domains.join(", ")}</span>}
             </p>
@@ -286,7 +289,7 @@ export function EngineCard({ a }: { a: EngineAnswerDetail & { country: string | 
 
       {a.commentary && (
         <div className="mb-3.5 rounded-[8px] px-3 py-2.5" style={{ background: "var(--tint-sky)" }}>
-          <div className="mb-1 font-sans text-[10px] font-semibold tracking-[0.08em] text-[var(--tint-sky-fg)] uppercase">
+          <div className="mb-1 font-sans text-[11px] font-semibold tracking-[0.08em] text-[var(--tint-sky-fg)] uppercase">
             Model&rsquo;s approach
           </div>
           <p className="m-0 font-sans text-[12.5px] leading-[1.55] text-[var(--tint-sky-fg)]">
@@ -333,7 +336,7 @@ export function EngineCard({ a }: { a: EngineAnswerDetail & { country: string | 
                     )}
                     {!s.citedInText && (
                       <span
-                        className="ml-1.5 rounded-full px-1.5 py-px text-[9px] font-semibold tracking-[0.06em] uppercase"
+                        className="ml-1.5 rounded-full px-1.5 py-px text-[11px] font-semibold tracking-[0.06em] uppercase"
                         style={{ background: "var(--tint-stone)", color: "var(--tint-stone-fg)" }}
                         title="Retrieved into the model's context but never referenced in the visible answer — quiet influence, not real attribution."
                       >
@@ -365,7 +368,7 @@ export function EngineCard({ a }: { a: EngineAnswerDetail & { country: string | 
               {a.searchRounds.map((r) => (
                 <div key={r.round}>
                   {a.searchRounds.length > 1 && (
-                    <div className="mb-1 font-sans text-[10px] tracking-[0.08em] text-[var(--faint)] uppercase">
+                    <div className="mb-1 font-sans text-[11px] tracking-[0.08em] text-[var(--faint)] uppercase">
                       Round {r.round}
                     </div>
                   )}

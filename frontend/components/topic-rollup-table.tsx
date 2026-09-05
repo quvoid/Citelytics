@@ -48,7 +48,7 @@ export function TopicRollupTable({ topics, compare = false }: { topics: TopicRow
         />
       </div>
       <div
-        className="grid gap-6 border-b border-[var(--rule)] py-3.5 text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
+        className="grid gap-6 border-b border-[var(--rule)] py-3.5 text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
         style={{ gridTemplateColumns: COLS }}
       >
         <span>Topic</span>

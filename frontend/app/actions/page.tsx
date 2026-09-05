@@ -157,7 +157,7 @@ export default async function ActionsPage() {
     <div className="pb-12">
       <section className="border-b border-[var(--border)] py-6">
         <h1 className="m-0 font-sans text-[26px] font-semibold tracking-[-0.02em]">Actions</h1>
-        <p className="mt-1.5 max-w-[70ch] font-sans text-[13.5px] text-[var(--muted-2)]">
+        <p className="mt-1.5 max-w-[61ch] font-sans text-[13.5px] text-[var(--muted-2)]">
           Ranked recommendations, derived entirely from data already captured elsewhere in this app —
           no new fetching, no ML scoring, just a weighted priority order.
         </p>

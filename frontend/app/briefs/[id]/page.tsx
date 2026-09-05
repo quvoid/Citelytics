@@ -39,7 +39,7 @@ export default async function BriefDetailPage({
             </h1>
           </div>
           <div className="text-right">
-            <div className="text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+            <div className="text-[11px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
               Brief score
             </div>
             <div className="mt-1.5 font-serif text-[52px] leading-none">{brief.score ?? "—"}</div>
@@ -85,7 +85,7 @@ export default async function BriefDetailPage({
                 },
               ].map((c) => (
                 <div key={c.label} className="bg-[var(--paper)] px-5 py-4.5">
-                  <div className="text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+                  <div className="text-[11px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
                     {c.label}
                   </div>
                   <div className="mt-2 font-serif text-[19px] leading-[1.2]">{c.value ?? "—"}</div>
@@ -107,10 +107,10 @@ export default async function BriefDetailPage({
                 { label: "Target audience", body: brief.target_audience },
               ].map((b) => (
                 <div key={b.label} className="border-t border-[var(--rule)] py-5.5">
-                  <div className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+                  <div className="text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
                     {b.label}
                   </div>
-                  <p className="mt-3 max-w-[60ch] font-serif text-[17px] leading-[1.6] text-pretty">
+                  <p className="mt-3 max-w-[52ch] font-serif text-[17px] leading-[1.6] text-pretty">
                     {b.body}
                   </p>
                 </div>
@@ -118,7 +118,7 @@ export default async function BriefDetailPage({
             </div>
             <div>
               <div className="border-t border-[var(--rule)] pt-5.5">
-                <div className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+                <div className="text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
                   Key takeaways
                 </div>
                 {(brief.key_takeaways ?? []).map((t, i) => (

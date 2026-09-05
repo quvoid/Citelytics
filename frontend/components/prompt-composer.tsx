@@ -64,7 +64,7 @@ export function PromptComposer({
             <div>
               <label
                 htmlFor="prompt-query-text"
-                className="font-sans text-[10.5px] font-semibold tracking-[0.06em] text-[var(--muted-2)] uppercase"
+                className="font-sans text-[11px] font-semibold tracking-[0.06em] text-[var(--muted-2)] uppercase"
               >
                 {fieldLabel}
               </label>

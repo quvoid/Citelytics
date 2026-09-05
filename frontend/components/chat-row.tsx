@@ -49,7 +49,7 @@ export function ChatRow({
         <div className="mb-2 font-serif text-[15px] text-[var(--ink)] italic">
           &ldquo;{chat.prompt.query_text}&rdquo;
           {chat.prompt.topic && (
-            <span className="ml-2 font-sans text-[10.5px] font-normal text-[var(--faint)] not-italic">
+            <span className="ml-2 font-sans text-[11px] font-normal text-[var(--faint)] not-italic">
               {chat.prompt.topic}
             </span>
           )}

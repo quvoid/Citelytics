@@ -66,7 +66,7 @@ function SuggestionChip({ suggestion }: { suggestion: CompetitorSuggestion }) {
     >
       {suggestion.name}
       <span
-        className="rounded-full px-1.5 py-0.5 font-sans text-[10px]"
+        className="rounded-full px-1.5 py-0.5 font-sans text-[11px]"
         style={{ background: "var(--muted)", color: "var(--muted-foreground)" }}
       >
         {suggestion.sightings}
@@ -89,10 +89,10 @@ export function CompetitorSuggestions({ suggestions }: { suggestions: Competitor
   return (
     <section className="border-b border-[var(--rule)] py-5">
       <div className="mb-2.5 flex items-baseline gap-2">
-        <span className="font-sans text-[10px] font-medium tracking-[0.1em] text-[var(--faint)] uppercase">
+        <span className="font-sans text-[11px] font-medium tracking-[0.1em] text-[var(--faint)] uppercase">
           Untracked brands noticed in your answers
         </span>
-        <span className="font-sans text-[10.5px] text-[var(--faint)]">
+        <span className="font-sans text-[11px] text-[var(--faint)]">
           — only ones mentioned alongside a brand you already track
         </span>
       </div>

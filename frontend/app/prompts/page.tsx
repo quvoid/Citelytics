@@ -262,7 +262,7 @@ export default async function PromptsPage({
       <TagManager tags={tags} />
 
       <section className="flex flex-wrap items-center gap-1.5 pt-4">
-        <span className="mr-1.5 font-sans text-[10px] font-medium tracking-[0.08em] text-[var(--faint)] uppercase">
+        <span className="mr-1.5 font-sans text-[11px] font-medium tracking-[0.08em] text-[var(--faint)] uppercase">
           Market
         </span>
         <Link
@@ -296,7 +296,7 @@ export default async function PromptsPage({
 
       {tagsInUse.length > 0 && (
         <section className="flex flex-wrap items-center gap-1.5 pt-2.5">
-          <span className="mr-1.5 font-sans text-[10px] font-medium tracking-[0.08em] text-[var(--faint)] uppercase">
+          <span className="mr-1.5 font-sans text-[11px] font-medium tracking-[0.08em] text-[var(--faint)] uppercase">
             Tag
           </span>
           <Link

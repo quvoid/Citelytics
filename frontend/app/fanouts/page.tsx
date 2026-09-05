@@ -211,7 +211,7 @@ export default async function FanoutsPage({
         <h1 className="m-0 font-serif text-[40px] font-normal tracking-[-0.02em]">
           Query fanouts
         </h1>
-        <p className="mt-2.5 max-w-[68ch] font-serif text-[16px] text-[var(--muted-2)] italic">
+        <p className="mt-2.5 max-w-[59ch] font-serif text-[16px] text-[var(--muted-2)] italic">
           The background sub-searches each engine actually ran before answering your tracked
           prompts. Gemini exposes these through its grounding tool; ChatGPT only exposes them when
           its real web-search API is used — the plain chat path doesn&apos;t carry them.
@@ -266,7 +266,7 @@ export default async function FanoutsPage({
                   </span>
                   {t.citesYou ? (
                     <span
-                      className="flex-none rounded-full px-2 py-0.5 font-sans text-[10px] font-semibold tracking-[0.04em] uppercase"
+                      className="flex-none rounded-full px-2 py-0.5 font-sans text-[11px] font-semibold tracking-[0.04em] uppercase"
                       style={{ background: "var(--tint-mint)", color: "var(--tint-mint-fg)" }}
                       title="This domain also appears in your citations naming you"
                     >
@@ -274,7 +274,7 @@ export default async function FanoutsPage({
                     </span>
                   ) : (
                     <span
-                      className="flex-none rounded-full px-2 py-0.5 font-sans text-[10px] font-semibold tracking-[0.04em] uppercase"
+                      className="flex-none rounded-full px-2 py-0.5 font-sans text-[11px] font-semibold tracking-[0.04em] uppercase"
                       style={{ background: "var(--tint-stone)", color: "var(--tint-stone-fg)" }}
                       title="The engine queries this publication but it has never cited you — a targeting gap"
                     >
@@ -371,7 +371,7 @@ export default async function FanoutsPage({
                     {q.engines.map((label) => (
                       <span
                         key={label}
-                        className="border border-[var(--rule)] px-1.5 py-px text-[9px] tracking-[0.08em] text-[var(--muted-2)] uppercase"
+                        className="border border-[var(--rule)] px-1.5 py-px text-[11px] tracking-[0.08em] text-[var(--muted-2)] uppercase"
                         title={`Fired by ${label}`}
                       >
                         {label}
@@ -379,7 +379,7 @@ export default async function FanoutsPage({
                     ))}
                     {q.avgPosition !== null && q.avgPosition <= 1.5 && (
                       <span
-                        className="text-[10px] tracking-[0.08em] text-[var(--rust)] uppercase"
+                        className="text-[11px] tracking-[0.08em] text-[var(--rust)] uppercase"
                         title="Fired first (or near-first) in its response's sub-search sequence — usually the primary read of intent, not a refinement"
                       >
                         primary

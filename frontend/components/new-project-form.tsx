@@ -13,7 +13,7 @@ export function NewProjectForm() {
       className="mt-11"
     >
       <div>
-        <label className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+        <label className="text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
           Brand name
         </label>
         <input
@@ -24,7 +24,7 @@ export function NewProjectForm() {
         />
       </div>
       <div className="mt-9">
-        <label className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+        <label className="text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
           Primary domain
         </label>
         <input
@@ -38,7 +38,7 @@ export function NewProjectForm() {
       <div className="mt-9">
         <label
           htmlFor="project-default-country"
-          className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
+          className="text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
         >
           Home market
         </label>
@@ -63,13 +63,13 @@ export function NewProjectForm() {
 
       <div className="mt-11 grid grid-cols-2 gap-px border border-[var(--rule)] bg-[var(--rule)]">
         <div className="bg-[var(--paper)] px-5 py-4.5">
-          <div className="text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+          <div className="text-[11px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
             Engines
           </div>
           <div className="mt-2 font-serif text-[17px]">Gemini &amp; ChatGPT</div>
         </div>
         <div className="bg-[var(--paper)] px-5 py-4.5">
-          <div className="text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+          <div className="text-[11px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
             Starting prompts
           </div>
           <div className="mt-2 font-serif text-[17px]">None yet — add from the Prompts page</div>

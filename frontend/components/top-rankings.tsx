@@ -26,11 +26,11 @@ export function TopRankings({ rankings }: { rankings: RankingsByEngine[] }) {
     <div className="overflow-x-auto">
       <div style={{ minWidth: 110 + widest * 96 }}>
         <div className="grid gap-1.5 pb-2" style={{ gridTemplateColumns: cols }}>
-          <span className="font-sans text-[10.5px] font-medium tracking-[0.08em] text-[var(--muted-2)] uppercase">
+          <span className="font-sans text-[11px] font-medium tracking-[0.08em] text-[var(--muted-2)] uppercase">
             Model
           </span>
           {Array.from({ length: widest }, (_, i) => (
-            <span key={i} className="text-center font-sans text-[10.5px] font-medium text-[var(--faint)]">
+            <span key={i} className="text-center font-sans text-[11px] font-medium text-[var(--faint)]">
               #{i + 1}
             </span>
           ))}
@@ -62,14 +62,14 @@ export function TopRankings({ rankings }: { rankings: RankingsByEngine[] }) {
             </div>
 
             {r.unranked.length > 0 && (
-              <div className="mt-1 pl-[110px] font-sans text-[10.5px] text-[var(--faint)]">
+              <div className="mt-1 pl-[110px] font-sans text-[11px] text-[var(--faint)]">
                 too few mentions to rank: {r.unranked.map((u) => u.name).join(", ")}
               </div>
             )}
           </div>
         ))}
 
-        <div className="mt-2 flex items-center gap-3 border-t border-[var(--border)] pt-2 font-sans text-[10.5px] text-[var(--faint)]">
+        <div className="mt-2 flex items-center gap-3 border-t border-[var(--border)] pt-2 font-sans text-[11px] text-[var(--faint)]">
           <span className="flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full" style={{ background: "var(--tint-peach-fg)" }} />
             your brand

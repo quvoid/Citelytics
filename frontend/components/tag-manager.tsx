@@ -26,10 +26,10 @@ function TagChip({ tag }: { tag: Tag }) {
           autoFocus
           className="w-24 border-0 bg-transparent font-sans text-[11px] text-[var(--ink)] outline-none"
         />
-        <button type="submit" disabled={isPending} className="text-[10px] text-[var(--rust)]">
+        <button type="submit" disabled={isPending} className="text-[11px] text-[var(--rust)]">
           ✓
         </button>
-        <button type="button" onClick={() => setEditing(false)} className="text-[10px] text-[var(--faint)]">
+        <button type="button" onClick={() => setEditing(false)} className="text-[11px] text-[var(--faint)]">
           ✕
         </button>
       </form>
@@ -54,10 +54,10 @@ function TagChip({ tag }: { tag: Tag }) {
           placeholder="Group (optional)"
           className="w-28 border-0 bg-transparent font-sans text-[11px] text-[var(--ink)] outline-none placeholder:text-[var(--faint)]"
         />
-        <button type="submit" disabled={isPending} className="text-[10px] text-[var(--rust)]">
+        <button type="submit" disabled={isPending} className="text-[11px] text-[var(--rust)]">
           ✓
         </button>
-        <button type="button" onClick={() => setGroupEditing(false)} className="text-[10px] text-[var(--faint)]">
+        <button type="button" onClick={() => setGroupEditing(false)} className="text-[11px] text-[var(--faint)]">
           ✕
         </button>
       </form>
@@ -120,7 +120,7 @@ export function TagManager({ tags }: { tags: Tag[] }) {
       <div className="flex flex-col gap-2.5">
         {[...groups.entries()].map(([group, groupTags]) => (
           <div key={group} className="flex flex-wrap items-center gap-2">
-            <span className="mr-1 min-w-[80px] font-sans text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+            <span className="mr-1 min-w-[80px] font-sans text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
               {group}
             </span>
             {groupTags.map((t) => (
@@ -130,7 +130,7 @@ export function TagManager({ tags }: { tags: Tag[] }) {
         ))}
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="mr-1 min-w-[80px] font-sans text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+          <span className="mr-1 min-w-[80px] font-sans text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
             {groups.size > 0 ? "Ungrouped" : "Tags"}
           </span>
           {ungrouped.map((t) => (
@@ -167,7 +167,7 @@ export function TagManager({ tags }: { tags: Tag[] }) {
           <button
             type="submit"
             disabled={isPending}
-            className="rounded-full border border-[var(--rust)] bg-[var(--rust)] px-3.5 py-1.5 font-sans text-[10.5px] font-semibold tracking-[0.06em] text-[var(--paper)] uppercase disabled:opacity-60"
+            className="rounded-full border border-[var(--rust)] bg-[var(--rust)] px-3.5 py-1.5 font-sans text-[11px] font-semibold tracking-[0.06em] text-[var(--paper)] uppercase disabled:opacity-60"
           >
             {isPending ? "Adding…" : "Add"}
           </button>

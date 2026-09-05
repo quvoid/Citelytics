@@ -37,7 +37,7 @@ export default function Error({
         <RotateCcw size={22} strokeWidth={2} style={{ color: "var(--tint-peach-fg)" }} aria-hidden="true" />
       </div>
       <h1 className="mt-5 font-sans text-[20px] font-bold tracking-[-0.02em]">Something went wrong</h1>
-      <p className="mt-2 max-w-[46ch] font-sans text-[13.5px] leading-[1.6] text-[var(--muted-2)]">
+      <p className="mt-2 max-w-[40ch] font-sans text-[13.5px] leading-[1.6] text-[var(--muted-2)]">
         This page hit an error loading its data. It&rsquo;s usually temporary — try
         again, or head back to Overview.
         {error.digest && (

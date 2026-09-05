@@ -66,8 +66,19 @@
   --secondary: #ffffff;
   --secondary-foreground: #17171b;
   --muted: #f0efec;
-  --muted-foreground: #6f6f78;
+  /* Same fix as --muted-2 below (this is a second, separately-declared
+     token that happened to share its old failing value: 4.33:1 on
+     --muted, need 4.5:1). */
+  --muted-foreground: #6a6a73;
   --accent: #ff6428;
+  /* 2.96:1 on --accent — under WCAG AA's 4.5:1 for normal-size text.
+     Intentional trade-off, not overlooked: --accent/--ember is this app's
+     deliberately vibrant, live-extracted brand color (schbang.com's exact
+     rgb(255,100,40) — see the --ember comment below), and darkening the
+     shared accent token to fix contrast would blunt that everywhere it's
+     used as an accent, not just where white text sits directly on a solid
+     fill. Kept as-is; white text on a solid accent fill should stay large
+     /bold (clears the 3:1 large-text threshold) rather than body-sized. */
   --accent-foreground: #ffffff;
   --destructive: #dc2626;
   --border: #e9e7e2;
@@ -86,8 +97,17 @@
   --red: #dc2626;
   --bg: #f6f5f2;
   --paper: #ffffff;
-  --muted-2: #6f6f78;
-  --faint: #a3a2ac;
+  /* Darkened from #6f6f78 (4.33:1 on --rule-light, failed WCAG AA's 4.5:1
+     body-text floor — Impeccable audit) to #6a6a73 (4.66:1), same hue,
+     barely perceptible shift. */
+  --muted-2: #6a6a73;
+  /* Darkened from #a3a2ac (2.52:1 on white, a real AA failure). First pass
+     landed on #757381 (4.64:1 on white) but --faint also sits on --bg
+     (#f6f5f2, slightly darker than white) in some places, where that value
+     only cleared 4.26:1 — re-solved against --bg specifically, the binding
+     (darker) constraint, landing on #6f6d7b (4.64:1 on --bg, 5.06:1 on
+     white — passes both). */
+  --faint: #6f6d7b;
   --rule: #e9e7e2;
   --rule-light: #f0efec;
 
@@ -119,17 +139,22 @@
   --tint-lavender: #f1eefc;
   --tint-lavender-fg: #6d4fd1;
   --tint-mint: #eaf8ef;
-  --tint-mint-fg: #159a52;
+  /* Every -fg token below is darkened just enough to clear WCAG AA's 4.5:1
+     on its matching tint background (Impeccable audit found all five
+     failing, 3.3-4.5:1) — same hue, minimal shift. --tint-lavender-fg
+     already passed (4.98:1) and is untouched. */
+  --tint-mint-fg: #117f44;
   --tint-peach: #fdece2;
-  --tint-peach-fg: #d9560f;
+  --tint-peach-fg: #b7490d;
   --tint-sky: #eaf3fd;
-  --tint-sky-fg: #1c7ed6;
+  --tint-sky-fg: #196fbd;
   --tint-rose: #fdecee;
-  --tint-rose-fg: #d1355a;
+  --tint-rose-fg: #c92e53;
   /* schbang.com's warm stone/tan neutral, extracted live — a fifth KPI tint
      alongside the pastels above, rounder and warmer than plain --muted. */
   --tint-stone: #dfdad5;
-  --tint-stone-fg: #6b5f52;
+  /* 4.47:1 on --tint-stone — just under AA. #695d51 (4.60:1) clears it. */
+  --tint-stone-fg: #695d51;
 }
 
 @layer base {

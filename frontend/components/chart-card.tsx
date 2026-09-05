@@ -25,7 +25,12 @@ export function ChartCard({
             {title}
           </h2>
           {subtitle && (
-            <p className="mt-1 mb-0 font-sans text-[12.5px] text-[var(--muted-2)]">{subtitle}</p>
+            // max-w caps line length at a readable measure — this card can
+            // be 700-900px wide, and an unconstrained subtitle sentence was
+            // measuring ~105 chars/line at that width (Impeccable audit).
+            <p className="mt-1 mb-0 max-w-[54ch] font-sans text-[12.5px] text-[var(--muted-2)]">
+              {subtitle}
+            </p>
           )}
         </div>
         {action && <div className="flex-none">{action}</div>}

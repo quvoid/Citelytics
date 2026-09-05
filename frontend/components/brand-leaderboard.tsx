@@ -29,7 +29,7 @@ export function BrandLeaderboard({ rows }: { rows: BrandMetricRow[] }) {
             {["#", "Brand", "Share of voice", "Visibility", "Mentions"].map((h, i) => (
               <th
                 key={h}
-                className={`px-3 py-2 font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${
+                className={`px-3 py-2 font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${
                   i <= 1 ? "text-left" : "text-right"
                 } ${i > 1 ? "border-l border-[var(--border)]" : ""}`}
               >
@@ -60,7 +60,7 @@ export function BrandLeaderboard({ rows }: { rows: BrandMetricRow[] }) {
                     </span>
                     {!r.isCompetitor && (
                       <span
-                        className="flex-none rounded-full px-1.5 py-0.5 font-sans text-[9px] font-semibold tracking-[0.06em] uppercase"
+                        className="flex-none rounded-full px-1.5 py-0.5 font-sans text-[11px] font-semibold tracking-[0.06em] uppercase"
                         style={{ background: "var(--tint-peach)", color: "var(--tint-peach-fg)" }}
                       >
                         you

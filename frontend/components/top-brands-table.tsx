@@ -22,7 +22,7 @@ function BrandMark({ name, url, hasLogo }: { name: string; url: string; hasLogo:
   if (failed || !hasLogo) {
     return (
       <span
-        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] font-sans text-[10px] font-semibold"
+        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] font-sans text-[11px] font-semibold"
         style={{ background: "var(--muted)", color: "var(--muted-foreground)" }}
         aria-hidden="true"
       >
@@ -72,14 +72,14 @@ function SortHeader({
 }) {
   return (
     <th
-      className={`px-3 py-2 font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${
+      className={`px-3 py-2 font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${
         align === "center" ? `text-center ${DIVIDER}` : "text-left"
       }`}
     >
       <button
         type="button"
         onClick={onClick}
-        className="inline-flex items-center gap-1 border-0 bg-transparent p-0 font-sans text-[10.5px] font-medium tracking-[0.06em] uppercase"
+        className="inline-flex items-center gap-1 border-0 bg-transparent p-0 font-sans text-[11px] font-medium tracking-[0.06em] uppercase"
         style={{ color: active ? "var(--ink)" : "var(--muted-2)", cursor: "pointer" }}
       >
         {label}
@@ -211,7 +211,7 @@ export function TopBrandsTable({
         <table className="w-full border-collapse" style={{ minWidth: 620 }}>
           <thead>
             <tr className="border-y border-[var(--border)] bg-[var(--muted)]">
-              <th className="w-10 px-3 py-2 text-center font-sans text-[10.5px] font-medium text-[var(--muted-2)]">
+              <th className="w-10 px-3 py-2 text-center font-sans text-[11px] font-medium text-[var(--muted-2)]">
                 #
               </th>
               <SortHeader label="Brand" active={sort === "name"} dir={dir} onClick={() => toggle("name")} align="left" />
@@ -220,7 +220,7 @@ export function TopBrandsTable({
               <SortHeader label="Sentiment" active={sort === "sentiment"} dir={dir} onClick={() => toggle("sentiment")} />
               <SortHeader label="Position" active={sort === "position"} dir={dir} onClick={() => toggle("position")} />
               <th
-                className={`px-3 py-2 text-center font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${DIVIDER}`}
+                className={`px-3 py-2 text-center font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${DIVIDER}`}
               >
                 Mentions
               </th>
@@ -246,7 +246,7 @@ export function TopBrandsTable({
                       </span>
                       {!r.isCompetitor && (
                         <span
-                          className="shrink-0 rounded-full px-1.5 py-0.5 font-sans text-[9px] font-semibold tracking-[0.06em] uppercase"
+                          className="shrink-0 rounded-full px-1.5 py-0.5 font-sans text-[11px] font-semibold tracking-[0.06em] uppercase"
                           style={{ background: "var(--tint-peach)", color: "var(--tint-peach-fg)" }}
                         >
                           you

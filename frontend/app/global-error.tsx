@@ -40,7 +40,7 @@ export default function GlobalError({
           Citelytics couldn&rsquo;t load
         </h1>
         <p
-          className="mt-2 max-w-[46ch] font-sans text-[13.5px] leading-[1.6]"
+          className="mt-2 max-w-[40ch] font-sans text-[13.5px] leading-[1.6]"
           style={{ color: "var(--muted-2)" }}
         >
           The app itself hit an error before any page could render — usually

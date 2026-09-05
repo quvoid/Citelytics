@@ -220,7 +220,7 @@ export default async function SourcesPage({
     <div>
       <section className="border-b border-[var(--ink)] py-11">
         <h1 className="m-0 font-serif text-[40px] font-normal tracking-[-0.02em]">Sources</h1>
-        <p className="mt-2.5 max-w-[70ch] font-serif text-[16px] text-[var(--muted-2)] italic">
+        <p className="mt-2.5 max-w-[61ch] font-serif text-[16px] text-[var(--muted-2)] italic">
           {totalCitations} cited pages across {groups.length} domains — expand a domain to see
           which specific pages are cited and whether they name your brand.
         </p>

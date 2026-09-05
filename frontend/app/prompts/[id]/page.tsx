@@ -42,7 +42,7 @@ async function EngineSourcesSection({
   if (!answerDetail) return null;
   return (
     <div className="mt-8 border-t border-[var(--rule-light)] pt-8">
-      <div className="mb-3 text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+      <div className="mb-3 text-[11px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
         Sources &amp; grounding
       </div>
       <EngineCard a={answerDetail} />
@@ -164,7 +164,7 @@ export default async function PromptDetailPage({
               { label: "Engines", value: byEngine.size },
             ].map((s) => (
               <div key={s.label} className="bg-[var(--paper)] px-4.5 py-4">
-                <div className="text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+                <div className="text-[11px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
                   {s.label}
                 </div>
                 <div className="mt-1.5 font-serif text-[28px]">{s.value}</div>
@@ -249,7 +249,7 @@ export default async function PromptDetailPage({
                 )}
                 {ranked.length > 0 && (
                   <div className="mt-4 border-t border-[var(--rule-light)] pt-3.5">
-                    <div className="mb-2 text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+                    <div className="mb-2 text-[11px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
                       Brands named, in order
                     </div>
                     <ol className="m-0 flex flex-col gap-1.5 p-0">
@@ -268,7 +268,7 @@ export default async function PromptDetailPage({
                             </span>
                           )}
                           {b.isOwn && (
-                            <span className="border border-[#E0BDB2] px-1 py-px text-[8.5px] tracking-[0.1em] text-[var(--rust)] uppercase">
+                            <span className="border border-[#E0BDB2] px-1 py-px text-[11px] tracking-[0.1em] text-[var(--rust)] uppercase">
                               you
                             </span>
                           )}
@@ -281,7 +281,7 @@ export default async function PromptDetailPage({
                   if (!tags?.length) return null;
                   return (
                     <div className="mt-4 border-t border-[var(--rule-light)] pt-3.5">
-                      <div className="mb-2 text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+                      <div className="mb-2 text-[11px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
                         Models named
                       </div>
                       <div className="flex flex-wrap gap-1.5">
@@ -348,7 +348,7 @@ export default async function PromptDetailPage({
             <Suspense
               fallback={
                 <div className="mt-8 border-t border-[var(--rule-light)] pt-8">
-                  <div className="mb-3 flex items-center gap-2 text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+                  <div className="mb-3 flex items-center gap-2 text-[11px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
                     Sources &amp; grounding
                     <span className="h-[6px] w-[6px] animate-pulse rounded-full bg-[var(--ember)]" />
                   </div>

@@ -104,7 +104,7 @@ export function PromptResearchPanel({
             <div>
               <label
                 htmlFor="research-seed"
-                className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
+                className="text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
               >
                 Seed term or category
               </label>
@@ -120,7 +120,7 @@ export function PromptResearchPanel({
             <div>
               <label
                 htmlFor="research-country"
-                className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
+                className="text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
               >
                 Market
               </label>
@@ -176,7 +176,7 @@ export function PromptResearchPanel({
                         {c.prompt_text}
                       </div>
                       <div className="mt-1.5 flex flex-wrap items-center gap-3">
-                        <span className="border border-[var(--rule)] px-1.5 py-0.5 text-[9px] tracking-[0.1em] text-[var(--muted-2)] uppercase">
+                        <span className="border border-[var(--rule)] px-1.5 py-0.5 text-[11px] tracking-[0.1em] text-[var(--muted-2)] uppercase">
                           {c.topic || c.intent}
                         </span>
                         <InterestBadge value={c.search_interest} />
@@ -191,7 +191,7 @@ export function PromptResearchPanel({
                       <button
                         onClick={() => track(c)}
                         disabled={isPending || isTracked}
-                        className="border px-3.5 py-2 font-sans text-[10.5px] tracking-[0.08em] uppercase whitespace-nowrap disabled:opacity-60"
+                        className="border px-3.5 py-2 font-sans text-[11px] tracking-[0.08em] uppercase whitespace-nowrap disabled:opacity-60"
                         style={{
                           borderColor: isTracked ? "var(--green)" : "var(--ink)",
                           background: isTracked ? "var(--green)" : "transparent",

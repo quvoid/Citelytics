@@ -16,7 +16,7 @@ export default function NewBriefPage() {
         <h1 className="mt-6 font-serif text-[42px] leading-[1.12] font-normal tracking-[-0.02em]">
           New brief
         </h1>
-        <p className="mt-4 max-w-[54ch] font-serif text-[17px] leading-[1.55] text-[var(--muted-2)]">
+        <p className="mt-4 max-w-[47ch] font-serif text-[17px] leading-[1.55] text-[var(--muted-2)]">
           Type the prompt or topic you want a writing brief for. Citelytics proposes tone, intent,
           article type and a takeaway set once you run the analysis.
         </p>

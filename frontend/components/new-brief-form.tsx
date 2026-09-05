@@ -8,7 +8,7 @@ export function NewBriefForm() {
 
   return (
     <form action={(formData) => startTransition(() => createBrief(formData))} className="mt-11">
-      <label className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+      <label className="text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
         Prompt or topic
       </label>
       <input

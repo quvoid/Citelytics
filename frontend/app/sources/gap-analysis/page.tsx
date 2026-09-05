@@ -78,7 +78,7 @@ export default async function GapAnalysisPage() {
         <h1 className="m-0 font-serif text-[40px] font-normal tracking-[-0.02em]">
           Gap analysis
         </h1>
-        <p className="mt-2.5 max-w-[70ch] font-serif text-[16px] text-[var(--muted-2)] italic">
+        <p className="mt-2.5 max-w-[61ch] font-serif text-[16px] text-[var(--muted-2)] italic">
           Real pages AI engines keep citing that confirmed do <em>not</em> mention your brand —
           ranked by how often they&apos;re cited, since that&apos;s the real cost of not being on them.
         </p>
@@ -92,7 +92,7 @@ export default async function GapAnalysisPage() {
           { label: "Briefs raised", value: briefs.length },
         ].map((s) => (
           <div key={s.label} className="bg-[var(--cream)] px-5 py-5">
-            <div className="text-[10px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
+            <div className="text-[11px] tracking-[0.11em] text-[var(--muted-2)] uppercase">
               {s.label}
             </div>
             <div className="mt-2.5 font-serif text-[32px] leading-[1.1]">{s.value}</div>
@@ -143,7 +143,7 @@ export default async function GapAnalysisPage() {
           <p className="m-0 mb-5 font-serif text-[14px] text-[var(--muted-2)] italic">
             Competitors named in the AI answers behind these gap pages
           </p>
-          <div className="grid grid-cols-[1fr_200px_160px] gap-6 border-b border-[var(--rule)] py-3 text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+          <div className="grid grid-cols-[1fr_200px_160px] gap-6 border-b border-[var(--rule)] py-3 text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
             <span>Competitor</span>
             <span className="text-right">Pages you&apos;re absent from</span>
             <span className="text-right">Total citations</span>
@@ -195,7 +195,7 @@ export default async function GapAnalysisPage() {
         <p className="m-0 mb-5 font-serif text-[14px] text-[var(--muted-2)] italic">
           ranked by how often engines pull from them
         </p>
-        <div className="grid grid-cols-[1fr_140px_150px_100px_140px] gap-6 border-b border-[var(--rule)] py-3.5 text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+        <div className="grid grid-cols-[1fr_140px_150px_100px_140px] gap-6 border-b border-[var(--rule)] py-3.5 text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
           <span>URL</span>
           <span>Content type</span>
           <span>Domain type</span>
@@ -233,7 +233,7 @@ export default async function GapAnalysisPage() {
               <form action={createBriefFromGap.bind(null, promptText, origin)} className="text-right">
                 <button
                   type="submit"
-                  className="border border-[var(--ink)] px-3 py-2 font-sans text-[10.5px] tracking-[0.08em] text-[var(--ink)] uppercase whitespace-nowrap hover:bg-[var(--ink)] hover:text-[var(--cream)]"
+                  className="border border-[var(--ink)] px-3 py-2 font-sans text-[11px] tracking-[0.08em] text-[var(--ink)] uppercase whitespace-nowrap hover:bg-[var(--ink)] hover:text-[var(--cream)]"
                 >
                   Brief this gap
                 </button>

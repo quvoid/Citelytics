@@ -123,7 +123,7 @@ export function WorkspaceSwitcher({
           fallbackColor={
             MARK_COLORS[projects.findIndex((p) => p.id === current.id) % MARK_COLORS.length]
           }
-          className="h-6.5 w-6.5 rounded-[7px] text-[10px] tracking-[0.02em]"
+          className="h-6.5 w-6.5 rounded-[7px] text-[11px] tracking-[0.02em]"
           hasLogo={knownLogos.has(current.domain)}
         />
         <span className="flex-1 overflow-hidden text-left font-sans text-[13.5px] font-medium overflow-ellipsis whitespace-nowrap text-white">
@@ -143,7 +143,7 @@ export function WorkspaceSwitcher({
           className="absolute top-[calc(100%+8px)] left-0 z-40 w-[280px] overflow-hidden rounded-[14px] border border-[var(--rule)] bg-[var(--card)]"
           style={{ boxShadow: "var(--shadow-pop)" }}
         >
-          <div className="border-b border-[var(--rule-light)] px-3.5 py-2.5 font-sans text-[10.5px] font-semibold tracking-[0.08em] text-[var(--muted-2)] uppercase">
+          <div className="border-b border-[var(--rule-light)] px-3.5 py-2.5 font-sans text-[11px] font-semibold tracking-[0.08em] text-[var(--muted-2)] uppercase">
             Tracked brands
           </div>
           {projects.map((p, i) => (
@@ -157,7 +157,7 @@ export function WorkspaceSwitcher({
                 name={p.name}
                 domain={p.domain}
                 fallbackColor={MARK_COLORS[i % MARK_COLORS.length]}
-                className="h-7 w-7 rounded-[8px] text-[10px]"
+                className="h-7 w-7 rounded-[8px] text-[11px]"
                 hasLogo={knownLogos.has(p.domain)}
               />
               <span className="flex-1">
@@ -165,7 +165,7 @@ export function WorkspaceSwitcher({
                 <span className="mt-0.5 block text-[11px] text-[var(--muted-2)]">{p.domain}</span>
               </span>
               {p.id === current.id && (
-                <span className="rounded-full bg-[var(--tint-mint)] px-2 py-0.5 font-sans text-[10px] font-medium text-[var(--tint-mint-fg)]">
+                <span className="rounded-full bg-[var(--tint-mint)] px-2 py-0.5 font-sans text-[11px] font-medium text-[var(--tint-mint-fg)]">
                   current
                 </span>
               )}

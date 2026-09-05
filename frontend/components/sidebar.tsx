@@ -23,7 +23,7 @@ export function Sidebar({ data }: { data: LayoutData }) {
         <WorkspaceSwitcher current={current} projects={projects} logoDomains={[...logoDomains()]} />
       </div>
       <div className="flex-1 overflow-y-auto px-2 pt-2 pb-4">
-        <div className="px-3 pb-2 font-sans text-[10.5px] font-semibold tracking-[0.08em] text-[var(--sb-text)] uppercase">
+        <div className="px-3 pb-2 font-sans text-[11px] font-semibold tracking-[0.08em] text-[var(--sb-text)] uppercase">
           Workspace
         </div>
         <SidebarNav promptCount={promptCount} brandCount={brandCount} briefCount={briefCount} />

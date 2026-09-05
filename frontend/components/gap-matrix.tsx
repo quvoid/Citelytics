@@ -75,7 +75,13 @@ export function GapMatrixView({ matrix }: { matrix: GapMatrix | null }) {
               {pct(c.count)}%
             </span>
           </div>
-          <p className="m-0 mt-1 font-sans text-[11px]" style={{ color: c.tintFg, opacity: 0.85 }}>
+          {/* Full-strength tintFg, not opacity-dimmed — each -fg token is
+              solved to just clear 4.5:1 on its own tint background
+              (Impeccable audit), and blending it toward the background via
+              opacity silently undoes that (measured 3.6:1 at 0.85). The
+              smaller size + regular weight already de-emphasize this line
+              relative to the title above it. */}
+          <p className="m-0 mt-1 font-sans text-[11px]" style={{ color: c.tintFg }}>
             {c.subtitle} · {c.count} answer(s)
           </p>
         </div>

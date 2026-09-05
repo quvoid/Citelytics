@@ -163,7 +163,7 @@ export function SourcesTable({ groups }: { groups: DomainGroup[] }) {
           />
         </div>
       </div>
-      <div className="grid grid-cols-[1fr_90px_100px_130px_150px] gap-6 border-b border-[var(--rule)] py-3.5 text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+      <div className="grid grid-cols-[1fr_90px_100px_130px_150px] gap-6 border-b border-[var(--rule)] py-3.5 text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
         <span>Domain</span>
         <span className="text-right">Position</span>
         <span className="text-right">Citations</span>
@@ -184,12 +184,12 @@ export function SourcesTable({ groups }: { groups: DomainGroup[] }) {
                 <div className="font-serif text-[21px] tracking-[-0.01em]">{g.domain}</div>
                 <div className="mt-1.5 flex items-center gap-2.5">
                   {g.owned && (
-                    <span className="border border-[#B9CDBF] px-1.5 py-0.5 text-[9px] tracking-[0.1em] text-[var(--green)] uppercase">
+                    <span className="border border-[#B9CDBF] px-1.5 py-0.5 text-[11px] tracking-[0.1em] text-[var(--green)] uppercase">
                       owned
                     </span>
                   )}
                   {g.domainType && (
-                    <span className="border border-[var(--rule)] px-1.5 py-0.5 text-[9px] tracking-[0.1em] text-[var(--muted-2)] uppercase">
+                    <span className="border border-[var(--rule)] px-1.5 py-0.5 text-[11px] tracking-[0.1em] text-[var(--muted-2)] uppercase">
                       {g.domainType}
                     </span>
                   )}
@@ -245,7 +245,7 @@ export function SourcesTable({ groups }: { groups: DomainGroup[] }) {
                       {u.url}
                     </a>
                   </div>
-                  <div className="text-[10.5px] tracking-[0.06em] text-[var(--muted-2)] uppercase">
+                  <div className="text-[11px] tracking-[0.06em] text-[var(--muted-2)] uppercase">
                     {u.contentType ?? "—"}
                   </div>
                   <div className="text-right font-serif text-[16px]">{u.citations}</div>

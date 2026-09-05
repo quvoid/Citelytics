@@ -39,7 +39,7 @@ export function AddBrandForm() {
             className="grid grid-cols-[1fr_1fr_1fr_auto_auto] items-end gap-5"
           >
             <div>
-              <label className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+              <label className="text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
                 Brand name
               </label>
               <input
@@ -49,7 +49,7 @@ export function AddBrandForm() {
               />
             </div>
             <div>
-              <label className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+              <label className="text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
                 Domain
               </label>
               <input
@@ -61,7 +61,7 @@ export function AddBrandForm() {
             </div>
             <div>
               <label
-                className="text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
+                className="text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase"
                 title="Other names this brand gets called — comma-separated. Matched the same way the brand name is, so 'Moto' or a parent-company name counts as this brand too."
               >
                 Also known as

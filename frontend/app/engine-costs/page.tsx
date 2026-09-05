@@ -175,12 +175,12 @@ function ResultsTable({ rows }: { rows: Row[] }) {
       <table className="w-full border-collapse" style={{ minWidth: 900 }}>
         <thead>
           <tr className="border-y border-[var(--border)] bg-[var(--muted)]">
-            <th className="px-3 py-2 text-left font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Prompt</th>
-            <th className="px-3 py-2 text-right font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Credits</th>
-            <th className="px-3 py-2 text-right font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Tokens in/out</th>
-            <th className="px-3 py-2 text-right font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Searches</th>
-            <th className="px-3 py-2 text-right font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Citations</th>
-            <th className="px-3 py-2 text-left font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Brand / Intent / Topic</th>
+            <th className="px-3 py-2 text-left font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Prompt</th>
+            <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Credits</th>
+            <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Tokens in/out</th>
+            <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Searches</th>
+            <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Citations</th>
+            <th className="px-3 py-2 text-left font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">Brand / Intent / Topic</th>
           </tr>
         </thead>
         <tbody>
@@ -209,7 +209,7 @@ function ResultsTable({ rows }: { rows: Row[] }) {
                       r.classification.mentioned_brands.map((b) => (
                         <span
                           key={b}
-                          className="rounded-full px-1.5 py-0.5 text-[9.5px] font-semibold"
+                          className="rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
                           style={{ background: "var(--tint-peach, #fde8d8)", color: "var(--tint-peach-fg, #9a4a13)" }}
                         >
                           {b}
@@ -283,7 +283,7 @@ function GroundedFavorabilityCard({ data }: { data: GroundedFavorability }) {
     <section className="mt-8">
       <h2 className="m-0 font-sans text-[19px] font-semibold">Grounded vs. memory-only favorability</h2>
       <p className="mt-1 max-w-[720px] font-sans text-[13px] text-[var(--muted-2)]">
-        A different question from the leaderboards above: not just "was the brand named," but{" "}
+        A different question from the leaderboards above: not just &ldquo;was the brand named,&rdquo; but{" "}
         <em>was that specific mention backed by a real cited source</em> (its sentence falls inside a real{" "}
         <code>groundingSupports</code> segment) or is the model just saying it from memory (no source covers it)?
         From <code>groundingChunkIndices</code> in your {data.sampleSize} real historical Gemini responses (1 Aug
@@ -321,7 +321,7 @@ function GroundedFavorabilityCard({ data }: { data: GroundedFavorability }) {
                   {topSources.map(([src, count]) => (
                     <span
                       key={src}
-                      className="rounded-full px-1.5 py-0.5 font-sans text-[9.5px] font-medium text-[var(--muted-2)]"
+                      className="rounded-full px-1.5 py-0.5 font-sans text-[11px] font-medium text-[var(--muted-2)]"
                       style={{ background: "var(--muted)" }}
                     >
                       {src} ×{count}

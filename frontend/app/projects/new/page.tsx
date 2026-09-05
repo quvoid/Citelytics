@@ -28,7 +28,7 @@ export default async function NewProjectPage() {
         <h1 className="mt-4 font-sans text-[32px] leading-[1.15] font-bold tracking-[-0.015em]">
           Track a new brand
         </h1>
-        <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[1.55] text-[var(--muted-2)]">
+        <p className="mt-3 max-w-[47ch] font-sans text-[15px] leading-[1.55] text-[var(--muted-2)]">
           Each brand gets its own workspace — its own prompts, sources and competitor set. It
           starts empty; add prompts and tracked URLs once it&apos;s created, then run a fetch.
         </p>

@@ -40,7 +40,7 @@ export function AnalyseBriefButton({ briefId }: { briefId: string }) {
         {state.phase === "loading" ? "Analysing…" : "Analyse prompt"}
       </button>
       {state.phase === "error" && (
-        <p className="mt-3 max-w-[54ch] font-serif text-[14px] text-[var(--rust)] italic">
+        <p className="mt-3 max-w-[47ch] font-serif text-[14px] text-[var(--rust)] italic">
           {state.message}
         </p>
       )}

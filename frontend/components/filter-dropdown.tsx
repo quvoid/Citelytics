@@ -115,7 +115,7 @@ export function FilterDropdown({
               )}
               <span className="min-w-0 flex-1 truncate">{o.label}</span>
               {o.sublabel && (
-                <span className="flex-none font-sans text-[10.5px] text-[var(--faint)]">{o.sublabel}</span>
+                <span className="flex-none font-sans text-[11px] text-[var(--faint)]">{o.sublabel}</span>
               )}
             </Link>
           ))}

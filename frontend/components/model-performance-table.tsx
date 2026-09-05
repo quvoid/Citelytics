@@ -43,7 +43,7 @@ export function ModelPerformanceTable({ rows }: { rows: ModelRow[] }) {
             {["Model", "Share of voice", "Visibility", "Mentions", "Avg. position"].map((h, i) => (
               <th
                 key={h}
-                className={`px-3 py-2 font-sans text-[10.5px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${
+                className={`px-3 py-2 font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${
                   i === 0 ? "text-left" : "text-right"
                 } ${i > 0 ? "border-l border-[var(--border)]" : ""}`}
               >

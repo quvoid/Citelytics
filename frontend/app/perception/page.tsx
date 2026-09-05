@@ -184,7 +184,7 @@ export default async function PerceptionPage({
       <section className="flex items-end justify-between gap-10 border-b border-[var(--ink)] py-11">
         <div>
           <h1 className="m-0 font-serif text-[40px] font-normal tracking-[-0.02em]">Perception</h1>
-          <p className="mt-2.5 max-w-[68ch] font-serif text-[16px] text-[var(--muted-2)] italic">
+          <p className="mt-2.5 max-w-[59ch] font-serif text-[16px] text-[var(--muted-2)] italic">
             What AI associates your brand with, from open brand-description prompts — separate
             from the citation-tracking prompts.
           </p>
@@ -337,7 +337,7 @@ export default async function PerceptionPage({
             className="flex items-baseline justify-between gap-5 border-b border-[var(--rule-light)] py-3"
           >
             <span className="font-serif text-[15px]">&ldquo;{p.query_text}&rdquo;</span>
-            <span className="shrink-0 font-sans text-[10px] tracking-[0.1em] text-[var(--faint)] uppercase">
+            <span className="shrink-0 font-sans text-[11px] tracking-[0.1em] text-[var(--faint)] uppercase">
               {countryName(p.country ?? defaultCountry)}
             </span>
           </div>

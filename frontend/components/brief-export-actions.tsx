@@ -43,7 +43,7 @@ export function BriefExportActions({ brief }: { brief: ContentBrief }) {
       <CopyButton text={markdown} label="Copy as Markdown" />
       <button
         onClick={() => downloadText(filename, markdown, "text/markdown;charset=utf-8")}
-        className="border border-[var(--ink)] px-3.5 py-2 font-sans text-[10.5px] tracking-[0.08em] uppercase whitespace-nowrap hover:bg-[var(--ink)] hover:text-[var(--cream)]"
+        className="border border-[var(--ink)] px-3.5 py-2 font-sans text-[11px] tracking-[0.08em] uppercase whitespace-nowrap hover:bg-[var(--ink)] hover:text-[var(--cream)]"
       >
         Download .md
       </button>

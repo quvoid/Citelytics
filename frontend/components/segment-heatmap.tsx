@@ -47,13 +47,13 @@ export function SegmentHeatmap({
       <div style={{ minWidth: 120 + matrix.colKeys.length * 90 }}>
         <div className="grid items-end gap-1.5 pb-2" style={{ gridTemplateColumns: cols }}>
           <div className="flex items-center gap-2">
-            <span className="font-sans text-[10.5px] font-medium tracking-[0.08em] text-[var(--muted-2)] uppercase">
+            <span className="font-sans text-[11px] font-medium tracking-[0.08em] text-[var(--muted-2)] uppercase">
               {matrix.rowAxis}
             </span>
             {switchAxisHref && (
               <a
                 href={switchAxisHref}
-                className="rounded-full border border-[var(--border)] px-2 py-0.5 font-sans text-[10px] text-[var(--muted-2)] no-underline"
+                className="rounded-full border border-[var(--border)] px-2 py-0.5 font-sans text-[11px] text-[var(--muted-2)] no-underline"
                 title="Swap rows and columns"
               >
                 switch
@@ -68,7 +68,7 @@ export function SegmentHeatmap({
               {/* Prompt counts are shown because overlapping tags are invisible
                   otherwise — two tags covering the same four prompts look like
                   two independent segments until you see the counts. */}
-              <div className="font-sans text-[10px] text-[var(--faint)]">{c.promptCount} prompts</div>
+              <div className="font-sans text-[11px] text-[var(--faint)]">{c.promptCount} prompts</div>
             </div>
           ))}
         </div>

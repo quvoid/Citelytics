@@ -177,7 +177,7 @@ export default async function OverviewPage() {
             cited pages mention <span className="text-[var(--ember)]">{brandName}</span> — named
             in <span>{answerMentionPct}%</span> of answers
           </h1>
-          <p className="mt-2 max-w-[62ch] font-sans text-[14px] leading-[1.55] text-[var(--muted-2)]">
+          <p className="mt-2 max-w-[54ch] font-sans text-[14px] leading-[1.55] text-[var(--muted-2)]">
             Answer engines cite plenty of pages that never name {brandName} — the ones that do are
             the real signal here.
           </p>
@@ -347,7 +347,7 @@ export default async function OverviewPage() {
                     &ldquo;{promptById.get(r.prompt_id) ?? "—"}&rdquo;
                   </Link>
                   {r.answer_text && (
-                    <p className="mt-2 max-w-[68ch] rounded-[10px] bg-[var(--muted)] p-3 font-sans text-[13px] leading-[1.6] text-[var(--muted-2)] text-pretty">
+                    <p className="mt-2 max-w-[59ch] rounded-[10px] bg-[var(--muted)] p-3 font-sans text-[13px] leading-[1.6] text-[var(--muted-2)] text-pretty">
                       {r.answer_text.slice(0, 220)}
                       {r.answer_text.length > 220 ? "…" : ""}
                     </p>

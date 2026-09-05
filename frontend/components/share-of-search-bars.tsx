@@ -63,7 +63,9 @@ export function ShareOfSearchBars({
           </li>
         ))}
       </ul>
-      <p className="mt-3 mb-0 font-sans text-[11.5px] text-[var(--faint)] tabular-nums">
+      {/* text-[11.5px] was under the 12px "tiny body text" floor for real
+          prose (Impeccable audit). */}
+      <p className="mt-3 mb-0 font-sans text-[12.5px] text-[var(--faint)] tabular-nums">
         {brandedPct}% of {totalSearches} sub-searches name a tracked brand.
       </p>
     </div>

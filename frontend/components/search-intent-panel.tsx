@@ -94,7 +94,7 @@ export function SearchIntentPanel({
             emphasis={false}
           />
         </div>
-        <p className="mt-3.5 mb-0 max-w-[74ch] font-sans text-[12px] leading-[1.6] text-[var(--muted-2)]">
+        <p className="mt-3.5 mb-0 max-w-[64ch] font-sans text-[12px] leading-[1.6] text-[var(--muted-2)]">
           {comparison.liftPoints === null ? (
             <>
               Not enough answers on both sides yet to compare these rates honestly — the split is

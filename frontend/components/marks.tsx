@@ -36,7 +36,7 @@ export function MentionMark({ value, label }: { value: boolean | null; label?: s
 
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-sans text-[10.5px] font-medium whitespace-nowrap"
+      className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-sans text-[11px] font-medium whitespace-nowrap"
       style={{ background: bg, color: fg }}
     >
       <span

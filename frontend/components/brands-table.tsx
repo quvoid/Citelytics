@@ -126,7 +126,7 @@ export function BrandsTable({ rows }: { rows: BrandRow[] }) {
           horizontal scrollbar instead of staying inside this table. */}
       <div className="overflow-x-auto">
       <div style={{ minWidth: 640 }}>
-      <div className="grid grid-cols-[1fr_1.6fr_90px_150px_24px] gap-9 border-b border-[var(--rule)] py-3.5 text-[10px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
+      <div className="grid grid-cols-[1fr_1.6fr_90px_150px_24px] gap-9 border-b border-[var(--rule)] py-3.5 text-[11px] tracking-[0.12em] text-[var(--muted-2)] uppercase">
         <span>Brand</span>
         <span>Share of voice</span>
         <span className="text-right">Position</span>
@@ -147,7 +147,7 @@ export function BrandsTable({ rows }: { rows: BrandRow[] }) {
                 {b.name}
               </span>
               {!b.is_competitor && (
-                <span className="border border-[#E0BDB2] px-1.5 py-0.5 text-[9px] tracking-[0.11em] text-[var(--rust)] uppercase">
+                <span className="border border-[#E0BDB2] px-1.5 py-0.5 text-[11px] tracking-[0.11em] text-[var(--rust)] uppercase">
                   you
                 </span>
               )}
