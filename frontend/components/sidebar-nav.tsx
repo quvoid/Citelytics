@@ -61,6 +61,13 @@ export function SidebarNav({
   // hover uses the exact mechanism `active` below already relies on —
   // inline style, which no stylesheet layer can ever out-rank.
   const [hoveredHref, setHoveredHref] = useState<string | null>(null);
+  // Same cascade-layer problem as hover, plus the sidebar had NO keyboard
+  // focus indicator at all before this — tabbing through the app's primary
+  // nav showed nothing. `:focus-visible` (checked in the handler, not
+  // written as CSS the layer bug would beat) distinguishes a real keyboard
+  // tab from a mouse click landing here, so clicking a link doesn't also
+  // light up a ring that's meant for keyboard users.
+  const [focusedHref, setFocusedHref] = useState<string | null>(null);
 
   const counts: Record<string, string> = {
     "/prompts": String(promptCount),
@@ -76,6 +83,8 @@ export function SidebarNav({
           (item.href === "/prompts" && pathname.startsWith("/prompts/")) ||
           (item.href === "/briefs" && pathname.startsWith("/briefs/"));
         const hovered = hoveredHref === item.href;
+        const focused = focusedHref === item.href;
+        const highlighted = hovered || focused;
         const Icon = item.icon;
         return (
           <Link
@@ -84,10 +93,15 @@ export function SidebarNav({
             aria-current={active ? "page" : undefined}
             onMouseEnter={() => setHoveredHref(item.href)}
             onMouseLeave={() => setHoveredHref((h) => (h === item.href ? null : h))}
-            className="group flex items-center gap-2.5 rounded-[10px] px-3 py-2 font-sans text-[13.5px] no-underline transition-colors duration-150 active:scale-[0.98]"
+            onFocus={(e) => {
+              if (e.currentTarget.matches(":focus-visible")) setFocusedHref(item.href);
+            }}
+            onBlur={() => setFocusedHref((h) => (h === item.href ? null : h))}
+            className="group flex items-center gap-2.5 rounded-[10px] px-3 py-2 font-sans text-[13.5px] no-underline transition-colors duration-150 outline-none active:scale-[0.98]"
             style={{
-              background: active ? "var(--sb-active-bg)" : hovered ? "var(--sb-hover-bg)" : "transparent",
-              color: active ? "var(--sb-text-active)" : hovered ? "var(--sb-text-active)" : "var(--sb-text)",
+              background: active ? "var(--sb-active-bg)" : highlighted ? "var(--sb-hover-bg)" : "transparent",
+              color: active ? "var(--sb-text-active)" : highlighted ? "var(--sb-text-active)" : "var(--sb-text)",
+              boxShadow: focused ? "0 0 0 2px var(--ember)" : undefined,
             }}
           >
             <Icon
@@ -95,8 +109,8 @@ export function SidebarNav({
               strokeWidth={active ? 2.1 : 1.75}
               className="flex-none transition-transform duration-150"
               style={{
-                opacity: active || hovered ? 1 : 0.7,
-                transform: hovered && !active ? "translateX(2px)" : undefined,
+                opacity: active || highlighted ? 1 : 0.7,
+                transform: highlighted && !active ? "translateX(2px)" : undefined,
               }}
               aria-hidden="true"
             />
