@@ -124,7 +124,7 @@ export type BrandMetricsResult = {
   warnings: MetricsWarning[];
 };
 
-export type SeriesPoint = {
+type SeriesPoint = {
   bucketStart: string;
   bucketEnd: string;
   /** null = gap. The line breaks here; it is not drawn through zero. */
@@ -142,7 +142,7 @@ export type BrandSeries = {
   points: SeriesPoint[];
 };
 
-export type EngineMetric = { engineId: string; engineName: string; value: MetricValue };
+type EngineMetric = { engineId: string; engineName: string; value: MetricValue };
 
 export type BrandEngineBreakdown = {
   brandId: string;
@@ -171,7 +171,7 @@ export type SegmentMatrix = {
   ratesOnly: true;
 };
 
-export type GroupMetricRow = {
+type GroupMetricRow = {
   key: string;
   label: string;
   promptCount: number;
@@ -239,8 +239,6 @@ export type SourceMetricsResult = {
  *  NAMED in the answer and/or its own domain was CITED as a source, tracked
  *  as two independent facts (see migration 0013's cited_domain column —
  *  `considered` conflates them into one OR, this doesn't). */
-export type GapQuadrant = "namedAndCited" | "namedNotCited" | "citedNotNamed" | "neither";
-
 export type GapMatrix = {
   brandId: string;
   totalResponses: number;

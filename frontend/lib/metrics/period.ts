@@ -12,10 +12,6 @@ import type { Bucket, DateRange } from "./types";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-export function toDay(iso: string): string {
-  return iso.slice(0, 10);
-}
-
 function parse(day: string): number {
   return Date.parse(`${day}T00:00:00Z`);
 }
@@ -92,7 +88,7 @@ function startOfMonth(day: string): string {
   return `${day.slice(0, 7)}-01`;
 }
 
-export function bucketStartFor(day: string, bucket: Bucket): string {
+function bucketStartFor(day: string, bucket: Bucket): string {
   if (bucket === "week") return startOfWeek(day);
   if (bucket === "month") return startOfMonth(day);
   return day;

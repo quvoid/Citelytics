@@ -82,16 +82,3 @@ export function MetricCellView({
     </div>
   );
 }
-
-/** A bare value with no delta — for matrices and per-engine breakdowns. */
-export function MetricValueView({ metric, value }: { metric: MetricKey; value: MetricValue }) {
-  return (
-    <span
-      className="font-sans text-[13px] font-medium tabular-nums"
-      style={{ color: value.value === null ? "var(--faint)" : "var(--ink)" }}
-      title={value.value === null ? absenceReason(value) : `${value.support.responses} answers`}
-    >
-      {formatMetric(metric, value.value)}
-    </span>
-  );
-}

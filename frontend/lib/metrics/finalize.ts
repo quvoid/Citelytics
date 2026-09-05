@@ -38,8 +38,13 @@ export const ZERO_SUMS: MetricSums = {
 /** Below these, a number is noise wearing a confident font. Rendering
  *  "#1.0 average position" off two observations is the fastest way to lose
  *  a user's trust in every other number on the page. */
-export const MIN_RESPONSES_FOR_RATE = 3;
-export const MIN_OBS_FOR_MEAN = 3;
+// Neither constant is exported — both are used only inside this file.
+// app/perception/page.tsx references MIN_OBS_FOR_MEAN by name in a comment
+// (defining its own separate, locally-scoped constant with the same value,
+// since perception has no RPC rollup to share this one through) — not a
+// real import, confirmed by grep before trusting the comment.
+const MIN_RESPONSES_FOR_RATE = 3;
+const MIN_OBS_FOR_MEAN = 3;
 
 /** Valid only because these are sums. Used to roll days into weeks, engines
  *  into a blended total, and so on. `daysWithData` is summed rather than

@@ -12,7 +12,6 @@
 import "server-only";
 
 import { createAnonServerClient } from "@/lib/supabase/server";
-import { countryName } from "@/lib/countries";
 import { makeDelta } from "./delta";
 import { coverageOf, finalize, sumAll, ZERO_SUMS, type MetricSums } from "./finalize";
 import { bucketRange, previousPeriod, rangeFromPreset, resolveRange, todayUtc } from "./period";
@@ -37,8 +36,6 @@ import type {
   SourceMetricRow,
   SourceMetricsResult,
 } from "./types";
-
-const METRICS: MetricKey[] = ["visibility", "sov", "sentiment", "position"];
 
 type RpcSumRow = {
   tracked_url_id: string;
@@ -765,5 +762,3 @@ export async function applySystemFilter(
   const merged = filter.promptIds?.length ? filter.promptIds.filter((id) => ids.includes(id)) : ids;
   return { ...filter, promptIds: merged };
 }
-
-export { METRICS, countryName };

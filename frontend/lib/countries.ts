@@ -57,13 +57,3 @@ export function countryName(code: string | null | undefined): string | null {
   if (!code) return null;
   return BY_CODE.get(code) ?? code;
 }
-
-/** Regional-indicator flag from the ISO code — no icon set, no image
- * requests, and it degrades to the letters themselves on platforms without
- * flag glyphs (Windows Chrome), which is still readable. */
-export function countryFlag(code: string | null | undefined): string {
-  if (!code || code.length !== 2) return "";
-  return String.fromCodePoint(
-    ...[...code.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)
-  );
-}

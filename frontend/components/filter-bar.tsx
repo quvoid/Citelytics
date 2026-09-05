@@ -34,7 +34,7 @@ export type FilterState = {
  *  params (metric, rows, view) that must survive a filter click. They are
  *  separate arguments because merging them into one object needs an index
  *  signature, which then forbids the array-valued filter fields. */
-export function buildFilterHref(
+function buildFilterHref(
   basePath: string,
   state: FilterState,
   patch: Partial<FilterState> = {},

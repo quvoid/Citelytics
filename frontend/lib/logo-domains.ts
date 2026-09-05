@@ -36,7 +36,3 @@ export function logoDomains(): Set<string> {
   }
   return cached;
 }
-
-export function hasLogo(domain: string | null | undefined): boolean {
-  return Boolean(domain) && logoDomains().has(domain!);
-}

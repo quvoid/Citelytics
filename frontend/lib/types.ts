@@ -156,18 +156,6 @@ export type DomainType = {
   domain_type: "Corporate" | "Editorial" | "UGC" | "Institutional" | "Reference" | "Other";
 };
 
-export type DailyMetric = {
-  id: string;
-  project_id: string;
-  date: string;
-  /** "" is the all-markets aggregate row; anything else is one market. */
-  country: string;
-  visibility_pct: number | null;
-  sov_pct: number | null;
-  avg_sentiment: number | null;
-  avg_position: number | null;
-};
-
 export type QueryFanout = {
   id: string;
   raw_response_id: string;
@@ -202,27 +190,14 @@ export type PromptResearchResponse = {
   candidates: PromptCandidate[];
 };
 
-export type FetchTriggerResponse = {
-  batch_id: string;
-  tasks_enqueued: number;
-};
+// FetchTriggerResponse / FetchTaskStatus / FetchBatchStatusResponse used to
+// describe the "Fetch citations now" button's trigger/poll API shape — that
+// button and its whole client-side polling flow were removed earlier this
+// session (the scheduled Celery fetch replaced it as the only fetch path),
+// leaving this trio with zero remaining consumers. Deleted rather than
+// de-exported: nothing else in this file referenced them either.
 
-export type FetchTaskStatus = {
-  prompt_id: string;
-  engine_name: "gemini" | "openrouter";
-  status: "pending" | "success" | "rate_limited" | "error";
-  message: string | null;
-  citation_count: number;
-};
-
-export type FetchBatchStatusResponse = {
-  batch_id: string;
-  project_id: string;
-  tasks: FetchTaskStatus[];
-  done: boolean;
-};
-
-export type PerceptionSkippedFetch = { prompt: string; engine: string; reason: string };
+type PerceptionSkippedFetch = { prompt: string; engine: string; reason: string };
 
 export type PerceptionFetchResponse = {
   processed: number;

@@ -87,9 +87,3 @@ export function formatDelta(metric: MetricKey, delta: Delta): string | null {
   const magnitude = Math.abs(delta.change);
   return unit === "rank" ? `${sign}${magnitude}` : `${sign}${magnitude}${unit === "pp" ? "pp" : ""}`;
 }
-
-export function deltaColor(delta: Delta): string {
-  if (delta.polarity === "good") return "var(--green)";
-  if (delta.polarity === "bad") return "var(--red)";
-  return "var(--faint)";
-}

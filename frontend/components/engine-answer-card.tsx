@@ -1,14 +1,14 @@
 import { groundingVerdict, sentenceExcerpt } from "@/lib/engine-details";
 import type { EngineAnswerDetail, GroundedSpan } from "@/lib/engine-details";
 
-export const ENGINE_LABEL: Record<string, string> = {
+const ENGINE_LABEL: Record<string, string> = {
   openrouter: "ChatGPT",
   "chatgpt-kie": "ChatGPT",
   gemini: "Gemini",
   "gemini-kie": "Gemini",
 };
 
-export function Section({
+function Section({
   title,
   count,
   hint,
@@ -39,7 +39,7 @@ export function Section({
  *  text is the model writing from training memory rather than from a source —
  *  the whole point of showing this, so it must stay visually distinguishable
  *  rather than being quietly rendered the same as everything else. */
-export function GroundedAnswer({ text, spans }: { text: string; spans: GroundedSpan[] }) {
+function GroundedAnswer({ text, spans }: { text: string; spans: GroundedSpan[] }) {
   if (!spans.length) {
     return <span className="whitespace-pre-wrap">{text}</span>;
   }
@@ -101,7 +101,7 @@ const VERDICT_LABEL: Record<string, string> = {
  *  screenshot's "67% Grounded / 10/15 Claims Substantiated / Verdict: ...",
  *  built from data this app already parses rather than a new capture. The
  *  colour follows the bucket so a weak answer cannot read as neutral. */
-export function GroundingVerdictBadge({ detail }: { detail: EngineAnswerDetail }) {
+function GroundingVerdictBadge({ detail }: { detail: EngineAnswerDetail }) {
   const v = groundingVerdict(detail);
   if (v.verdict === "unknown") {
     return (
@@ -156,7 +156,7 @@ export function GroundingVerdictBadge({ detail }: { detail: EngineAnswerDetail }
  *      one source. Widening to sentence boundaries makes those collapse to
  *      literally the same string — merged here by that string, keeping the
  *      union of every source number that backs it. */
-export function GroundingSupportsList({ a }: { a: EngineAnswerDetail }) {
+function GroundingSupportsList({ a }: { a: EngineAnswerDetail }) {
   const answerText = a.answerText;
   if (!answerText) return null;
 
@@ -210,7 +210,7 @@ export function GroundingSupportsList({ a }: { a: EngineAnswerDetail }) {
  *  positioned to match what actually renders, so the layout doesn't jump the
  *  instant data arrives. `animate-pulse` is Tailwind's own opacity breathe;
  *  reused rather than inventing a second loading rhythm for one screen. */
-export function Bone({ className = "", style }: { className?: string; style?: React.CSSProperties }) {
+function Bone({ className = "", style }: { className?: string; style?: React.CSSProperties }) {
   return (
     <span
       className={`block animate-pulse rounded-[6px] bg-[var(--muted)] ${className}`}

@@ -15,7 +15,7 @@
  * empty section that reads like "no data" when it means "not exposed".
  */
 
-export type DetailSource = {
+type DetailSource = {
   /** 1-based, matches the †n markers rendered beside the answer. */
   n: number;
   url: string;
@@ -37,9 +37,9 @@ export type GroundedSpan = {
 /** One round of the engine's search→read→search loop. Gemini reports a single
  *  flat list; OpenAI reports several rounds, which is itself informative — it
  *  shows the model refining its query after reading. */
-export type SearchRound = { round: number; queries: string[] };
+type SearchRound = { round: number; queries: string[] };
 
-export type EngineUsage = {
+type EngineUsage = {
   input: number | null;
   output: number | null;
   thinking: number | null;
@@ -96,7 +96,7 @@ const asArr = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
 const asStr = (v: unknown): string | null => (typeof v === "string" && v ? v : null);
 const asNum = (v: unknown): number | null => (typeof v === "number" ? v : null);
 
-export function domainOf(url: string): string {
+function domainOf(url: string): string {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
   } catch {

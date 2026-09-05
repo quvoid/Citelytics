@@ -1,7 +1,7 @@
 // Simplified, stylized marks representing each engine — not exact trademarked
 // logo files, but recognizable at a glance next to the engine name.
 
-export function GeminiIcon({ size = 16 }: { size?: number }) {
+function GeminiIcon({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <defs>
@@ -19,7 +19,7 @@ export function GeminiIcon({ size = 16 }: { size?: number }) {
   );
 }
 
-export function ChatGPTIcon({ size = 16 }: { size?: number }) {
+function ChatGPTIcon({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
@@ -30,13 +30,13 @@ export function ChatGPTIcon({ size = 16 }: { size?: number }) {
   );
 }
 
-export function engineDisplayName(name: string | undefined): string {
+function engineDisplayName(name: string | undefined): string {
   if (name === "gemini") return "Gemini";
   if (name === "openrouter") return "ChatGPT";
   return name ?? "—";
 }
 
-export function EngineIcon({ name, size }: { name: string | undefined; size?: number }) {
+function EngineIcon({ name, size }: { name: string | undefined; size?: number }) {
   if (name === "gemini") return <GeminiIcon size={size} />;
   if (name === "openrouter") return <ChatGPTIcon size={size} />;
   return null;

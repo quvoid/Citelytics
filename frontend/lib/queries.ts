@@ -5,7 +5,6 @@ import type {
   BrandAttribute,
   Citation,
   ContentBrief,
-  DailyMetric,
   DomainType,
   Engine,
   Project,
@@ -244,27 +243,6 @@ export async function getDomainTypes(domains: string[]): Promise<Map<string, str
     .in("domain", domains)
     .returns<DomainType[]>();
   return new Map((data ?? []).map((d) => [d.domain, d.domain_type]));
-}
-
-/** `country` defaults to "" — the all-markets aggregate row. Pass a code to
- * read that market's own trend line; the rows are written per market at
- * fetch time, so this is a filter, not a recomputation. */
-export async function getDailyMetrics(
-  limit = 8,
-  projectId?: string,
-  country = ""
-): Promise<DailyMetric[]> {
-  const sb = createAnonServerClient();
-  const pid = projectId ?? (await getCurrentProjectId());
-  const { data } = await sb
-    .from("daily_metrics")
-    .select("id, project_id, date, country, visibility_pct, sov_pct, avg_sentiment, avg_position")
-    .eq("project_id", pid)
-    .eq("country", country)
-    .order("date", { ascending: false })
-    .limit(limit)
-    .returns<DailyMetric[]>();
-  return data ?? [];
 }
 
 export async function getAnswerBrandMentions(rawResponseIds: string[]): Promise<AnswerBrandMention[]> {
