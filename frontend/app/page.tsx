@@ -145,13 +145,9 @@ export default async function OverviewPage() {
   const answersMentioningBrand = rawResponses.filter((r) => r.brand_mentioned_in_answer).length;
   const answerMentionPct = totalAnswers ? Math.round((answersMentioningBrand / totalAnswers) * 100) : 0;
 
-  const domainCounts = new Map<string, number>();
-  const domainOwned = new Set<string>();
   const byDay = new Map<string, number>();
   const byDayNaming = new Map<string, number>();
   for (const c of citations) {
-    domainCounts.set(c.domain, (domainCounts.get(c.domain) ?? 0) + 1);
-    if (c.mentions_brand) domainOwned.add(c.domain);
     const day = c.fetched_at.slice(0, 10);
     byDay.set(day, (byDay.get(day) ?? 0) + 1);
     if (c.mentions_brand) byDayNaming.set(day, (byDayNaming.get(day) ?? 0) + 1);
@@ -167,11 +163,6 @@ export default async function OverviewPage() {
     list.push(c);
     citationsByRawResponse.set(c.raw_response_id, list);
   }
-
-  const topDomains = Array.from(domainCounts.entries())
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 7);
-  const domainMax = topDomains.length ? topDomains[0][1] : 1;
 
   const recentAnswers = rawResponses.slice(0, 6);
 
@@ -311,53 +302,14 @@ export default async function OverviewPage() {
           duplicate of the ChartCard above — same TrendChart, same data,
           twice on one page. Removed; the card above is the one. */}
 
-      <section className="mt-5 grid grid-cols-1 items-start gap-5 lg:grid-cols-[1fr_1.5fr]">
-        <div
-          className="rounded-[var(--radius-xl)] bg-[var(--card)] p-6"
-          style={{ boxShadow: "var(--shadow-card)" }}
-        >
-          <h2 className="m-0 font-sans text-[16px] font-bold tracking-[-0.005em]">Where answers come from</h2>
-          <p className="m-0 mt-1 mb-4 font-sans text-[12.5px] text-[var(--muted-2)]">
-            {totalCitations} cited pages across {domainCounts.size} domains
-          </p>
-          <div className="flex flex-col gap-3.5">
-            {topDomains.map(([domain, count], i) => (
-              <Link
-                key={domain}
-                href="/sources"
-                className="block rounded-[10px] no-underline transition-colors duration-150 hover:bg-[var(--muted)]"
-              >
-                <div className="flex items-baseline justify-between gap-3">
-                  <div className="flex items-baseline gap-2">
-                    <span className="w-[16px] font-sans text-[11px] text-[var(--faint)] tabular-nums">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="font-sans text-[13px] font-medium tracking-[-0.005em]">{domain}</span>
-                    {domainOwned.has(domain) && (
-                      <span className="rounded-full bg-[var(--tint-mint)] px-2 py-0.5 font-sans text-[9.5px] font-medium text-[var(--tint-mint-fg)]">
-                        names you
-                      </span>
-                    )}
-                  </div>
-                  <span className="font-sans text-[14px] font-semibold tabular-nums">{count}</span>
-                </div>
-                <div className="mt-1.5 h-[5px] overflow-hidden rounded-full bg-[var(--rule-light)]">
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${Math.round((count / domainMax) * 100)}%`,
-                      background: domainOwned.has(domain) ? "var(--green)" : "var(--faint)",
-                    }}
-                  />
-                </div>
-              </Link>
-            ))}
-            {!topDomains.length && (
-              <p className="font-sans text-[13px] text-[var(--muted-2)]">No data yet.</p>
-            )}
-          </div>
-        </div>
-
+      {/* "Where answers come from" used to render here — the same
+          domain-ranked-by-citation-count list as "Most cited sources" above
+          (same domains, same order, same counts: healthline.com 11,
+          nykaa.com 10, incidecoder.com 7...), just without that section's
+          source-visibility % column. An exact subset of data already on
+          this page, a screen higher — removed rather than kept as a second,
+          weaker rendering of the same table. */}
+      <section className="mt-5">
         <div
           className="rounded-[var(--radius-xl)] bg-[var(--card)] p-6"
           style={{ boxShadow: "var(--shadow-card)" }}

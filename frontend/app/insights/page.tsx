@@ -81,6 +81,20 @@ export default async function InsightsPage({
 }) {
   const sp = await searchParams;
   const projectId = await getCurrentProjectId();
+
+  // Kicked off here, not awaited until the render below, deliberately — this
+  // batch only needs `projectId`, nothing the metrics/filter pipeline below
+  // computes, so it has no reason to wait for that pipeline to finish first.
+  // It previously did (same file, sequenced after everything else), purely
+  // because it was written later — a real, measured waterfall: 3.8s for a
+  // real /insights load, most of it this page waiting on work it didn't
+  // need to wait on.
+  const recentChatsPromise = Promise.all([
+    getEngines(),
+    getTrackedUrls(),
+    getChats({ projectId, limit: 6 }),
+  ]);
+
   const options = await getFilterOptions(projectId);
   const systemParam = Array.isArray(sp.system) ? sp.system[0] : sp.system;
   const baseParsed = parseMetricsFilter(sp, projectId, options);
@@ -133,11 +147,9 @@ export default async function InsightsPage({
   // Recent chats — Peec's Performance page keeps this inline, not only on a
   // separate page. Small fixed slice, not filtered by the metrics range:
   // this is "what just happened", the full /chats page is where filtering lives.
-  const [engines, trackedUrls, recentChats] = await Promise.all([
-    getEngines(),
-    getTrackedUrls(),
-    getChats({ projectId, limit: 6 }),
-  ]);
+  // Kicked off above, in parallel with the whole metrics/breakdowns/trend
+  // pipeline above — just awaited here, where it's first needed.
+  const [engines, trackedUrls, recentChats] = await recentChatsPromise;
   const engineNameById = new Map(engines.map((e) => [e.id, e.name]));
   const trackedById = new Map(trackedUrls.map((t) => [t.id, t]));
   const recentMentions = await getAnswerBrandMentions(recentChats.rows.map((c) => c.id));
