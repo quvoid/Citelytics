@@ -10,12 +10,16 @@ import type { BrandMetricRow, MetricKey } from "@/lib/metrics/types";
 type SortKey = MetricKey | "name";
 
 /** Brand mark by convention, matching workspace-switcher: public/logos/<domain>.png.
- *  Falls back to a tinted monogram so a missing file never leaves a hole. */
-function BrandMark({ name, url }: { name: string; url: string }) {
+ *  Falls back to a tinted monogram so a missing file never leaves a hole.
+ *  `hasLogo` (from lib/logo-domains.ts, checked server-side by the page
+ *  that renders this table) skips the <img> — and the network request
+ *  behind it — entirely for a domain known to have no logo file, rather
+ *  than finding out via a failed request every time. */
+function BrandMark({ name, url, hasLogo }: { name: string; url: string; hasLogo: boolean }) {
   const [failed, setFailed] = useState(false);
   const letter = name.trim().charAt(0).toUpperCase() || "?";
 
-  if (failed) {
+  if (failed || !hasLogo) {
     return (
       <span
         className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] font-sans text-[10px] font-semibold"
@@ -116,10 +120,18 @@ function SortHeader({
 export function TopBrandsTable({
   rows,
   totalResponses,
+  logoDomains,
 }: {
   rows: BrandMetricRow[];
   totalResponses: number;
+  /** Domains actually confirmed to have a /logos/ file — from
+   *  lib/logo-domains.ts, checked server-side by the caller. Required (not
+   *  defaulted to "assume every domain has one") so a caller that forgets
+   *  to pass it fails loudly in dev rather than silently hiding every real
+   *  logo behind a monogram. */
+  logoDomains: string[];
 }) {
+  const knownLogos = useMemo(() => new Set(logoDomains), [logoDomains]);
   const [sort, setSort] = useState<SortKey>("visibility");
   const [dir, setDir] = useState<"asc" | "desc">("desc");
 
@@ -228,7 +240,7 @@ export function TopBrandsTable({
                   </td>
                   <td className={`px-3 py-2.5 ${DIVIDER}`}>
                     <div className="flex min-w-0 items-center gap-2">
-                      <BrandMark name={r.name} url={r.url} />
+                      <BrandMark name={r.name} url={r.url} hasLogo={knownLogos.has(r.url)} />
                       <span className="truncate font-sans text-[13px] font-medium text-[var(--ink)]">
                         {r.name}
                       </span>

@@ -9,6 +9,7 @@ import { SegmentHeatmap } from "@/components/segment-heatmap";
 import { TopBrandsTable } from "@/components/top-brands-table";
 import { TopRankings } from "@/components/top-rankings";
 import { getCurrentProjectId } from "@/lib/current-project";
+import { logoDomains } from "@/lib/logo-domains";
 import { getAnswerBrandMentions, getChats, getEngines, getTrackedUrls } from "@/lib/queries";
 import type { RankedBrand } from "@/lib/highlight-brands";
 import {
@@ -291,7 +292,11 @@ export default async function InsightsPage({
       </section>
 
       <section className="mt-5">
-        <TopBrandsTable rows={metrics.rows} totalResponses={metrics.totalResponses} />
+        <TopBrandsTable
+          rows={metrics.rows}
+          totalResponses={metrics.totalResponses}
+          logoDomains={[...logoDomains()]}
+        />
       </section>
 
       <section className="mt-5 grid grid-cols-1 gap-5">

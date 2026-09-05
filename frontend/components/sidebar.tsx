@@ -1,5 +1,6 @@
 import { SidebarNav } from "@/components/sidebar-nav";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
+import { logoDomains } from "@/lib/logo-domains";
 import type { LayoutData } from "@/lib/layout-data";
 
 export function Sidebar({ data }: { data: LayoutData }) {
@@ -19,7 +20,7 @@ export function Sidebar({ data }: { data: LayoutData }) {
         </span>
       </div>
       <div className="px-4 pb-4">
-        <WorkspaceSwitcher current={current} projects={projects} />
+        <WorkspaceSwitcher current={current} projects={projects} logoDomains={[...logoDomains()]} />
       </div>
       <div className="flex-1 overflow-y-auto px-2 pt-2 pb-4">
         <div className="px-3 pb-2 font-sans text-[10.5px] font-semibold tracking-[0.08em] text-[var(--sb-text)] uppercase">

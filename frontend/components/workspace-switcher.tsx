@@ -2,7 +2,7 @@
 
 import { ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { setCurrentProject } from "@/lib/actions/workspace";
 import type { Project } from "@/lib/types";
@@ -18,21 +18,29 @@ function initialsFor(name: string): string {
  * coloured initials mark when a project has no logo file — which is the
  * normal case for a newly tracked brand, not an error. object-contain keeps
  * wide wordmarks (Bajaj) undistorted in the same square slot that square
- * marks (Motorola) fill edge to edge. */
+ * marks (Motorola) fill edge to edge.
+ *
+ * `hasLogo` (from lib/logo-domains.ts, checked server-side once and passed
+ * down from the layout) skips the <img> — and the network request behind
+ * it — entirely for a domain known to have no logo file, rather than
+ * finding out via a failed request on every single page load, since this
+ * component renders on every page via the sidebar. */
 function BrandMark({
   name,
   domain,
   fallbackColor,
   className,
+  hasLogo,
 }: {
   name: string;
   domain: string;
   fallbackColor: string;
   className: string;
+  hasLogo: boolean;
 }) {
   const [failed, setFailed] = useState(false);
 
-  if (!domain || failed) {
+  if (!domain || !hasLogo || failed) {
     return (
       <span
         className={`${className} flex flex-none items-center justify-center font-semibold text-white`}
@@ -62,10 +70,16 @@ function BrandMark({
 export function WorkspaceSwitcher({
   current,
   projects,
+  logoDomains,
 }: {
   current: Project;
   projects: Project[];
+  /** Domains actually confirmed to have a /logos/ file — from
+   *  lib/logo-domains.ts, checked server-side once by Sidebar (this renders
+   *  on every page). */
+  logoDomains: string[];
 }) {
+  const knownLogos = useMemo(() => new Set(logoDomains), [logoDomains]);
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -110,6 +124,7 @@ export function WorkspaceSwitcher({
             MARK_COLORS[projects.findIndex((p) => p.id === current.id) % MARK_COLORS.length]
           }
           className="h-6.5 w-6.5 rounded-[7px] text-[10px] tracking-[0.02em]"
+          hasLogo={knownLogos.has(current.domain)}
         />
         <span className="flex-1 overflow-hidden text-left font-sans text-[13.5px] font-medium overflow-ellipsis whitespace-nowrap text-white">
           {current.name}
@@ -143,6 +158,7 @@ export function WorkspaceSwitcher({
                 domain={p.domain}
                 fallbackColor={MARK_COLORS[i % MARK_COLORS.length]}
                 className="h-7 w-7 rounded-[8px] text-[10px]"
+                hasLogo={knownLogos.has(p.domain)}
               />
               <span className="flex-1">
                 <span className="block font-sans text-[14px] font-medium tracking-[-0.005em]">{p.name}</span>
