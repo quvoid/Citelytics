@@ -252,10 +252,16 @@ export function EngineCard({ a }: { a: EngineAnswerDetail & { country: string | 
   return (
     <section className="rounded-[12px] border border-[var(--border)] bg-[var(--card)] p-4">
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-        <span className="font-sans text-[14px] font-semibold tracking-[-0.01em]">{label}</span>
+        <span className="flex items-baseline gap-1.5 font-sans text-[14px] font-semibold tracking-[-0.01em]">
+          {label}
+          {a.model && (
+            <span className="font-sans text-[11px] font-normal text-[var(--faint)]">{a.model}</span>
+          )}
+        </span>
         <span className="font-sans text-[11px] text-[var(--faint)]">
           {a.country ? `${a.country} · ` : ""}
           {new Date(a.fetchedAt).toLocaleString()}
+          {a.latencyMs !== null && ` · ${(a.latencyMs / 1000).toFixed(1)}s`}
         </span>
       </div>
 
@@ -265,6 +271,8 @@ export function EngineCard({ a }: { a: EngineAnswerDetail & { country: string | 
           { k: "Sources", v: String(a.sources.length) },
           { k: "Mini-searches", v: String(a.searchRounds.reduce((n, r) => n + r.queries.length, 0)) },
           ...(retrievedOnly ? [{ k: "Read, not cited", v: String(retrievedOnly) }] : []),
+          // kie.ai's own real per-call cost — see engine-details.ts's `credits`.
+          ...(a.credits !== null ? [{ k: "Cost", v: `${a.credits.toFixed(2)} cr` }] : []),
         ].map((s) => (
           <span
             key={s.k}
@@ -275,6 +283,17 @@ export function EngineCard({ a }: { a: EngineAnswerDetail & { country: string | 
           </span>
         ))}
       </div>
+
+      {a.commentary && (
+        <div className="mb-3.5 rounded-[8px] px-3 py-2.5" style={{ background: "var(--tint-sky)" }}>
+          <div className="mb-1 font-sans text-[10px] font-semibold tracking-[0.08em] text-[var(--tint-sky-fg)] uppercase">
+            Model&rsquo;s approach
+          </div>
+          <p className="m-0 font-sans text-[12.5px] leading-[1.55] text-[var(--tint-sky-fg)]">
+            {a.commentary}
+          </p>
+        </div>
+      )}
 
       <Section
         title="Answer"
@@ -387,7 +406,9 @@ export function EngineCard({ a }: { a: EngineAnswerDetail & { country: string | 
           <Section title="Notes">
             {a.usage && (
               <p className="m-0 mb-1.5 font-sans text-[11.5px] text-[var(--muted-2)] tabular-nums">
-                Tokens — in {a.usage.input ?? "—"} · out {a.usage.output ?? "—"}
+                Tokens — in {a.usage.input ?? "—"}
+                {a.usage.cachedInput ? ` (${a.usage.cachedInput.toLocaleString()} cached)` : ""} · out{" "}
+                {a.usage.output ?? "—"}
                 {a.usage.thinking ? ` · thinking ${a.usage.thinking}` : ""} · total{" "}
                 {a.usage.total ?? "—"}
               </p>

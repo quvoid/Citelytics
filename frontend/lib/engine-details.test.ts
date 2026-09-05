@@ -368,3 +368,107 @@ test("sentenceExcerpt does not falsely mark a real sentence boundary as truncate
   assert.equal(x.truncatedEnd, false);
   assert.equal(x.text, "TARGET sentence here.");
 });
+
+// --- kie.ai production client fields: commentary/final_answer split, cost,
+// model, timing, cache. Real fields found sitting unparsed in a real stored
+// response (see backend/clients/kie_chatgpt_client.py) — locked down here so
+// a future response-shape change doesn't silently drop them again. ---
+
+test("a phase:commentary message is kept out of answerText and exposed separately", () => {
+  // Real, previously-live bug: with no phase split, commentary and the real
+  // answer were concatenated with no separator ("...before recommending
+  // options.For 4K video recording, these are the strongest current
+  // choices:"). answerText here is what the backend now stores — already
+  // final_answer-only — so this locks down that `commentary` is populated
+  // from the OTHER message instead of duplicating into the answer.
+  const raw = {
+    model: "gpt-5.6-luna",
+    output: [
+      {
+        type: "message",
+        phase: "commentary",
+        content: [{ type: "output_text", text: "I'll narrow this to the strongest options." }],
+      },
+      {
+        type: "web_search_call",
+        action: { query: "q" },
+      },
+      {
+        type: "message",
+        phase: "final_answer",
+        content: [
+          {
+            type: "output_text",
+            text: "For 4K video, the iPhone 17 Pro Max is the best choice.",
+            annotations: [
+              { type: "url_citation", url: "https://apple.com/iphone-17-pro", start_index: 0, end_index: 10 },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  const answerText = "For 4K video, the iPhone 17 Pro Max is the best choice.";
+  const d = parseEngineDetail("chatgpt-kie", raw, answerText);
+  assert.equal(d.commentary, "I'll narrow this to the strongest options.");
+  // The commentary message must not contribute a source/span of its own.
+  assert.equal(d.sources.length, 1);
+  assert.equal(d.sources[0].url, "https://apple.com/iphone-17-pro");
+  assert.equal(d.groundedSpans.length, 1);
+});
+
+test("a model with no phase field treats every message as the answer (backward compatible)", () => {
+  const raw = {
+    output: [
+      {
+        type: "message",
+        content: [{ type: "output_text", text: "Plain answer, no phase field at all." }],
+      },
+    ],
+  };
+  const d = parseEngineDetail("chatgpt-kie", raw, "Plain answer, no phase field at all.");
+  assert.equal(d.commentary, null);
+});
+
+test("credits_consumed, model, and latency are pulled from the kie.ai envelope", () => {
+  const raw = {
+    model: "gpt-5.6-luna",
+    credits_consumed: 0.19,
+    created_at: 1000,
+    completed_at: 1052.4,
+    output: [{ type: "message", content: [{ type: "output_text", text: "hi" }] }],
+  };
+  const d = parseEngineDetail("chatgpt-kie", raw, "hi");
+  assert.equal(d.model, "gpt-5.6-luna");
+  assert.equal(d.credits, 0.19);
+  assert.equal(d.latencyMs, 52400);
+});
+
+test("cached input tokens are read from usage.input_tokens_details", () => {
+  const raw = {
+    usage: {
+      input_tokens: 18277,
+      output_tokens: 838,
+      total_tokens: 19115,
+      input_tokens_details: { cached_tokens: 6784 },
+      output_tokens_details: { reasoning_tokens: 453 },
+    },
+    output: [{ type: "message", content: [{ type: "output_text", text: "hi" }] }],
+  };
+  const d = parseEngineDetail("chatgpt-kie", raw, "hi");
+  assert.equal(d.usage?.cachedInput, 6784);
+  assert.equal(d.usage?.thinking, 453);
+});
+
+test("kie.ai Gemini envelope: model and credits read from the reconstructed top level", () => {
+  const raw = {
+    model: "gemini-3-6-flash",
+    credits_consumed: 0.54,
+    candidates: [{ content: { parts: [{ text: "answer" }] }, groundingMetadata: {} }],
+    usageMetadata: { promptTokenCount: 100, candidatesTokenCount: 50, totalTokenCount: 150 },
+  };
+  const d = parseEngineDetail("gemini-kie", raw, "answer");
+  assert.equal(d.model, "gemini-3-6-flash");
+  assert.equal(d.credits, 0.54);
+  assert.equal(d.commentary, null);
+});

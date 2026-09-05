@@ -15,7 +15,7 @@ from normalize import extract_domain
 # the market biases those searches toward local sources and retailers.
 
 
-async def _resolve_redirect(client: httpx.AsyncClient, url: str) -> str:
+async def resolve_grounding_redirect(client: httpx.AsyncClient, url: str) -> str:
     """Gemini's grounding chunks return vertexaisearch.cloud.google.com
     redirect-proxy URLs, not the actual source. Follow the redirect chain to
     get the real destination article URL."""
@@ -100,7 +100,7 @@ class GeminiClient(EngineClient):
 
         async with httpx.AsyncClient() as client:
             resolved_urls = await asyncio.gather(
-                *(_resolve_redirect(client, uri) for _, uri in redirect_uris)
+                *(resolve_grounding_redirect(client, uri) for _, uri in redirect_uris)
             )
 
         citations = [

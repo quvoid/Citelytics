@@ -7,7 +7,7 @@ import store
 from brand_check import brand_keywords_for, text_mentions_brand
 from celery_app import celery_app
 from classifier import classify_answer
-from clients import RateLimitedError, get_engine_client
+from clients import ACTIVE_ENGINE_NAMES, RateLimitedError, get_engine_client
 from clients.base import RawEngineResponse
 from metrics import refresh_daily_metrics
 from normalizer import enrich_citations, ensure_domain_types
@@ -149,9 +149,11 @@ def create_fetch_batch(project_id: str) -> tuple[str, int]:
     if not prompt_ids:
         raise ValueError("No active prompts found for this project.")
 
-    batch_id, task_rows = store.create_batch(
-        project_id, prompt_ids, list(store.engine_ids().keys())
-    )
+    # Only the engines actually meant to run, not every row that's ever
+    # existed in the `engines` table — store.engine_ids() also carries
+    # "gemini"/"openrouter", which stay registered for historical data but
+    # are deliberately no longer scheduled. See clients/__init__.py.
+    batch_id, task_rows = store.create_batch(project_id, prompt_ids, ACTIVE_ENGINE_NAMES)
     for row in task_rows:
         fetch_citations_task.delay(row["batch_task_id"], row["prompt_id"], row["engine_name"])
 

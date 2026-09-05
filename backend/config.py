@@ -30,6 +30,16 @@ GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 # brainstorming, never for citation tracking — Groq has no web search.
 GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
 
+KIE_API_KEY = os.environ.get("kIE_API", "")
+# Both real, non-free-tier engines run through kie.ai now — see
+# clients/kie_chatgpt_client.py and clients/kie_gemini_client.py.
+# GEMINI_API_KEY/OPENROUTER_API_KEY above stay defined (their clients stay
+# registered in clients/__init__.py) purely so historical "gemini"/
+# "openrouter" raw_responses rows remain explicable and the clients are one
+# schedule-list edit away from reactivating, not deleted outright.
+KIE_CHATGPT_MODEL = os.environ.get("KIE_CHATGPT_MODEL", "gpt-5-6-luna")
+KIE_GEMINI_MODEL = os.environ.get("KIE_GEMINI_MODEL", "gemini-3-6-flash")
+
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 # gpt-4o-mini is what actually approximates real ChatGPT behavior for a user
 # query — gpt-oss-20b (OpenAI's free open-weight model) is NOT what ChatGPT

@@ -44,11 +44,25 @@ export type EngineUsage = {
   output: number | null;
   thinking: number | null;
   total: number | null;
+  /** Input tokens served from cache rather than freshly processed — real
+   *  cost signal (cached tokens are billed at a fraction of fresh ones) that
+   *  was sitting in the response unused. Null when the engine doesn't
+   *  expose a cache breakdown at all, not when it's zero. */
+  cachedInput: number | null;
 };
 
 export type EngineAnswerDetail = {
   engineName: string;
   answerText: string | null;
+  /** OpenAI/kie.ai models sometimes narrate their own approach before
+   *  answering ("I'll narrow this to phones that are genuinely strong for
+   *  4K video...") as a separate `phase: "commentary"` message, distinct
+   *  from the actual answer (`phase: "final_answer"`). Kept out of
+   *  `answerText` (which used to have both concatenated with no separator —
+   *  a real bug this fixed) and surfaced here instead, since it's genuine
+   *  insight into how the model approached the question. Null when the
+   *  engine doesn't expose this distinction at all. */
+  commentary: string | null;
   sources: DetailSource[];
   searchRounds: SearchRound[];
   groundedSpans: GroundedSpan[];
@@ -58,6 +72,18 @@ export type EngineAnswerDetail = {
    *  at all, which is NOT the same as 0%. */
   groundedPct: number | null;
   usage: EngineUsage | null;
+  /** The exact model version that answered (e.g. "gpt-5.6-luna",
+   *  "gemini-3-6-flash") — null when the response doesn't say. */
+  model: string | null;
+  /** kie.ai's own real per-call cost for this fetch, in their credits — not
+   *  part of either engine's own response shape, but present on every
+   *  kie.ai response and worth keeping now that cost is tracked per answer
+   *  rather than estimated in aggregate. */
+  credits: number | null;
+  /** Wall-clock time the engine itself reported spending, in ms — from
+   *  completed_at - created_at (OpenAI/kie.ai) — null when the response
+   *  carries no timestamps to compute it from. */
+  latencyMs: number | null;
   /** Honest limitations for this specific response. Rendered, not swallowed. */
   notes: string[];
 };
@@ -170,6 +196,7 @@ function parseGemini(raw: Json, answerText: string | null): Partial<EngineAnswer
 
   return {
     sources,
+    commentary: null, // Gemini's shape has no separate planning-phase message.
     searchRounds: queries.length ? [{ round: 1, queries }] : [],
     groundedSpans,
     groundedPct: pctCovered(groundedSpans, answerText),
@@ -179,8 +206,15 @@ function parseGemini(raw: Json, answerText: string | null): Partial<EngineAnswer
           output: asNum(um.candidatesTokenCount),
           thinking: asNum(um.thinkingTokenCount),
           total: asNum(um.totalTokenCount),
+          cachedInput: asNum(um.cachedContentTokenCount),
         }
       : null,
+    // Both kie.ai-only, additive fields on the reconstructed envelope — see
+    // backend/clients/kie_gemini_client.py. Absent (and null here) for
+    // anything fetched through the real free-tier Gemini API.
+    model: asStr(raw.model),
+    credits: asNum(raw.credits_consumed),
+    latencyMs: null, // kie.ai's Gemini stream doesn't expose start/end timestamps.
     notes,
   };
 }
@@ -205,9 +239,30 @@ function parseOpenAI(raw: Json, answerText: string | null): Partial<EngineAnswer
   let sourcesIncludeRequested = false;
   const readOnlyUrls: { url: string; title: string | null }[] = [];
 
+  // Some models emit a `phase` on each `message` item: "commentary" is the
+  // model narrating its own approach before answering, "final_answer" is the
+  // real answer — see backend/clients/kie_chatgpt_client.py's
+  // _final_answer_text for the backend half of this fix (answerText passed
+  // in here is already final_answer-only). A model with no `phase` field at
+  // all treats every message as the answer, matching the old behavior.
+  const hasPhaseField = output.some(
+    (item) => asObj(item)?.type === "message" && "phase" in (asObj(item) ?? {}),
+  );
+  let commentary = "";
+
   for (const item of output) {
     const o = asObj(item);
     if (!o) continue;
+
+    if (hasPhaseField && o.type === "message" && o.phase !== "final_answer") {
+      if (o.phase === "commentary") {
+        for (const c of asArr(o.content)) {
+          const co = asObj(c);
+          if (co?.type === "output_text") commentary += asStr(co.text) ?? "";
+        }
+      }
+      continue; // don't parse citations/spans from a non-answer message
+    }
 
     if (o.type === "web_search_call") {
       const action = asObj(o.action);
@@ -286,8 +341,12 @@ function parseOpenAI(raw: Json, answerText: string | null): Partial<EngineAnswer
     );
   }
 
+  const createdAt = asNum(raw.created_at);
+  const completedAt = asNum(raw.completed_at);
+
   return {
     sources,
+    commentary: commentary.trim() || null,
     searchRounds,
     groundedSpans,
     groundedPct: pctCovered(groundedSpans, answerText),
@@ -297,8 +356,15 @@ function parseOpenAI(raw: Json, answerText: string | null): Partial<EngineAnswer
           output: asNum(usage.output_tokens),
           thinking: asNum(asObj(usage.output_tokens_details)?.reasoning_tokens),
           total: asNum(usage.total_tokens),
+          cachedInput: asNum(asObj(usage.input_tokens_details)?.cached_tokens),
         }
       : null,
+    // model/credits/timestamps are kie.ai/OpenAI-Responses fields that were
+    // being stored in raw_json all along and never read — see
+    // backend/clients/kie_chatgpt_client.py.
+    model: asStr(raw.model),
+    credits: asNum(raw.credits_consumed),
+    latencyMs: createdAt !== null && completedAt !== null ? Math.round((completedAt - createdAt) * 1000) : null,
     notes,
   };
 }
@@ -322,6 +388,7 @@ function parseKieSummary(raw: Json): Partial<EngineAnswerDetail> {
   const usage = asObj(raw.usage);
   return {
     sources,
+    commentary: null,
     searchRounds: queries.length ? [{ round: 1, queries }] : [],
     groundedSpans: [],
     groundedPct: null,
@@ -331,8 +398,12 @@ function parseKieSummary(raw: Json): Partial<EngineAnswerDetail> {
           output: asNum(usage.candidatesTokenCount) ?? asNum(usage.output_tokens),
           thinking: asNum(usage.thinkingTokenCount),
           total: asNum(usage.totalTokenCount) ?? asNum(usage.total_tokens),
+          cachedInput: null,
         }
       : null,
+    model: asStr(raw.model),
+    credits: asNum(raw.credits_consumed),
+    latencyMs: null,
     notes: [
       "Captured through the kie.ai proxy, which stored a summary rather than the full API envelope — per-sentence grounding supports were never available for this run.",
     ],
@@ -525,11 +596,15 @@ export function parseEngineDetail(
   const base: EngineAnswerDetail = {
     engineName,
     answerText,
+    commentary: null,
     sources: [],
     searchRounds: [],
     groundedSpans: [],
     groundedPct: null,
     usage: null,
+    model: null,
+    credits: null,
+    latencyMs: null,
     notes: [],
   };
 

@@ -2,7 +2,7 @@ from typing import Any
 
 import store
 from classifier import classify_attributes
-from clients import RateLimitedError, get_engine_client
+from clients import ACTIVE_ENGINE_NAMES, RateLimitedError, get_engine_client
 from db import get_supabase
 
 
@@ -42,7 +42,15 @@ async def run_perception_fetch(project_id: str) -> dict[str, Any]:
 
     brand_names = [t["name"] for t in tracked]
     name_to_id = {t["name"]: t["id"] for t in tracked}
-    engines = sb.table("engines").select("id, name").execute().data
+    # Same active-engine filter the citation flow uses (clients/__init__.py) —
+    # querying every row in the `engines` table unfiltered used to mean this
+    # called get_engine_client("chatgpt-kie")/("gemini-kie") before either was
+    # registered, raising ValueError on every perception run for those rows.
+    engines = [
+        e
+        for e in sb.table("engines").select("id, name").execute().data
+        if e["name"] in ACTIVE_ENGINE_NAMES
+    ]
 
     processed = 0
     skipped: list[dict[str, str]] = []
