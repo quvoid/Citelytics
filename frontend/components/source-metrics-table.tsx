@@ -31,28 +31,28 @@ export function SourceMetricsTable({ rows, totalResponses }: { rows: SourceMetri
         <table className="w-full border-collapse" style={{ minWidth: 620 }}>
           <thead>
             <tr className="border-y border-[var(--border)] bg-[var(--muted)]">
-              <th className="px-3 py-2 text-left font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-3.5 text-left font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Domain
               </th>
               <th
-                className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase"
+                className="px-3 py-3.5 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase"
                 title="Share of answers where this domain showed up as a source at all"
               >
                 Retrieved
               </th>
               <th
-                className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase"
+                className="px-3 py-3.5 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase"
                 title="Average number of times this domain was cited per answer — can exceed 1"
               >
                 Retrieval rate
               </th>
               <th
-                className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase"
+                className="px-3 py-3.5 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase"
                 title="Of the times this domain was retrieved, how often the visible answer actually drew from it — vs. quiet background retrieval"
               >
                 Citation rate
               </th>
-              <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-3.5 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Citations
               </th>
             </tr>

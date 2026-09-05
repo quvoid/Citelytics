@@ -72,7 +72,7 @@ function SortHeader({
 }) {
   return (
     <th
-      className={`px-3 py-2 font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${
+      className={`px-3 py-3.5 font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${
         align === "center" ? `text-center ${DIVIDER}` : "text-left"
       }`}
     >
@@ -211,7 +211,7 @@ export function TopBrandsTable({
         <table className="w-full border-collapse" style={{ minWidth: 620 }}>
           <thead>
             <tr className="border-y border-[var(--border)] bg-[var(--muted)]">
-              <th className="w-10 px-3 py-2 text-center font-sans text-[11px] font-medium text-[var(--muted-2)]">
+              <th className="w-10 px-3 py-3.5 text-center font-sans text-[11px] font-medium text-[var(--muted-2)]">
                 #
               </th>
               <SortHeader label="Brand" active={sort === "name"} dir={dir} onClick={() => toggle("name")} align="left" />
@@ -220,7 +220,7 @@ export function TopBrandsTable({
               <SortHeader label="Sentiment" active={sort === "sentiment"} dir={dir} onClick={() => toggle("sentiment")} />
               <SortHeader label="Position" active={sort === "position"} dir={dir} onClick={() => toggle("position")} />
               <th
-                className={`px-3 py-2 text-center font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${DIVIDER}`}
+                className={`px-3 py-3.5 text-center font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase ${DIVIDER}`}
               >
                 Mentions
               </th>

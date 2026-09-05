@@ -2,6 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { createTag, deleteTag, renameTag, updateTagGroup } from "@/lib/actions/tags";
+import { colorForTag } from "@/lib/tag-colors";
 import type { Tag } from "@/lib/types";
 
 function TagChip({ tag }: { tag: Tag }) {
@@ -64,15 +65,22 @@ function TagChip({ tag }: { tag: Tag }) {
     );
   }
 
+  // Same hashed-from-name palette as TagPicker/FilterDropdown — a tag reads
+  // as the same color wherever it's shown, starting here at creation.
+  const tc = colorForTag(tag.name);
   return (
-    <span className="flex items-center gap-1.5 border border-[var(--rule)] px-2.5 py-1 font-sans text-[11px] text-[var(--ink)]">
-      <button type="button" onClick={() => setEditing(true)} className="hover:text-[var(--rust)]">
+    <span
+      className="flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-sans text-[11.5px] font-medium"
+      style={{ borderColor: tc.border, color: tc.fg, background: tc.bg }}
+    >
+      <button type="button" onClick={() => setEditing(true)} className="hover:underline">
         {tag.name}
       </button>
       <button
         type="button"
         onClick={() => setGroupEditing(true)}
-        className="text-[var(--faint)] hover:text-[var(--rust)]"
+        className="opacity-70 hover:opacity-100"
+        style={{ color: tc.fg }}
         title={tag.group_name ? `Group: ${tag.group_name} — click to change` : "Set a group for this tag"}
       >
         ⌂
@@ -81,7 +89,8 @@ function TagChip({ tag }: { tag: Tag }) {
         type="button"
         disabled={isPending}
         onClick={() => startTransition(() => deleteTag(tag.id))}
-        className="text-[var(--faint)] hover:text-[var(--rust)]"
+        className="opacity-70 hover:opacity-100"
+        style={{ color: tc.fg }}
         title={`Delete "${tag.name}" — removes it from every prompt`}
       >
         ✕

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { addTagToPrompt, removeTagFromPrompt } from "@/lib/actions/tags";
+import { colorForTag } from "@/lib/tag-colors";
 import type { Tag } from "@/lib/types";
 
 /** Per-prompt tag assignment: pills for what's already applied (click ✕ to
@@ -24,25 +25,34 @@ export function TagPicker({
 
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      {assigned.map((t) => (
-        <span
-          key={t.id}
-          className="flex items-center gap-1 border border-[var(--rule)] px-1.5 py-0.5 text-[11px] tracking-[0.03em] text-[var(--muted-2)]"
-        >
-          {t.name}
-          <button
-            type="button"
-            disabled={isPending}
-            onClick={(e) => {
-              e.preventDefault();
-              startTransition(() => removeTagFromPrompt(promptId, t.id));
-            }}
-            className="text-[var(--faint)] hover:text-[var(--rust)]"
+      {assigned.map((t) => {
+        // Same hashed-from-name color every tag pill uses everywhere
+        // (lib/tag-colors.ts) — a tag reads as the same color here, in the
+        // Tag filter dropdown, and anywhere else it's rendered.
+        const tc = colorForTag(t.name);
+        return (
+          <span
+            key={t.id}
+            className="flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11.5px] font-medium tracking-[0.02em]"
+            style={{ borderColor: tc.border, color: tc.fg, background: tc.bg }}
           >
-            ✕
-          </button>
-        </span>
-      ))}
+            {t.name}
+            <button
+              type="button"
+              disabled={isPending}
+              onClick={(e) => {
+                e.preventDefault();
+                startTransition(() => removeTagFromPrompt(promptId, t.id));
+              }}
+              className="opacity-70 hover:opacity-100"
+              style={{ color: tc.fg }}
+              aria-label={`Remove ${t.name} tag`}
+            >
+              ✕
+            </button>
+          </span>
+        );
+      })}
       {available.length > 0 && (
         <TagAddSelect promptId={promptId} available={available} pending={isPending} startTransition={startTransition} />
       )}

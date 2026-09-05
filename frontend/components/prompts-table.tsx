@@ -137,25 +137,25 @@ export function PromptsTable({
         <table className="w-full border-collapse" style={{ minWidth: 720 }}>
           <thead>
             <tr className="border-y border-[var(--border)] bg-[var(--muted)]">
-              <th className="px-3 py-2 text-left font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-3.5 text-left font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Prompt
               </th>
-              <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-3.5 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Sent.
               </th>
-              <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-3.5 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Pos.
               </th>
-              <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-3.5 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Citations
               </th>
-              <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-3.5 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Mentions
               </th>
-              <th className="px-3 py-2 text-left font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-3.5 text-left font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 Last fetched
               </th>
-              <th className="px-3 py-2 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
+              <th className="px-3 py-3.5 text-right font-sans text-[11px] font-medium tracking-[0.06em] text-[var(--muted-2)] uppercase">
                 State
               </th>
             </tr>
