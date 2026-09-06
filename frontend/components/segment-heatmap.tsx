@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { formatMetric } from "@/components/metric-cell";
 import type { SegmentMatrix } from "@/lib/metrics/types";
 
@@ -51,13 +52,13 @@ export function SegmentHeatmap({
               {matrix.rowAxis}
             </span>
             {switchAxisHref && (
-              <a
+              <Link
                 href={switchAxisHref}
                 className="rounded-full border border-[var(--border)] px-2 py-0.5 font-sans text-[11px] text-[var(--muted-2)] no-underline"
                 title="Swap rows and columns"
               >
                 switch
-              </a>
+              </Link>
             )}
           </div>
           {matrix.colKeys.map((c) => (

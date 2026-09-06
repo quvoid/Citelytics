@@ -3,43 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import {
-  ArrowUpRight,
-  CircleDollarSign,
-  FileText,
-  Gauge,
-  Layers,
-  Link2,
-  ListChecks,
-  MessagesSquare,
-  Search,
-  Sparkles,
-  SplitSquareHorizontal,
-  Target,
-  type LucideIcon,
-} from "lucide-react";
+import { NAV_ITEMS as items, isNavItemActive } from "@/lib/nav-items";
 
-/** Real drawn icons, one library, one stroke weight.
- *
- *  Every icon in this app used to be a Unicode geometric glyph (◱ ◉ ⑃ ⛁).
- *  Those render at whatever weight and baseline the user's font happens to
- *  supply, never align with each other, and are the single loudest tell that
- *  an interface was assembled rather than designed. Lucide gives one
- *  consistent 1.5px stroke across the set and scales cleanly at 16px. */
-const items: { href: string; label: string; icon: LucideIcon }[] = [
-  { href: "/", label: "Overview", icon: Gauge },
-  { href: "/insights", label: "Insights", icon: Sparkles },
-  { href: "/actions", label: "Actions", icon: ListChecks },
-  { href: "/prompts", label: "Prompts", icon: Search },
-  { href: "/chats", label: "Chats", icon: MessagesSquare },
-  { href: "/briefs", label: "Briefs", icon: FileText },
-  { href: "/fanouts", label: "Fanouts", icon: SplitSquareHorizontal },
-  { href: "/sources", label: "Sources", icon: Link2 },
-  { href: "/sources/gap-analysis", label: "Gap Analysis", icon: Target },
-  { href: "/brands", label: "Brands", icon: Layers },
-  { href: "/perception", label: "Perception", icon: ArrowUpRight },
-  { href: "/engine-costs", label: "Engine Costs", icon: CircleDollarSign },
-];
+/** Kept but no longer mounted (app/layout.tsx now renders BottomNav
+ *  instead) — the left-rail nav, superseded by the bottom-drawer redesign.
+ *  Left working rather than deleted so switching back is a one-line change
+ *  in layout.tsx, not a rebuild. Nav item list now lives in lib/nav-items.ts,
+ *  shared with bottom-nav.tsx. */
 
 export function SidebarNav({
   promptCount,
@@ -78,10 +48,7 @@ export function SidebarNav({
   return (
     <nav className="flex flex-col gap-0.5">
       {items.map((item) => {
-        const active =
-          pathname === item.href ||
-          (item.href === "/prompts" && pathname.startsWith("/prompts/")) ||
-          (item.href === "/briefs" && pathname.startsWith("/briefs/"));
+        const active = isNavItemActive(pathname, item.href);
         const hovered = hoveredHref === item.href;
         const focused = focusedHref === item.href;
         const highlighted = hovered || focused;

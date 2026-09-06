@@ -71,13 +71,20 @@ export function WorkspaceSwitcher({
   current,
   projects,
   logoDomains,
+  compact = false,
 }: {
   current: Project;
   projects: Project[];
   /** Domains actually confirmed to have a /logos/ file — from
-   *  lib/logo-domains.ts, checked server-side once by Sidebar (this renders
-   *  on every page). */
+   *  lib/logo-domains.ts, checked server-side once by the layout chrome
+   *  that renders this (Sidebar, or now BottomNav — both render on every
+   *  page). */
   logoDomains: string[];
+  /** BottomNav's condensed rendering: smaller trigger, and — since this now
+   *  sits near the bottom of the viewport instead of the top of a sidebar —
+   *  the popover opens upward instead of down, or it would render mostly
+   *  off-screen. */
+  compact?: boolean;
 }) {
   const knownLogos = useMemo(() => new Set(logoDomains), [logoDomains]);
   const [open, setOpen] = useState(false);
@@ -111,7 +118,7 @@ export function WorkspaceSwitcher({
       <button
         onClick={() => setOpen((v) => !v)}
         disabled={isPending}
-        className="flex w-full items-center gap-2.5 rounded-[10px] border py-2 pr-2.5 pl-2 font-sans transition-colors duration-150 disabled:opacity-60"
+        className={`flex w-full items-center gap-2.5 rounded-[10px] border font-sans transition-colors duration-150 disabled:opacity-60 ${compact ? "py-1.5 pr-2 pl-1.5" : "py-2 pr-2.5 pl-2"}`}
         style={{
           background: open ? "var(--sb-active-bg)" : "transparent",
           borderColor: open ? "var(--sb-border)" : "transparent",
@@ -123,14 +130,16 @@ export function WorkspaceSwitcher({
           fallbackColor={
             MARK_COLORS[projects.findIndex((p) => p.id === current.id) % MARK_COLORS.length]
           }
-          className="h-6.5 w-6.5 rounded-[7px] text-[11px] tracking-[0.02em]"
+          className={compact ? "h-6 w-6 rounded-[6px] text-[10px] tracking-[0.02em]" : "h-6.5 w-6.5 rounded-[7px] text-[11px] tracking-[0.02em]"}
           hasLogo={knownLogos.has(current.domain)}
         />
-        <span className="flex-1 overflow-hidden text-left font-sans text-[13.5px] font-medium overflow-ellipsis whitespace-nowrap text-white">
+        <span
+          className={`flex-1 overflow-hidden text-left font-sans font-medium overflow-ellipsis whitespace-nowrap text-white ${compact ? "text-[12.5px]" : "text-[13.5px]"}`}
+        >
           {current.name}
         </span>
         <ChevronsUpDown
-          size={14}
+          size={compact ? 12 : 14}
           strokeWidth={1.9}
           aria-hidden="true"
           className="flex-none"
@@ -140,7 +149,7 @@ export function WorkspaceSwitcher({
 
       {open && (
         <div
-          className="absolute top-[calc(100%+8px)] left-0 z-40 w-[280px] overflow-hidden rounded-[14px] border border-[var(--rule)] bg-[var(--card)]"
+          className={`absolute left-0 z-40 w-[280px] overflow-hidden rounded-[14px] border border-[var(--rule)] bg-[var(--card)] ${compact ? "bottom-[calc(100%+8px)]" : "top-[calc(100%+8px)]"}`}
           style={{ boxShadow: "var(--shadow-pop)" }}
         >
           <div className="border-b border-[var(--rule-light)] px-3.5 py-2.5 font-sans text-[11px] font-semibold tracking-[0.08em] text-[var(--muted-2)] uppercase">

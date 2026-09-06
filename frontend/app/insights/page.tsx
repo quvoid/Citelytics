@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { ChartCard } from "@/components/chart-card";
 import { ChatRow } from "@/components/chat-row";
+import { CircleSpinnerFill } from "@/components/circle-spinner";
 import { FilterBar, type FilterState } from "@/components/filter-bar";
 import { GapMatrixView } from "@/components/gap-matrix";
 import { KpiStrip } from "@/components/kpi-strip";
@@ -75,12 +77,40 @@ function headline(rank: number | null, total: number, enough: boolean): { title:
   };
 }
 
+/** The page itself does no DB work — it just unwraps `searchParams` (free)
+ *  and hands off to `InsightsContent` inside a `Suspense` boundary. That's
+ *  what makes "change 7d to 30d" and "click a nav link into here" show a
+ *  local `CircleSpinnerFill` in the content column instead of a blank page:
+ *  the boundary is keyed on the serialized search params, so React tears
+ *  down and re-suspends the content subtree on every filter change while
+ *  everything outside it (root layout, BottomNav) never re-renders — it
+ *  isn't part of this subtree to begin with. Same in-page-Suspense pattern
+ *  already proven on /prompts/[id] (see EngineSourcesSection there), just
+ *  applied to the whole content area instead of one nested section. */
 export default async function InsightsPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sp = await searchParams;
+  const key = new URLSearchParams(
+    Object.entries(sp).flatMap(([k, v]) =>
+      v === undefined ? [] : [[k, Array.isArray(v) ? v.join(",") : v] as [string, string]],
+    ),
+  ).toString();
+
+  return (
+    <Suspense key={key} fallback={<CircleSpinnerFill label="Loading insights…" />}>
+      <InsightsContent sp={sp} />
+    </Suspense>
+  );
+}
+
+async function InsightsContent({
+  sp,
+}: {
+  sp: Record<string, string | string[] | undefined>;
+}) {
   const projectId = await getCurrentProjectId();
 
   // Kicked off here, not awaited until the render below, deliberately — this
@@ -250,7 +280,7 @@ export default async function InsightsPage({
 
       <section className="mt-3 flex flex-wrap gap-1.5">
         {(["visibility", "sov", "sentiment", "position"] as MetricKey[]).map((m) => (
-          <a
+          <Link
             key={m}
             href={metricHref(m)}
             className="rounded-full border px-3 py-1.5 font-sans text-[12px] font-medium capitalize no-underline"
@@ -261,7 +291,7 @@ export default async function InsightsPage({
             }}
           >
             {m === "sov" ? "Share of voice" : m}
-          </a>
+          </Link>
         ))}
       </section>
 
@@ -272,7 +302,7 @@ export default async function InsightsPage({
           action={
             <div className="flex items-center gap-1 rounded-[8px] border border-[var(--border)] bg-[var(--card)] p-0.5">
               {(["day", "week", "month"] as Bucket[]).map((b) => (
-                <a
+                <Link
                   key={b}
                   href={bucketHref(b)}
                   className="rounded-[6px] px-2.5 py-1 font-sans text-[11px] font-medium capitalize no-underline"
@@ -282,7 +312,7 @@ export default async function InsightsPage({
                   }}
                 >
                   {b}
-                </a>
+                </Link>
               ))}
             </div>
           }
