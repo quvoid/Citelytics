@@ -50,13 +50,21 @@ export default async function RootLayout({
         <NavigationProgressBar />
         <HapticFeedback />
         <HoverSidebar data={data} logoDomains={[...logoDomains()]} />
-        {/* pl-[72px] clears the collapsed rail's fixed width — the rail is
-            `position: fixed` and overlays (rather than pushes) the content
-            column when it expands on hover, so this padding never changes. */}
-        <div className="min-w-0 pt-8 pl-[72px]">
-          <div className="mx-auto min-w-0 max-w-[1240px]">
-            <main className="min-w-0 px-8">{children}</main>
-            <footer className="mt-14 flex justify-between px-8 pt-5 pb-10 font-sans text-[12.5px] text-[var(--faint)]">
+        {/* The Trendtrack-style shell: a flush-left dark rail, then the
+            ENTIRE rest of the app sits in one large rounded card floating
+            on the page's warm-gray canvas (--bg), with a visible gap on
+            every side — not just Insights getting its own card, the whole
+            app shaped this way. pl-[88px] clears the 72px collapsed rail
+            plus a real gap (the rail is `position: fixed` and overlays
+            rather than pushes the content column when it expands on hover,
+            so this padding never changes on hover). */}
+        <div className="min-w-0 py-4 pr-4 pl-[88px]">
+          <div
+            className="mx-auto min-w-0 max-w-[1280px] rounded-[var(--radius-4xl)] bg-[var(--card)]"
+            style={{ boxShadow: "var(--shadow-card)" }}
+          >
+            <main className="min-w-0 px-8 pt-8">{children}</main>
+            <footer className="mt-14 flex justify-between px-8 pt-5 pb-8 font-sans text-[12.5px] text-[var(--faint)]">
               <span>Citelytics · real citations from Gemini &amp; ChatGPT</span>
               <span>Filled dots mark real fetches; hollow dots mark simulated demo records.</span>
             </footer>
