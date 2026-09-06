@@ -78,29 +78,34 @@ function headline(rank: number | null, total: number, enough: boolean): { title:
 }
 
 /** The page itself does no DB work — it just unwraps `searchParams` (free)
- *  and hands off to `InsightsContent` inside a `Suspense` boundary. That's
- *  what makes "change 7d to 30d" and "click a nav link into here" show a
- *  local `CircleSpinnerFill` in the content column instead of a blank page:
- *  the boundary is keyed on the serialized search params, so React tears
- *  down and re-suspends the content subtree on every filter change while
- *  everything outside it (root layout, BottomNav) never re-renders — it
- *  isn't part of this subtree to begin with. Same in-page-Suspense pattern
- *  already proven on /prompts/[id] (see EngineSourcesSection there), just
- *  applied to the whole content area instead of one nested section. */
+ *  and hands off to `InsightsContent` inside a `Suspense` boundary.
+ *
+ *  Deliberately NOT keyed on the search params. A keyed Suspense forces
+ *  React to unmount the whole subtree and show `fallback` again on every
+ *  single filter click — which is indistinguishable, visually, from a full
+ *  page reload (everything blanks to a spinner, then the whole card
+ *  repopulates at once). That was tried and is exactly the bug report:
+ *  "clicking Week reloads the whole page."
+ *
+ *  Without a key, a same-route Link navigation (clicking a preset/bucket/
+ *  metric link changes only the query string) is a soft navigation: Next
+ *  fetches the new RSC payload in the background while the CURRENT content
+ *  stays fully visible, then swaps it in atomically once ready — no
+ *  fallback flash, nothing blanks. `NavigationProgressBar` (mounted in the
+ *  root layout) is the only loading affordance during that window, which is
+ *  the intended "smooth, doesn't feel like a reload" behavior. The fallback
+ *  below still matters for a genuinely first mount of this boundary (a hard
+ *  refresh or a fresh navigation from another page), where there IS no
+ *  prior content to keep showing. */
 export default async function InsightsPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sp = await searchParams;
-  const key = new URLSearchParams(
-    Object.entries(sp).flatMap(([k, v]) =>
-      v === undefined ? [] : [[k, Array.isArray(v) ? v.join(",") : v] as [string, string]],
-    ),
-  ).toString();
 
   return (
-    <Suspense key={key} fallback={<CircleSpinnerFill label="Loading insights…" />}>
+    <Suspense fallback={<CircleSpinnerFill label="Loading insights…" />}>
       <InsightsContent sp={sp} />
     </Suspense>
   );
