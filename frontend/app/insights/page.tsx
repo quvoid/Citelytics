@@ -249,6 +249,14 @@ async function InsightsContent({
         <p className="mt-1.5 font-sans text-[14px] text-[var(--muted-2)]">{sub}</p>
       </section>
 
+      {/* One big rounded card holding everything below the headline — the
+          reference the user shared (a dark rail + a single curved white
+          content panel floating on the page's warm-gray background), rather
+          than every section being its own separate card on bare background. */}
+      <div
+        className="rounded-[var(--radius-4xl)] bg-[var(--card)] px-6 py-6 sm:px-8 sm:py-8"
+        style={{ boxShadow: "var(--shadow-card)" }}
+      >
       <FilterBar
         basePath="/insights"
         state={state}
@@ -363,7 +371,10 @@ async function InsightsContent({
             View all →
           </Link>
         </div>
-        <div className="mt-2 rounded-[var(--radius-xl)] bg-[var(--card)] px-4" style={{ boxShadow: "var(--shadow-card)" }}>
+        <div
+          className="mt-2 rounded-[var(--radius-xl)] px-4"
+          style={{ background: "var(--bg)" }}
+        >
           {recentChats.rows.map((c) => (
             <ChatRow
               key={c.id}
@@ -379,6 +390,7 @@ async function InsightsContent({
           )}
         </div>
       </section>
+      </div>
     </div>
   );
 }
