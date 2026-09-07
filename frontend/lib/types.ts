@@ -31,6 +31,16 @@ export type ContentBrief = {
   analysed_at: string | null;
 };
 
+/** A category a prompt can be manually filed under — chosen by the user at
+ *  creation time, exactly like Peec, never guessed by a classifier. See
+ *  supabase/migrations/0010_metrics_foundation.sql for the table, and
+ *  lib/actions/prompts.ts for where a prompt gets linked to one. */
+export type Topic = {
+  id: string;
+  project_id: string;
+  name: string;
+};
+
 export type Prompt = {
   id: string;
   project_id: string;
@@ -39,7 +49,11 @@ export type Prompt = {
   prompt_type: "citation" | "perception";
   /** ISO 3166-1 alpha-2, or null to inherit the project's default_country. */
   country: string | null;
+  /** The category name, kept in sync with topic_id's row so every existing
+   *  free-text consumer (rollups, Chats log) keeps working unmodified. Set
+   *  once, manually, when the prompt is created — never auto-assigned. */
   topic: string | null;
+  topic_id: string | null;
   intent: "Commercial" | "Informational" | "Transactional" | "Navigational" | null;
   is_branded: boolean;
   /** Raw 0-100 Google Trends interest, set only from a "Track this" research
@@ -172,22 +186,6 @@ export type BrandAttribute = {
   raw_response_id: string;
   tracked_url_id: string;
   attribute: string;
-};
-
-export type PromptCandidate = {
-  prompt_text: string;
-  topic: string;
-  search_query: string;
-  intent: string;
-  relevance_note: string;
-  /** Real Google Trends relative interest (0-100), scoped to the researched
-   * market — never AI-prompt traffic, no such data exists anywhere.
-   * null = unknown. */
-  search_interest: number | null;
-};
-
-export type PromptResearchResponse = {
-  candidates: PromptCandidate[];
 };
 
 // FetchTriggerResponse / FetchTaskStatus / FetchBatchStatusResponse used to

@@ -13,16 +13,17 @@ BEAT_SCHEDULE = {
         "task": "tasks.enqueue_all_projects_fetch",
         "schedule": crontab(hour=FETCH_SCHEDULE_HOUR_UTC, minute=0),
     },
-    # Drips the per-brand sentiment backfill a few answers at a time.
+    # Backfills per-brand sentiment for any answer not yet scored by the
+    # current CLASSIFIER_VERSION. Local model, no quota — runs each
+    # project's whole backlog to completion every night rather than
+    # dripping it, so a version bump or a newly-tracked competitor is fully
+    # caught up by the next morning. only_missing keeps a normal night a
+    # cheap no-op once the corpus is current.
     #
-    # Gemini's free tier allows ~20 classifier calls per DAY, so a corpus of
-    # any size cannot be re-scored in one run — it has to accumulate. This is
-    # resumable by construction (only_missing skips anything already scored by
-    # the current CLASSIFIER_VERSION), so it simply converges over several
-    # days and then becomes a no-op until the version is bumped.
-    #
-    # Deliberately several hours after the fetch job: both share the same
-    # Gemini quota, and the live fetch must always win that race.
+    # Still scheduled after the fetch job (not concurrently) purely so a
+    # night's freshly-fetched answers get classified live during the fetch
+    # itself first, and this backfill only ever mops up what's left —
+    # nothing here shares a quota with the fetch anymore.
     "daily-reclassify-backfill": {
         "task": "tasks.reclassify_all_projects_task",
         "schedule": crontab(hour=(FETCH_SCHEDULE_HOUR_UTC + 6) % 24, minute=30),

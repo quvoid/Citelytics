@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { PromptComposer } from "@/components/prompt-composer";
-import { PromptResearchPanel } from "@/components/prompt-research-panel";
 import { PromptsTable, type PromptRow } from "@/components/prompts-table";
 import { TagManager } from "@/components/tag-manager";
 import { TopicRollupTable, type TopicRow } from "@/components/topic-rollup-table";
@@ -14,6 +13,7 @@ import {
   getPrompts,
   getRawResponses,
   getTags,
+  getTopics,
   getTrackedUrls,
 } from "@/lib/queries";
 import type { Tag } from "@/lib/types";
@@ -49,13 +49,14 @@ export default async function PromptsPage({
   const country = COUNTRIES.some((c) => c.code === countryParam) ? countryParam : undefined;
 
   const projectId = await getCurrentProjectId();
-  const [allPrompts, citations, rawResponses, ownBrand, project, tags] = await Promise.all([
+  const [allPrompts, citations, rawResponses, ownBrand, project, tags, topics] = await Promise.all([
     getPrompts("citation", projectId),
     getCitations(),
     getRawResponses(),
     getTrackedUrls({ ownOnly: true }),
     getProject(projectId),
     getTags(projectId),
+    getTopics(projectId),
   ]);
   const defaultCountry = project?.default_country ?? "IN";
 
@@ -257,8 +258,8 @@ export default async function PromptsPage({
         fieldLabel="New prompt"
         placeholder="e.g. is almond oil good for hair growth"
         defaultCountry={defaultCountry}
+        topics={topics}
       />
-      <PromptResearchPanel projectId={projectId} defaultCountry={defaultCountry} />
       <TagManager tags={tags} />
 
       <section className="flex flex-wrap items-center gap-1.5 pt-4">
@@ -381,7 +382,7 @@ export default async function PromptsPage({
       ) : isTagView ? (
         <TopicRollupTable topics={tagRows} compare={compare} />
       ) : (
-        <PromptsTable prompts={rows} allTags={tags} compare={compare} />
+        <PromptsTable prompts={rows} compare={compare} />
       )}
     </div>
   );

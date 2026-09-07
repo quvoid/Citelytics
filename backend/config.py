@@ -24,12 +24,6 @@ GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.6-flash")
 # countries.py and store.resolve_country.
 DEFAULT_COUNTRY = os.environ.get("ENGINE_LOCALE_COUNTRY", "IN")
 
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
-# GPT-OSS 120B is Groq's currently-recommended general model (llama-3.3-70b
-# and llama-3.1-8b are being retired). Used only for prompt-research
-# brainstorming, never for citation tracking — Groq has no web search.
-GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
-
 KIE_API_KEY = os.environ.get("kIE_API", "")
 # Both real, non-free-tier engines run through kie.ai now — see
 # clients/kie_chatgpt_client.py and clients/kie_gemini_client.py.

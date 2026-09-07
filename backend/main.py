@@ -18,21 +18,16 @@ from models import (
     PerceptionFetchResponse,
     ProjectCreate,
     ProjectOut,
-    PromptCandidateOut,
     PromptCreate,
     PromptOut,
-    PromptResearchRequest,
-    PromptResearchResponse,
     PromptUpdate,
     ReclassifyResponse,
     TrackedUrlCreate,
     TrackedUrlOut,
 )
-import store
 from countries import COUNTRIES
 from perception import run_perception_fetch
 from reclassify import reclassify_project
-from prompt_research import research_prompts
 from tasks import create_fetch_batch
 
 app = FastAPI(title="Citelytics Backend", version="0.2.0")
@@ -207,13 +202,13 @@ async def trigger_reclassify(
     Run this after adding a competitor: it gives the new brand real history
     from answers already on disk, instead of leaving it at a fake 0% for every
     day before you started tracking it. Also fills per-brand sentiment for
-    rows written before migration 0010.
+    rows written before migration 0010, or scored under an older
+    CLASSIFIER_VERSION (the retired Gemini-based classifier).
 
-    Gemini's free tier allows only ~20 classifier calls per DAY, so one call
-    scores a capped batch and reports how many remain; the scheduled job in
-    celery_beat_schedule.py finishes the rest over the following days. Pass
-    ?only_missing=false to force a full re-score after a CLASSIFIER_VERSION
-    bump, and ?limit=N to override the per-run cap."""
+    Local model, no quota — a call with no `limit` runs the whole project's
+    backlog to completion in one request. Pass ?only_missing=false to force a
+    full re-score after a CLASSIFIER_VERSION bump, and ?limit=N to cap a
+    single run (e.g. for testing) rather than process everything."""
     try:
         result = await asyncio.to_thread(reclassify_project, project_id, only_missing, limit)
     except Exception as exc:
@@ -245,32 +240,3 @@ async def analyze_content_brief(brief_id: str) -> ContentBriefOut:
     except RuntimeError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
     return ContentBriefOut(**row)
-
-
-# --- Prompt research (Groq brainstorming + real Google Trends interest) ----
-
-@app.post("/api/projects/{project_id}/prompt-research", response_model=PromptResearchResponse)
-async def prompt_research(project_id: str, body: PromptResearchRequest) -> PromptResearchResponse:
-    sb = get_supabase()
-    own = (
-        sb.table("tracked_urls")
-        .select("name, url")
-        .eq("project_id", project_id)
-        .eq("is_competitor", False)
-        .limit(1)
-        .execute()
-        .data
-    )
-    brand_name = own[0]["name"] if own else "the brand"
-    domain = own[0]["url"] if own else ""
-    # Research the market the caller asked about, defaulting to the project's
-    # home market — otherwise Trends scores and the suggested phrasing come
-    # back for a country the user isn't tracking.
-    country = body.country or store.project_default_country(project_id)
-
-    try:
-        candidates = await research_prompts(body.seed, brand_name, domain, country)
-    except Exception as exc:
-        raise HTTPException(status_code=502, detail=f"Prompt research failed: {exc}") from exc
-
-    return PromptResearchResponse(candidates=[PromptCandidateOut(**c) for c in candidates])

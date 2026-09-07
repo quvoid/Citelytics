@@ -2,15 +2,16 @@
 
 This exists because every answer's full text is stored in
 `raw_responses.answer_text`. That makes re-classification a purely offline
-operation: no engine call, no grounding quota, no cost beyond a cheap Gemini
-Flash structured-output call per answer. It is the only way to get history for
-something you decided to measure after the fact.
+operation. Since round 4 (local sentiment, see classifier.py/local_sentiment.py)
+it costs nothing but CPU time — no API call, no quota, no per-day budget.
 
 Three jobs, one implementation:
 
   1. **Per-brand sentiment backfill.** `answer_brand_mentions.sentiment_score`
-     was added in migration 0010; every row written before it is null. This
-     fills them.
+     was added in migration 0010; every row written before it is null. Rows
+     scored under an older CLASSIFIER_VERSION (the Gemini-based classifier
+     that preceded the local model) are also missing a real score. This
+     fills both.
   2. **Newly-tracked competitors.** Add a competitor today and it has zero
      mention rows across all prior history, while the visibility denominator
      still covers that history — so it renders 0% forever and looks like real
@@ -21,61 +22,28 @@ Three jobs, one implementation:
 
 Idempotent: upserts on (raw_response_id, tracked_url_id), so re-running is
 always safe and never duplicates a row.
+
+No daily budget or rate limiting here anymore — that machinery existed only
+because the old Gemini-based classifier shared a ~20/day free-tier quota with
+the live fetch pipeline. classify_answer is 100% local now (no network call
+of any kind), so a full backfill runs to completion in one pass, gated only
+by `limit` if a caller wants to cap it for some other reason (e.g. testing).
 """
 
 import asyncio
-import os
 from typing import Any
 
 import store
-from classifier import CLASSIFIER_VERSION, QuotaExhaustedError, classify_answer
+from classifier import CLASSIFIER_VERSION, classify_answer
 from db import get_supabase
-
-# Gemini's free tier binding limit is per DAY, not per minute: currently 20
-# generateContent requests/day/model (quotaId
-# GenerateRequestsPerDayPerProjectPerModel-FreeTier). Every older Flash model
-# has been retired, so there is no higher-quota free model to fall back to.
-#
-# That shapes this whole module. The job cannot run to completion in one go —
-# it drips, resumably, until the corpus is scored. Two consequences:
-#   * a per-run cap, so one run cannot burn the day's allowance and leave
-#     nothing for the live fetch pipeline, which shares the same quota;
-#   * hard abort on 429 rather than retry, because a DAILY quota cannot
-#     recover within a run. The first version retried three times per answer
-#     and spent 334 seconds discovering that.
-_DAILY_BUDGET = int(os.getenv("GEMINI_CLASSIFY_DAILY_BUDGET", "16"))
-_REQUESTS_PER_MINUTE = int(os.getenv("GEMINI_CLASSIFY_RPM", "12"))
-_CONCURRENCY = 2
-
-
-class _RateLimiter:
-    """Spaces request STARTS at a fixed interval across all workers.
-
-    Reserving each slot under a lock (rather than sleeping then firing) means
-    N concurrent workers can't all wake at the same instant and burst."""
-
-    def __init__(self, per_minute: int) -> None:
-        self._interval = 60.0 / max(1, per_minute)
-        self._lock = asyncio.Lock()
-        self._next = 0.0
-
-    async def acquire(self) -> None:
-        loop = asyncio.get_running_loop()
-        async with self._lock:
-            now = loop.time()
-            start = max(now, self._next)
-            self._next = start + self._interval
-        delay = start - now
-        if delay > 0:
-            await asyncio.sleep(delay)
 
 
 def _load_responses(project_id: str, only_missing: bool) -> list[dict[str, Any]]:
     """Every usable stored answer for a project, newest first.
 
     `only_missing` restricts to answers whose mention rows were scored by an
-    older classifier (or not at all), which is what makes a re-run after a
-    partial failure cheap."""
+    older classifier (or not at all) — the normal mode, since re-scoring
+    already-current rows is wasted work even without a quota to worry about."""
     sb = get_supabase()
     prompt_rows = (
         sb.table("prompts").select("id, query_text, project_id").eq("project_id", project_id).execute().data
@@ -135,20 +103,13 @@ async def _run(project_id: str, only_missing: bool, limit: int | None) -> dict[s
             "message": "nothing to re-score — every stored answer is current",
         }
 
-    budget = _DAILY_BUDGET if limit is None else limit
-    batch = pending[:budget]
+    batch = pending if limit is None else pending[:limit]
 
-    # Sequential on purpose. With a daily budget in the teens there is nothing
-    # to parallelise, and a straight loop makes "stop the moment quota runs
-    # out" trivial instead of a cancellation dance across gathered tasks.
-    limiter = _RateLimiter(_REQUESTS_PER_MINUTE)
     mention_rows: list[dict[str, Any]] = []
     processed = 0
     soft_failures = 0
-    quota_hit = False
 
     for row in batch:
-        await limiter.acquire()
         try:
             classification = await classify_answer(
                 query_text=row["query_text"],
@@ -156,20 +117,15 @@ async def _run(project_id: str, only_missing: bool, limit: int | None) -> dict[s
                 brand_names=names,
                 own_brand_name=own_name,
                 known_topics=known_topics,
-                raise_on_quota=True,
                 aliases=aliases,
             )
-        except QuotaExhaustedError:
-            # A DAILY quota cannot recover inside this run. Stop immediately
-            # and keep whatever was scored — the first version retried three
-            # times per answer and spent 334s learning this the hard way.
-            quota_hit = True
-            break
+        except Exception:  # noqa: BLE001 — one bad row (e.g. a local-model
+            # inference hiccup) must never abort the whole backfill; skip it
+            # and let a later re-run (only_missing=True) retry it.
+            soft_failures += 1
+            continue
 
         if classification is None:
-            # Non-quota failure (malformed output, timeout). Skip rather than
-            # write zeros — a failed classification must never be recorded as
-            # "this brand was not mentioned". only_missing retries it later.
             soft_failures += 1
             continue
 
@@ -203,30 +159,24 @@ async def _run(project_id: str, only_missing: bool, limit: int | None) -> dict[s
             ).execute()
             written += len(chunk)
 
-    remaining = len(pending) - processed
+    remaining = len(pending) - processed - soft_failures
 
-    if quota_hit:
+    if remaining > 0:
         message = (
-            f"Stopped early: Gemini's daily free-tier quota is exhausted. "
-            f"Scored {processed} answer(s); {remaining} still to go. "
-            f"The quota resets daily — the scheduled job will continue tomorrow."
-        )
-    elif remaining:
-        message = (
-            f"Scored {processed} answer(s) within today's budget of {budget}; "
-            f"{remaining} remaining. Continues on the next scheduled run."
+            f"Scored {processed} answer(s) within this run's limit of {limit}; "
+            f"{remaining} remaining — run again (or omit `limit`) to finish."
         )
     else:
         message = f"Complete — all {processed} answer(s) scored."
 
     if soft_failures:
-        message += f" ({soft_failures} answer(s) failed for non-quota reasons and will be retried.)"
+        message += f" ({soft_failures} answer(s) failed and will be retried on the next run.)"
 
     return {
         "processed": processed,
         "failed": soft_failures,
         "rows_written": written,
-        "remaining": remaining,
+        "remaining": max(remaining, 0),
         "message": message,
     }
 
@@ -236,24 +186,19 @@ def reclassify_project(
 ) -> dict[str, Any]:
     """Synchronous entrypoint for the FastAPI route and the Celery job.
 
-    `only_missing` defaults to True: the normal mode is resuming an unfinished
-    drip, and re-scoring already-current answers would waste a daily quota
-    that only allows ~16 of them. Pass False to force a full re-score after a
-    CLASSIFIER_VERSION bump."""
+    `only_missing` defaults to True: the normal mode is filling in what's
+    missing (new competitor, older CLASSIFIER_VERSION), not re-scoring
+    everything already current. Pass False to force a full re-score after a
+    CLASSIFIER_VERSION bump. `limit` is optional now (no quota to budget
+    against) — omit it to run the whole project's backlog in one call."""
     return asyncio.run(_run(project_id, only_missing, limit))
 
 
 def reclassify_all_projects() -> dict[str, Any]:
-    """Celery Beat entrypoint. Walks every project, spending the daily budget
-    across them until Gemini's quota runs out."""
-    spent = 0
+    """Celery Beat entrypoint. Walks every project, backfilling whatever
+    each one is missing. No cross-project budget anymore — each project's
+    backlog runs to completion."""
     out: dict[str, Any] = {}
     for project_id in store.list_project_ids():
-        left = _DAILY_BUDGET - spent
-        if left <= 0:
-            out[project_id] = {"processed": 0, "remaining": None, "message": "daily budget spent"}
-            continue
-        res = reclassify_project(project_id, only_missing=True, limit=left)
-        spent += res.get("processed", 0) + res.get("failed", 0)
-        out[project_id] = res
+        out[project_id] = reclassify_project(project_id, only_missing=True)
     return out

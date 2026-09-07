@@ -4,7 +4,7 @@ from typing import Any
 from celery.exceptions import MaxRetriesExceededError
 
 import store
-from brand_check import brand_keywords_for, text_mentions_brand
+from brand_check import brand_keywords_for
 from celery_app import celery_app
 from classifier import classify_answer
 from clients import ACTIVE_ENGINE_NAMES, RateLimitedError, get_engine_client
@@ -31,27 +31,6 @@ class FetchOutcome:
         self.citation_rows = citation_rows or []
 
 
-def _fallback_classification(
-    answer_text: str | None, own: dict | None, brand_keywords: list[str]
-) -> dict[str, Any]:
-    """Used when the classifier call itself fails — commonly a rate limit,
-    since it shares Gemini's quota with the grounding call. Falls back to a
-    plain text match so brand_mentioned_in_answer is never wrong just
-    because the richer classification couldn't run; sentiment/position/topic
-    are left unset rather than guessed."""
-    mentioned = own is not None and text_mentions_brand(answer_text, brand_keywords)
-    return {
-        "mentioned_brands": [own["name"]] if mentioned and own else [],
-        "own_brand_sentiment": None,
-        "brand_sentiment": {},
-        "topic": None,
-        "intent": None,
-        "is_branded_query": False,
-        "product_tags": [],
-        "other_brands_mentioned": [],
-    }
-
-
 async def _run_fetch(
     prompt: dict, engine_name: str, tracked: list[dict], country: str
 ) -> FetchOutcome:
@@ -65,6 +44,11 @@ async def _run_fetch(
     own = next((t for t in tracked if not t["is_competitor"]), None)
     brand_keywords = brand_keywords_for(own)
 
+    # classify_answer is fully local now (round 4) and, per its own
+    # docstring, never returns None — there is no remaining failure mode
+    # that isn't already handled inside it (no answer text, no brand
+    # mentioned). The old None-guard + text-match fallback this replaced
+    # only existed for a Gemini rate-limit path that no longer exists.
     classification = await classify_answer(
         query_text=prompt["query_text"],
         answer_text=result.answer_text,
@@ -73,8 +57,6 @@ async def _run_fetch(
         known_topics=store.get_topic_names(prompt["project_id"]),
         aliases={t["name"]: t.get("aliases") or [] for t in tracked},
     )
-    if classification is None:
-        classification = _fallback_classification(result.answer_text, own, brand_keywords)
 
     citation_rows = await enrich_citations(result.citations, brand_keywords)
     await ensure_domain_types({c.domain for c in result.citations if not c.is_simulated})
@@ -115,10 +97,18 @@ def fetch_citations_task(self, batch_task_id: str, prompt_id: str, engine_name: 
             tracked=tracked,
         )
 
-        if not prompt.get("topic") and outcome.classification.get("topic"):
-            store.set_prompt_classification(
-                prompt_id, prompt["project_id"], outcome.classification
-            )
+        # Intent/branding are cheap deterministic facts about the query text,
+        # safe to recompute on every fetch. Topic/category is NOT set here —
+        # it's the user's manual call at prompt-creation time now (see
+        # lib/actions/prompts.ts), never auto-assigned by a fetch.
+        store.set_prompt_classification(prompt_id, outcome.classification)
+
+        # Auto-match tagging: any existing tag whose name shows up in this
+        # prompt's text or this fresh answer gets linked automatically — the
+        # only way a prompt is ever tagged now (see store.auto_link_tags).
+        store.auto_link_tags(
+            prompt["project_id"], prompt_id, [prompt["query_text"], outcome.result.answer_text]
+        )
 
         store.update_batch_task_status(
             batch_task_id, "success", citation_count=len(outcome.citation_rows)

@@ -5,6 +5,7 @@ orchestration (call engine -> classify -> persist) rather than a wall of
 inserts. Everything here is synchronous — it runs inside the Celery worker,
 not the async engine-call path."""
 
+import re
 from functools import lru_cache
 from typing import Any
 
@@ -302,47 +303,63 @@ def get_topic_names(project_id: str) -> list[str]:
     return [r["name"] for r in rows]
 
 
-def resolve_topic_id(project_id: str, name: str | None) -> str | None:
-    """Finds or creates the topic row for a classifier-produced label.
-    Created rows stay flagged is_ai_suggested until a human touches them, so
-    the UI can distinguish a label nobody has reviewed from one you chose."""
-    clean = (name or "").strip()
-    if not clean:
-        return None
-    sb = get_supabase()
-    existing = (
-        sb.table("topics")
-        .select("id")
-        .eq("project_id", project_id)
-        .eq("name", clean)
-        .limit(1)
-        .execute()
-        .data
-    )
-    if existing:
-        return existing[0]["id"]
-    return (
-        sb.table("topics")
-        .insert({"project_id": project_id, "name": clean, "is_ai_suggested": True})
-        .execute()
-        .data[0]["id"]
-    )
-
-
-def set_prompt_classification(
-    prompt_id: str, project_id: str, classification: dict[str, Any]
-) -> None:
-    """Topic/intent/branding are properties of the prompt itself, so they're
-    only written once — the first fetch that manages to classify it wins.
-    (Note: this used to also write a `category` here — dropped in favor of
-    user-managed tags, see supabase/migrations/0009_tags.sql.)"""
+def set_prompt_classification(prompt_id: str, classification: dict[str, Any]) -> None:
+    """Intent/branding are cheap, deterministic facts about the query text
+    itself (not a chosen category), so they're safe to recompute and
+    overwrite on every fetch — unlike topic, which is entirely the user's
+    call now: chosen once, manually, from the topics table when the prompt
+    is created (see lib/actions/prompts.ts and the new `topics` picker on
+    the frontend) and never touched by this function or by classify_answer's
+    own `_logic_topic` guess, which nothing in the live fetch pipeline reads
+    anymore."""
     get_supabase().table("prompts").update(
         {
-            # `topic` is kept as the classifier's raw suggestion for one
-            # release; topic_id is the real, user-manageable link (0010).
-            "topic": classification["topic"],
-            "topic_id": resolve_topic_id(project_id, classification["topic"]),
             "intent": classification["intent"],
             "is_branded": classification["is_branded_query"],
         }
     ).eq("id", prompt_id).execute()
+
+
+_TAG_WORD_BOUNDARY = r"(?<!\w){}(?!\w)"
+
+
+def auto_link_tags(project_id: str, prompt_id: str, texts: list[str]) -> None:
+    """Auto-match tagging: a tag applies itself to a prompt the moment its
+    name shows up as a whole word (case-insensitive) anywhere in that
+    prompt's own text or one of its answers. This is the ONLY way a prompt
+    ever gets tagged now — there is no manual per-prompt tag-assignment UI
+    any more (see components/tag-picker.tsx on the frontend, which now only
+    shows what auto-matched and lets a user remove a bad match, not add
+    one). Called after every fetch with [query_text, answer_text] so a
+    brand-new answer can retroactively tag a prompt it didn't before.
+
+    Idempotent (upsert on prompt_tags' (prompt_id, tag_id) unique pair), so
+    calling this on every single fetch is cheap and safe."""
+    clean_texts = [t for t in texts if t and t.strip()]
+    if not clean_texts:
+        return
+    tags = (
+        get_supabase()
+        .table("tags")
+        .select("id, name")
+        .eq("project_id", project_id)
+        .execute()
+        .data
+        or []
+    )
+    if not tags:
+        return
+
+    matches = []
+    for tag in tags:
+        name = (tag["name"] or "").strip()
+        if not name:
+            continue
+        pattern = re.compile(_TAG_WORD_BOUNDARY.format(re.escape(name)), re.IGNORECASE)
+        if any(pattern.search(t) for t in clean_texts):
+            matches.append({"prompt_id": prompt_id, "tag_id": tag["id"]})
+
+    if matches:
+        get_supabase().table("prompt_tags").upsert(
+            matches, on_conflict="prompt_id,tag_id", ignore_duplicates=True
+        ).execute()

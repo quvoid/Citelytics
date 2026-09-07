@@ -84,11 +84,9 @@ function ToggleButton({ id, active }: { id: string; active: boolean }) {
  */
 export function PromptsTable({
   prompts,
-  allTags,
   compare = false,
 }: {
   prompts: PromptRow[];
-  allTags: Tag[];
   compare?: boolean;
 }) {
   return (
@@ -204,9 +202,9 @@ export function PromptsTable({
                       )}
                     </div>
                   </PromptDetailModal>
-                  {(p.tags.length > 0 || allTags.length > 0) && (
+                  {p.tags.length > 0 && (
                     <div className="mt-1.5">
-                      <TagPicker promptId={p.id} assigned={p.tags} allTags={allTags} />
+                      <TagPicker promptId={p.id} assigned={p.tags} />
                     </div>
                   )}
                 </td>

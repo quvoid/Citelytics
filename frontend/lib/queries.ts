@@ -14,6 +14,7 @@ import type {
   ChatRow,
   RawResponse,
   Tag,
+  Topic,
   TrackedUrl,
   UnmatchedBrandMention,
 } from "@/lib/types";
@@ -30,11 +31,14 @@ import type {
 // search_volume/search_volume_checked_at added by migration 0014, live and
 // verified — see backend fetch for its meaning (raw 0-100 Google Trends
 // interest, not the 1-5 "relative" bucket shown in the UI).
+// topic_id added by migration 0010, confirmed live (curl probe: 200) — the
+// manual category picker (prompt-composer.tsx) writes it directly now.
 const PROMPT_COLS =
-  "id, project_id, query_text, active, prompt_type, country, topic, intent, is_branded, search_volume, search_volume_checked_at";
+  "id, project_id, query_text, active, prompt_type, country, topic, topic_id, intent, is_branded, search_volume, search_volume_checked_at";
 const PRODUCT_TAG_COLS = "id, raw_response_id, tag";
 // group_name added 2026-08-28 — migration 0017 confirmed live (curl probe: 200).
 const TAG_COLS = "id, project_id, name, group_name";
+const TOPIC_COLS = "id, project_id, name";
 const CITATION_COLS =
   "id, prompt_id, engine_id, country, url, domain, is_simulated, raw_response_id, mentions_brand, content_type, position, fetched_at";
 const RAW_RESPONSE_COLS =
@@ -289,6 +293,22 @@ export async function getAnswerProductTags(rawResponseIds: string[]): Promise<Pr
     .select(PRODUCT_TAG_COLS)
     .in("raw_response_id", rawResponseIds)
     .returns<ProductTag[]>();
+  return data ?? [];
+}
+
+/** Every category for the current project — what the prompt composer's
+ * Category dropdown offers, plus "+ add new". Manually created only: there
+ * is no classifier writing to this table any more (see backend/store.py's
+ * set_prompt_classification). */
+export async function getTopics(projectId?: string): Promise<Topic[]> {
+  const sb = createAnonServerClient();
+  const pid = projectId ?? (await getCurrentProjectId());
+  const { data } = await sb
+    .from("topics")
+    .select(TOPIC_COLS)
+    .eq("project_id", pid)
+    .order("name")
+    .returns<Topic[]>();
   return data ?? [];
 }
 

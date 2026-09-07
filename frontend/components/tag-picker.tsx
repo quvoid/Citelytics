@@ -1,27 +1,25 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { addTagToPrompt, removeTagFromPrompt } from "@/lib/actions/tags";
+import { useTransition } from "react";
+import { removeTagFromPrompt } from "@/lib/actions/tags";
 import { colorForTag } from "@/lib/tag-colors";
 import type { Tag } from "@/lib/types";
 
-/** Per-prompt tag assignment: pills for what's already applied (click ✕ to
- * remove), plus a small dropdown of the project's other tags to add one.
- * Tag CREATION lives in TagManager, not here — this only assigns tags that
- * already exist, matching SEMrush's split between "manage tags" and "apply
- * tags to this keyword". */
-export function TagPicker({
-  promptId,
-  assigned,
-  allTags,
-}: {
-  promptId: string;
-  assigned: Tag[];
-  allTags: Tag[];
-}) {
+/** Shows what auto-matched to this prompt (click ✕ to remove a bad match) —
+ * there is no manual "add a tag" control here any more. A tag applies
+ * itself the moment its name shows up as a whole word in the prompt's text
+ * or one of its answers (lib/actions/tags.ts's createTag, lib/actions/
+ * prompts.ts's addPrompt, and backend/store.py's auto_link_tags all run the
+ * same match on their own trigger). Removing one here is a manual override;
+ * it may get re-applied if a future tag/prompt creation re-scans this exact
+ * pair, same as any computed value can. Tag CREATION still lives in
+ * TagManager, not here. */
+export function TagPicker({ promptId, assigned }: { promptId: string; assigned: Tag[] }) {
   const [isPending, startTransition] = useTransition();
-  const assignedIds = new Set(assigned.map((t) => t.id));
-  const available = allTags.filter((t) => !assignedIds.has(t.id));
+
+  if (!assigned.length) {
+    return <span className="font-sans text-[11px] text-[var(--faint)] italic">no tag matched yet</span>;
+  }
 
   return (
     <div className="flex flex-wrap items-center gap-1.5">
@@ -47,51 +45,13 @@ export function TagPicker({
               className="opacity-70 hover:opacity-100"
               style={{ color: tc.fg }}
               aria-label={`Remove ${t.name} tag`}
+              title="Remove this auto-matched tag"
             >
               ✕
             </button>
           </span>
         );
       })}
-      {available.length > 0 && (
-        <TagAddSelect promptId={promptId} available={available} pending={isPending} startTransition={startTransition} />
-      )}
     </div>
-  );
-}
-
-function TagAddSelect({
-  promptId,
-  available,
-  pending,
-  startTransition,
-}: {
-  promptId: string;
-  available: Tag[];
-  pending: boolean;
-  startTransition: (fn: () => void | Promise<void>) => void;
-}) {
-  const [value, setValue] = useState("");
-  return (
-    <select
-      aria-label="Add a tag"
-      value={value}
-      disabled={pending}
-      onChange={(e) => {
-        e.preventDefault();
-        const tagId = e.target.value;
-        if (!tagId) return;
-        startTransition(() => addTagToPrompt(promptId, tagId));
-        setValue("");
-      }}
-      className="border border-dashed border-[var(--rule)] bg-transparent px-1 py-0.5 text-[11px] text-[var(--faint)] outline-none"
-    >
-      <option value="">+ tag</option>
-      {available.map((t) => (
-        <option key={t.id} value={t.id}>
-          {t.name}
-        </option>
-      ))}
-    </select>
   );
 }

@@ -3,22 +3,68 @@
 import { revalidatePath } from "next/cache";
 import { createAnonServerClient } from "@/lib/supabase/server";
 import { getCurrentProjectId } from "@/lib/current-project";
+import { matchesAnyText } from "@/lib/tag-match";
 
 /** Creates a tag if it doesn't already exist for this project (name is
  * unique per project — see migration 0009), otherwise no-ops rather than
  * erroring, so "add tag" always feels safe to click even on a name that's
- * already there. */
+ * already there.
+ *
+ * Auto-match tagging (the only way a prompt is ever tagged now — see
+ * components/tag-picker.tsx and backend/store.py's auto_link_tags): a brand
+ * new tag is immediately scanned against every existing prompt's query text
+ * AND every one of its answers, so "add Moto Fusion as a tag" retroactively
+ * tags every prompt that already mentions it, not just future ones. */
 export async function createTag(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   if (!name) return;
 
   const sb = createAnonServerClient();
   const projectId = await getCurrentProjectId();
-  const { error } = await sb
+  const { data: tagRow, error } = await sb
     .from("tags")
-    .upsert({ project_id: projectId, name }, { onConflict: "project_id,name", ignoreDuplicates: true });
+    .upsert({ project_id: projectId, name }, { onConflict: "project_id,name", ignoreDuplicates: true })
+    .select("id")
+    .maybeSingle();
 
   if (error) throw new Error(`Failed to create tag: ${error.message}`);
+
+  // ignoreDuplicates means an existing tag returns no row here — re-select
+  // it so the scan below still runs (re-adding an existing tag name is also
+  // how a user would ask "re-scan for this tag", harmless to repeat).
+  const tagId =
+    tagRow?.id ??
+    (
+      await sb.from("tags").select("id").eq("project_id", projectId).eq("name", name).maybeSingle()
+    ).data?.id;
+  if (!tagId) return;
+
+  const { data: prompts } = await sb.from("prompts").select("id, query_text").eq("project_id", projectId);
+  const promptIds = (prompts ?? []).map((p) => p.id);
+  // raw_responses has no project_id of its own — it's reached through
+  // prompt_id, same as everywhere else in this codebase that joins the two.
+  const { data: responses } = promptIds.length
+    ? await sb.from("raw_responses").select("prompt_id, answer_text").in("prompt_id", promptIds)
+    : { data: [] as { prompt_id: string; answer_text: string | null }[] };
+
+  const answersByPrompt = new Map<string, string[]>();
+  for (const r of responses ?? []) {
+    const list = answersByPrompt.get(r.prompt_id) ?? [];
+    if (r.answer_text) list.push(r.answer_text);
+    answersByPrompt.set(r.prompt_id, list);
+  }
+
+  const matches = (prompts ?? [])
+    .filter((p) => matchesAnyText(name, [p.query_text, ...(answersByPrompt.get(p.id) ?? [])]))
+    .map((p) => ({ prompt_id: p.id, tag_id: tagId }));
+
+  if (matches.length) {
+    const { error: linkError } = await sb
+      .from("prompt_tags")
+      .upsert(matches, { onConflict: "prompt_id,tag_id", ignoreDuplicates: true });
+    if (linkError) throw new Error(`Failed to auto-link tag: ${linkError.message}`);
+  }
+
   revalidatePath("/prompts");
   revalidatePath("/fanouts");
   revalidatePath("/brands");
@@ -64,17 +110,9 @@ export async function updateTagGroup(tagId: string, groupName: string) {
   revalidatePath("/insights");
 }
 
-export async function addTagToPrompt(promptId: string, tagId: string) {
-  const sb = createAnonServerClient();
-  const { error } = await sb
-    .from("prompt_tags")
-    .upsert({ prompt_id: promptId, tag_id: tagId }, { onConflict: "prompt_id,tag_id", ignoreDuplicates: true });
-  if (error) throw new Error(`Failed to add tag: ${error.message}`);
-  revalidatePath("/prompts");
-  revalidatePath("/fanouts");
-  revalidatePath("/brands");
-}
-
+/** Manual override only — removes a bad auto-match. Nothing calls the
+ * inverse (a manual "add") any more; see createTag/addPrompt for the only
+ * two ways a prompt_tags row gets written now. */
 export async function removeTagFromPrompt(promptId: string, tagId: string) {
   const sb = createAnonServerClient();
   const { error } = await sb

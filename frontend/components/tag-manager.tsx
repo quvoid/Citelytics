@@ -100,9 +100,12 @@ function TagChip({ tag }: { tag: Tag }) {
 }
 
 /** Tag creation + management, SEMrush-style: entirely user-defined, nothing
- * AI-generated here. Assignment to individual prompts happens in TagPicker
- * on each prompt row — this component only owns the tag vocabulary itself
- * (create / rename / delete / group).
+ * AI-generated here. Creating a tag here (createTag, lib/actions/tags.ts)
+ * immediately auto-matches it against every existing prompt/answer by
+ * keyword — that's the only way a prompt ever gets tagged now. TagPicker on
+ * each prompt row only shows the result and lets you remove a bad match;
+ * this component owns the tag vocabulary itself (create / rename / delete /
+ * group).
  *
  * Grouped tags render under their group_name header; ungrouped tags stay in
  * a flat list underneath — matching how thin Peec's own tag-group feature
