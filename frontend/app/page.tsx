@@ -1,11 +1,10 @@
-import Link from "next/link";
 import { BrandLeaderboard } from "@/components/brand-leaderboard";
 import { ChartCard } from "@/components/chart-card";
-import { EngineLabel } from "@/components/engine-icons";
+import { GreetingHeader } from "@/components/greeting-header";
 import { KpiCard } from "@/components/kpi-card";
-import { MentionMark, ProvenanceLabel } from "@/components/marks";
 import { ModelPerformanceTable, type ModelRow } from "@/components/model-performance-table";
 import { MoversList } from "@/components/movers-list";
+import { buildRecentAnswerCards, RecentAnswersGrid } from "@/components/recent-answers-grid";
 import { ShareOfSearchBars } from "@/components/share-of-search-bars";
 import { MultiTrendChart } from "@/components/multi-trend-chart";
 import { ReferralSurfaceTable } from "@/components/referral-surface-table";
@@ -31,7 +30,6 @@ import {
 import { brandTerms, shareOfSearch } from "@/lib/fanout-analysis";
 import { computeMovers } from "@/lib/movers";
 import { referralSurface } from "@/lib/referral-surface";
-import type { Citation } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -155,34 +153,21 @@ export default async function OverviewPage() {
 
   const chartDays = Array.from(byDay.entries()).sort(([a], [b]) => a.localeCompare(b));
 
-
-  const citationsByRawResponse = new Map<string, Citation[]>();
-  for (const c of citations) {
-    if (!c.raw_response_id) continue;
-    const list = citationsByRawResponse.get(c.raw_response_id) ?? [];
-    list.push(c);
-    citationsByRawResponse.set(c.raw_response_id, list);
-  }
-
-  const recentAnswers = rawResponses.slice(0, 6);
+  const recentAnswerCards = buildRecentAnswerCards(rawResponses, citations, promptById, engineById);
 
   return (
     <div className="py-7">
-      <div className="mb-6 flex items-end justify-between gap-8">
-        <div>
-          <h1 className="m-0 font-sans text-[26px] leading-[1.25] font-bold tracking-[-0.01em] text-balance">
-            <span>
-              {citationsMentioningBrand} of {totalCitations}
-            </span>{" "}
-            cited pages mention <span className="text-[var(--ember)]">{brandName}</span> — named
-            in <span>{answerMentionPct}%</span> of answers
-          </h1>
-          <p className="mt-2 max-w-[54ch] font-sans text-[14px] leading-[1.55] text-[var(--muted-2)]">
-            Answer engines cite plenty of pages that never name {brandName} — the ones that do are
-            the real signal here.
-          </p>
-        </div>
-      </div>
+      <GreetingHeader brandName={brandName} />
+
+      <p className="-mt-3.5 mb-6 max-w-[62ch] font-sans text-[14px] leading-[1.55] text-[var(--muted-2)]">
+        <span className="font-semibold text-[var(--ink)]">
+          {citationsMentioningBrand} of {totalCitations}
+        </span>{" "}
+        cited pages mention {brandName} — named in{" "}
+        <span className="font-semibold text-[var(--ink)]">{answerMentionPct}%</span> of answers.
+        Answer engines cite plenty of pages that never name {brandName} — the ones that do are the
+        real signal here.
+      </p>
 
       {/* Headline metrics come from the metrics layer, not from daily_metrics,
           so this page and /insights can never quote different numbers for the
@@ -309,64 +294,7 @@ export default async function OverviewPage() {
           source-visibility % column. An exact subset of data already on
           this page, a screen higher — removed rather than kept as a second,
           weaker rendering of the same table. */}
-      <section className="mt-5">
-        <div
-          className="rounded-[var(--radius-xl)] bg-[var(--card)] p-6"
-          style={{ boxShadow: "var(--shadow-card)" }}
-        >
-          <h2 className="m-0 font-sans text-[16px] font-bold tracking-[-0.005em]">Recent answers</h2>
-          <p className="m-0 mt-1 mb-4 font-sans text-[12.5px] text-[var(--muted-2)]">newest fetch first</p>
-          <div className="flex flex-col">
-            {recentAnswers.map((r, i) => {
-              const cited = citationsByRawResponse.get(r.id) ?? [];
-              const real = cited.length ? cited.some((c) => !c.is_simulated) : true;
-              const mentionCount = cited.filter((c) => c.mentions_brand === true).length;
-              return (
-                <article
-                  key={r.id}
-                  className="py-4"
-                  style={{ borderTop: i === 0 ? "none" : "1px solid var(--rule-light)" }}
-                >
-                  <div className="flex items-baseline justify-between gap-6">
-                    <div className="flex items-baseline gap-2.5 font-sans text-[11px] font-medium text-[var(--muted-2)]">
-                      <span className="text-[var(--ink)]">
-                        <EngineLabel name={engineById.get(r.engine_id)} size={13} />
-                      </span>
-                      <span>{new Date(r.fetched_at).toLocaleString()}</span>
-                      <ProvenanceLabel real={real} />
-                    </div>
-                    <MentionMark
-                      value={r.brand_mentioned_in_answer}
-                      label={r.brand_mentioned_in_answer ? `${brandName} in answer` : "not in answer"}
-                    />
-                  </div>
-                  <Link
-                    href={`/prompts/${r.prompt_id}`}
-                    className="mt-2 block font-sans text-[15px] leading-[1.35] font-semibold tracking-[-0.005em] text-[var(--ink)] no-underline hover:text-[var(--ember)]"
-                  >
-                    &ldquo;{promptById.get(r.prompt_id) ?? "—"}&rdquo;
-                  </Link>
-                  {r.answer_text && (
-                    <p className="mt-2 max-w-[59ch] rounded-[10px] bg-[var(--muted)] p-3 font-sans text-[13px] leading-[1.6] text-[var(--muted-2)] text-pretty">
-                      {r.answer_text.slice(0, 220)}
-                      {r.answer_text.length > 220 ? "…" : ""}
-                    </p>
-                  )}
-                  <div className="mt-2 flex gap-4 font-sans text-[11.5px] text-[var(--muted-2)]">
-                    <span>{cited.length} pages cited</span>
-                    <span>
-                      {mentionCount} mention {brandName}
-                    </span>
-                  </div>
-                </article>
-              );
-            })}
-            {!recentAnswers.length && (
-              <p className="font-sans text-[13px] text-[var(--muted-2)]">No fetches yet.</p>
-            )}
-          </div>
-        </div>
-      </section>
+      <RecentAnswersGrid cards={recentAnswerCards} viewAllHref="/chats" />
     </div>
   );
 }

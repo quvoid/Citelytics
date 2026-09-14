@@ -3,6 +3,7 @@ import { Sora } from "next/font/google";
 import "./globals.css";
 import { HapticFeedback } from "@/components/haptic-feedback";
 import { HoverSidebar } from "@/components/hover-sidebar";
+import { MobileTabBar } from "@/components/mobile-tab-bar";
 import { NavigationProgressBar } from "@/components/navigation-progress-bar";
 import { getLayoutData } from "@/lib/layout-data";
 import { logoDomains } from "@/lib/logo-domains";
@@ -49,7 +50,13 @@ export default async function RootLayout({
       <body className="min-h-screen overflow-x-clip bg-background font-sans text-[15px] text-foreground">
         <NavigationProgressBar />
         <HapticFeedback />
-        <HoverSidebar data={data} logoDomains={[...logoDomains()]} />
+        {/* HoverSidebar needs real hover, which a touchscreen doesn't have —
+            hidden below `sm` in favor of MobileTabBar's floating pill, the
+            mirror image of this same rule in that component. */}
+        <div className="hidden sm:block">
+          <HoverSidebar data={data} logoDomains={[...logoDomains()]} />
+        </div>
+        <MobileTabBar />
         {/* The Trendtrack-style shell: a flush-left dark rail, then the
             ENTIRE rest of the app sits in one large rounded card floating
             on the page's warm-gray canvas (--bg), with a visible gap on
@@ -57,14 +64,16 @@ export default async function RootLayout({
             app shaped this way. pl-[88px] clears the 72px collapsed rail
             plus a real gap (the rail is `position: fixed` and overlays
             rather than pushes the content column when it expands on hover,
-            so this padding never changes on hover). */}
-        <div className="min-w-0 py-4 pr-4 pl-[88px]">
+            so this padding never changes on hover) — 0 below `sm`, where
+            there's no rail to clear. pb-28 below `sm` clears MobileTabBar's
+            floating pill instead. */}
+        <div className="min-w-0 py-4 pr-4 pb-28 pl-4 sm:pb-4 sm:pl-[88px]">
           <div
-            className="mx-auto min-w-0 max-w-[1280px] rounded-[var(--radius-4xl)] bg-[var(--card)]"
+            className="mx-auto min-w-0 max-w-[1280px] rounded-[var(--radius-2xl)] bg-[var(--card)] sm:rounded-[var(--radius-4xl)]"
             style={{ boxShadow: "var(--shadow-card)" }}
           >
-            <main className="min-w-0 px-8 pt-8">{children}</main>
-            <footer className="mt-14 flex justify-between px-8 pt-5 pb-8 font-sans text-[12.5px] text-[var(--faint)]">
+            <main className="min-w-0 px-4 pt-6 sm:px-8 sm:pt-8">{children}</main>
+            <footer className="mt-14 flex flex-col justify-between gap-1 px-4 pt-5 pb-8 font-sans text-[12.5px] text-[var(--faint)] sm:flex-row sm:px-8">
               <span>Citelytics · real citations from Gemini &amp; ChatGPT</span>
               <span>Filled dots mark real fetches; hollow dots mark simulated demo records.</span>
             </footer>
