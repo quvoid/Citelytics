@@ -161,8 +161,10 @@ export function TopBrandsTable({
   };
 
   return (
+    // --bg not --card — nests inside the app shell's own white panel now
+    // (see chart-card.tsx's comment for the full reasoning).
     <section
-      className="rounded-[var(--radius-xl)] bg-[var(--card)]"
+      className="rounded-[var(--radius-xl)] bg-[var(--bg)]"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       <div className="flex items-center justify-between gap-4 px-4 pt-4 pb-3">

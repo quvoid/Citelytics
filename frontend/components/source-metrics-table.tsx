@@ -16,8 +16,9 @@ import type { SourceMetricRow } from "@/lib/metrics/types";
  */
 export function SourceMetricsTable({ rows, totalResponses }: { rows: SourceMetricRow[]; totalResponses: number }) {
   return (
+    // --bg not --card — nests inside the app shell's own white panel now.
     <section
-      className="rounded-[var(--radius-xl)] bg-[var(--card)]"
+      className="rounded-[var(--radius-xl)] bg-[var(--bg)]"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       <div className="px-4 pt-4 pb-3">

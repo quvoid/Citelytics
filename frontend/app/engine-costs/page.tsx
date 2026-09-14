@@ -160,7 +160,7 @@ function summarize(rows: Row[]) {
 
 function Tile({ label, value, hint }: { label: string; value: React.ReactNode; hint?: string }) {
   return (
-    <div className="rounded-[var(--radius-lg)] bg-[var(--card)] px-4 py-3.5" style={{ boxShadow: "var(--shadow-card)" }}>
+    <div className="rounded-[var(--radius-lg)] bg-[var(--bg)] px-4 py-3.5" style={{ boxShadow: "var(--shadow-card)" }}>
       <div className="font-sans text-[11px] font-medium text-[var(--muted-2)]" title={hint}>
         {label}
       </div>
@@ -244,7 +244,7 @@ const BAR_COLORS = ["#e8590c", "#d1541a", "#b8501f", "#9f4b23", "#864726", "#6d4
 function BrandLeaderboard({ title, source, data }: { title: string; source: string; data: BrandFavorability }) {
   const top = data.brands[0];
   return (
-    <div className="rounded-[var(--radius-lg)] bg-[var(--card)] p-4" style={{ boxShadow: "var(--shadow-card)" }}>
+    <div className="rounded-[var(--radius-lg)] bg-[var(--bg)] p-4" style={{ boxShadow: "var(--shadow-card)" }}>
       <div className="flex items-baseline justify-between gap-2">
         <h3 className="m-0 font-sans text-[14px] font-semibold text-[var(--ink)]">{title}</h3>
         <span className="font-sans text-[11px] text-[var(--muted-2)]">n={data.sampleSize}</span>
@@ -297,7 +297,7 @@ function GroundedFavorabilityCard({ data }: { data: GroundedFavorability }) {
             .sort((a, z) => z[1] - a[1])
             .slice(0, 4);
           return (
-            <div key={b.brand} className="rounded-[var(--radius-lg)] bg-[var(--card)] p-4" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div key={b.brand} className="rounded-[var(--radius-lg)] bg-[var(--bg)] p-4" style={{ boxShadow: "var(--shadow-card)" }}>
               <div className="flex items-baseline justify-between">
                 <h3 className="m-0 font-sans text-[14px] font-semibold text-[var(--ink)]">{b.brand}</h3>
                 <span className="font-sans text-[11px] text-[var(--muted-2)]">{total} mentions</span>

@@ -35,8 +35,11 @@ export function KpiCard({
   const Arrow = delta.direction === "down" ? ArrowDown : ArrowUp;
 
   return (
+    // --bg not --card — see chart-card.tsx's comment: this always nests
+    // inside the app shell's own white panel now, so it needs a tone that
+    // actually contrasts against that, not another coat of the same white.
     <div
-      className="rounded-[var(--radius-lg)] bg-[var(--card)] px-4 py-3.5"
+      className="rounded-[var(--radius-lg)] bg-[var(--bg)] px-4 py-3.5"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       <div className="font-sans text-[12px] font-medium text-[var(--muted-2)]" title={hint}>

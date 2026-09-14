@@ -369,7 +369,8 @@ async function InsightsContent({
           </Link>
         </div>
         <div
-          className="mt-2 rounded-[var(--radius-xl)] bg-[var(--card)] px-4"
+          // --bg not --card — nests inside the app shell's own white panel.
+          className="mt-2 rounded-[var(--radius-xl)] bg-[var(--bg)] px-4"
           style={{ boxShadow: "var(--shadow-card)" }}
         >
           {recentChats.rows.map((c) => (

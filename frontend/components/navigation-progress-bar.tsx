@@ -188,13 +188,17 @@ export function NavigationProgressBar() {
             {[0, 1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-[86px] animate-pulse rounded-[var(--radius-xl,10px)] bg-[var(--card)]"
+                // --bg not --card — mimics chart-card.tsx/kpi-card.tsx,
+                // which now use --bg since they nest inside the shell's
+                // own white panel; the skeleton should match what it's
+                // standing in for.
+                className="h-[86px] animate-pulse rounded-[var(--radius-xl,10px)] bg-[var(--bg)]"
                 style={{ boxShadow: "var(--shadow-card)", animationDelay: `${i * 80}ms` }}
               />
             ))}
           </div>
           <div
-            className="mt-3.5 h-[220px] animate-pulse rounded-[var(--radius-xl,10px)] bg-[var(--card)]"
+            className="mt-3.5 h-[220px] animate-pulse rounded-[var(--radius-xl,10px)] bg-[var(--bg)]"
             style={{ boxShadow: "var(--shadow-card)", animationDelay: "260ms" }}
           />
         </div>

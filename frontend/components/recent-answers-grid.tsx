@@ -58,7 +58,9 @@ export function RecentAnswersGrid({ cards, viewAllHref }: { cards: RecentAnswerC
               <Link
                 key={c.id}
                 href={`/prompts/${c.promptId}`}
-                className="flex w-[270px] flex-none snap-start flex-col rounded-[var(--radius-xl)] border border-[var(--rule-light)] bg-[var(--card)] p-4.5 no-underline transition-shadow duration-150 hover:shadow-[var(--shadow-card-hover)]"
+                // --bg not --card — nests inside the app shell's own white
+                // panel (see chart-card.tsx's comment for the reasoning).
+                className="flex w-[270px] flex-none snap-start flex-col rounded-[var(--radius-xl)] border border-[var(--rule-light)] bg-[var(--bg)] p-4.5 no-underline transition-shadow duration-150 hover:shadow-[var(--shadow-card-hover)]"
                 style={{ boxShadow: "var(--shadow-card)" }}
               >
                 <div className="flex items-center justify-between gap-2">

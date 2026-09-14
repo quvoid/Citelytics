@@ -15,8 +15,14 @@ export function ChartCard({
   children: ReactNode;
 }) {
   return (
+    // bg-[var(--bg)], not --card: this always renders nested inside the
+    // app shell's own big --card (white) panel now (see app/layout.tsx),
+    // so a same-white card here would only read as "a card" via its thin
+    // border/shadow — flat, padding-on-padding (Kole Jain's "avoid
+    // double-nested cards" — see video notes). --bg gives it real,
+    // visible contrast against the white shell instead.
     <section
-      className="rounded-[14px] border border-[var(--rule)] bg-[var(--card)] p-5"
+      className="rounded-[14px] border border-[var(--rule)] bg-[var(--bg)] p-5"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       <div className="mb-4 flex items-start justify-between gap-4">

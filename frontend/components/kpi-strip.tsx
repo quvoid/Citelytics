@@ -11,8 +11,10 @@ const KPIS: { key: MetricKey; label: string; hint: string }[] = [
 
 function Tile({ children }: { children: React.ReactNode }) {
   return (
+    // --bg not --card — nests inside the app shell's own white panel, so
+    // needs to contrast against it rather than repeat it (see chart-card.tsx).
     <div
-      className="rounded-[var(--radius-lg)] bg-[var(--card)] px-4 py-3.5"
+      className="rounded-[var(--radius-lg)] bg-[var(--bg)] px-4 py-3.5"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       {children}

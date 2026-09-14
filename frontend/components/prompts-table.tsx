@@ -90,8 +90,9 @@ export function PromptsTable({
   compare?: boolean;
 }) {
   return (
+    // --bg not --card — nests inside the app shell's own white panel now.
     <section
-      className="rounded-[var(--radius-xl)] bg-[var(--card)]"
+      className="rounded-[var(--radius-xl)] bg-[var(--bg)]"
       style={{ boxShadow: "var(--shadow-card)" }}
     >
       <div className="flex items-center justify-end px-4 pt-3.5 pb-2.5">

@@ -227,7 +227,7 @@ function Bone({ className = "", style }: { className?: string; style?: React.CSS
  *  the loading state already tells you how many answers are coming. */
 export function EngineCardSkeleton() {
   return (
-    <section className="rounded-[12px] border border-[var(--border)] bg-[var(--card)] p-4">
+    <section className="rounded-[12px] border border-[var(--border)] bg-[var(--bg)] p-4">
       <div className="mb-3 flex items-baseline justify-between gap-2">
         <Bone className="h-[16px] w-[90px]" />
         <Bone className="h-[12px] w-[120px]" />
@@ -253,7 +253,7 @@ export function EngineCard({ a }: { a: EngineAnswerDetail & { country: string | 
   const retrievedOnly = a.sources.filter((s) => !s.citedInText).length;
 
   return (
-    <section className="rounded-[12px] border border-[var(--border)] bg-[var(--card)] p-4">
+    <section className="rounded-[12px] border border-[var(--border)] bg-[var(--bg)] p-4">
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
         <span className="flex items-baseline gap-1.5 font-sans text-[14px] font-semibold tracking-[-0.01em]">
           {label}

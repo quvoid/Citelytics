@@ -61,8 +61,9 @@ export function PromptComposer({
       </div>
 
       {open && (
+        // --bg not --card — nests inside the app shell's own white panel now.
         <section
-          className="mb-4 rounded-[var(--radius-xl)] bg-[var(--card)] p-6"
+          className="mb-4 rounded-[var(--radius-xl)] bg-[var(--bg)] p-6"
           style={{ boxShadow: "var(--shadow-card)" }}
         >
           <form
