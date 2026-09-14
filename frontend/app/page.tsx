@@ -173,7 +173,7 @@ export default async function OverviewPage() {
           so this page and /insights can never quote different numbers for the
           same thing. Each carries its own change vs. the preceding period. */}
       {own && (
-        <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <KpiCard
             label="Share of voice"
             metric="sov"
