@@ -46,7 +46,17 @@ export default async function RootLayout({
           `auto` too — CSS Overflow's axis-coupling rule — which turns
           <body>/<html> into their own scroll containers). `clip` is exempt
           from that coupling. */}
-      <body className="min-h-screen overflow-x-clip bg-background font-sans text-[15px] text-foreground">
+      {/* The page's own canvas is dark now (matching the sidebar's --sb-bg),
+          not the light --background token — that token is still used
+          as-is by the modal/error-page/route-transition-overlay
+          components, which stay light on purpose, so it's left alone;
+          only body's own background changes here. The white shell
+          (--card) floats on this dark canvas, same contrast the
+          reference uses. */}
+      <body
+        className="min-h-screen overflow-x-clip font-sans text-[15px] text-foreground"
+        style={{ background: "var(--sb-bg)" }}
+      >
         <NavigationProgressBar />
         <HapticFeedback />
         {/* Static, always-open sidebar — back to how this was before the
