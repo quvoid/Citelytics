@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { createBrief } from "@/lib/actions/briefs";
+import { buttonAccent } from "@/lib/button-styles";
 
 export function NewBriefForm() {
   const [isPending, startTransition] = useTransition();
@@ -20,7 +21,7 @@ export function NewBriefForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="mt-9 border border-[var(--rust)] bg-[var(--rust)] px-6 py-3 font-sans text-xs tracking-[0.06em] text-[var(--paper)] uppercase disabled:opacity-60"
+        className={`mt-9 ${buttonAccent}`}
       >
         {isPending ? "Creating…" : "Create brief"}
       </button>

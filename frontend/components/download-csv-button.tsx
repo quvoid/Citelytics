@@ -1,5 +1,6 @@
 "use client";
 
+import { buttonSecondarySm } from "@/lib/button-styles";
 import { toCsv, downloadText } from "@/lib/csv";
 
 export function DownloadCsvButton({
@@ -16,7 +17,7 @@ export function DownloadCsvButton({
   return (
     <button
       onClick={() => downloadText(filename, toCsv(rows, columns))}
-      className="border border-[var(--ink)] px-3.5 py-2 font-sans text-[11px] tracking-[0.08em] uppercase whitespace-nowrap hover:bg-[var(--ink)] hover:text-[var(--cream)]"
+      className={buttonSecondarySm}
     >
       {label}
     </button>

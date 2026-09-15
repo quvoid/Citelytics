@@ -46,12 +46,16 @@ async function getOverviewData() {
 
 
 export default async function OverviewPage() {
-  const { prompts, engines, citations, rawResponses, ownBrand } = await getOverviewData();
-
   // --- Metrics layer: the same sums-first numbers /insights reports, so the
   // Overview can never disagree with the page it links into. -----------------
+  // getCurrentProjectId is a cookie read (no network); the raw-data batch
+  // and the filter-options RPC are independent of each other, so they go
+  // out together — this was two sequential Supabase round trips before.
   const projectId = await getCurrentProjectId();
-  const filterOptions = await getFilterOptions(projectId);
+  const [{ prompts, engines, citations, rawResponses, ownBrand }, filterOptions] = await Promise.all([
+    getOverviewData(),
+    getFilterOptions(projectId),
+  ]);
   const filter = {
     projectId,
     range: rangeFromPreset("30d", filterOptions.dataRange?.last ?? todayUtc()),

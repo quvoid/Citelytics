@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { FileText, PlusCircle, Sparkles } from "lucide-react";
+import { buttonPrimary, buttonSecondary } from "@/lib/button-styles";
 
 /** "Good morning, {brand}" header for Overview — the reference's greeting
  *  card, adapted: no user identity exists in this app (projects are brands,
@@ -38,21 +39,21 @@ export function GreetingHeader({ brandName }: { brandName: string }) {
       <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:flex-none">
         <Link
           href="/prompts"
-          className="flex items-center gap-1.5 rounded-full border border-[var(--rule)] bg-[var(--card)] px-3.5 py-2 font-sans text-[12.5px] font-semibold text-[var(--ink)] no-underline transition-colors duration-150 hover:bg-[var(--muted)]"
+          className={buttonSecondary}
         >
           <PlusCircle size={14} strokeWidth={2} aria-hidden="true" />
           Add a prompt
         </Link>
         <Link
           href="/briefs/new"
-          className="flex items-center gap-1.5 rounded-full border border-[var(--rule)] bg-[var(--card)] px-3.5 py-2 font-sans text-[12.5px] font-semibold text-[var(--ink)] no-underline transition-colors duration-150 hover:bg-[var(--muted)]"
+          className={buttonSecondary}
         >
           <FileText size={14} strokeWidth={2} aria-hidden="true" />
           New brief
         </Link>
         <Link
           href="/insights"
-          className="flex items-center gap-1.5 rounded-full bg-[var(--ink)] px-3.5 py-2 font-sans text-[12.5px] font-semibold text-[var(--bg)] no-underline transition-opacity duration-150 hover:opacity-85"
+          className={buttonPrimary}
         >
           <Sparkles size={14} strokeWidth={2} aria-hidden="true" />
           Full insights

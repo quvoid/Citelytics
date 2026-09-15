@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { buttonSecondarySm } from "@/lib/button-styles";
 
 export function CopyButton({ text, label = "Copy" }: { text: string; label?: string }) {
   const [copied, setCopied] = useState(false);
@@ -14,7 +15,7 @@ export function CopyButton({ text, label = "Copy" }: { text: string; label?: str
   return (
     <button
       onClick={handleCopy}
-      className="border border-[var(--ink)] px-3.5 py-2 font-sans text-[11px] tracking-[0.08em] uppercase whitespace-nowrap hover:bg-[var(--ink)] hover:text-[var(--cream)]"
+      className={buttonSecondarySm}
     >
       {copied ? "Copied" : label}
     </button>

@@ -2,6 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { addPrompt } from "@/lib/actions/prompts";
+import { buttonAccent, buttonPrimary, buttonSecondary } from "@/lib/button-styles";
 import { countryName } from "@/lib/countries";
 import type { Topic } from "@/lib/types";
 
@@ -50,11 +51,7 @@ export function PromptComposer({
       <div className="flex justify-end py-3">
         <button
           onClick={() => setOpen((v) => !v)}
-          className="rounded-full px-4.5 py-2.5 font-sans text-[12.5px] font-semibold transition-colors duration-150"
-          style={{
-            background: open ? "var(--muted)" : "var(--ink)",
-            color: open ? "var(--ink)" : "var(--bg)",
-          }}
+          className={open ? buttonSecondary : buttonPrimary}
         >
           {open ? "Cancel" : toggleLabel}
         </button>
@@ -132,7 +129,7 @@ export function PromptComposer({
             <button
               type="submit"
               disabled={isPending}
-              className="rounded-full bg-[var(--ember)] px-5 py-3 font-sans text-[12.5px] font-semibold text-white transition-opacity duration-150 disabled:opacity-60"
+              className={buttonAccent}
             >
               {isPending ? "Adding…" : "Track prompt"}
             </button>

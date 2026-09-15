@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { createProject } from "@/lib/actions/projects";
+import { buttonAccent } from "@/lib/button-styles";
 import { COUNTRIES } from "@/lib/countries";
 
 export function NewProjectForm() {
@@ -80,7 +81,7 @@ export function NewProjectForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="border border-[var(--rust)] bg-[var(--rust)] px-6 py-3 font-sans text-xs tracking-[0.06em] text-[var(--paper)] uppercase disabled:opacity-60"
+          className={buttonAccent}
         >
           {isPending ? "Starting…" : "Start tracking"}
         </button>

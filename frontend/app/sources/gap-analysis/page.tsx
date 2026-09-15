@@ -2,6 +2,7 @@ import { BarList } from "@/components/bar-list";
 import { ChartCard } from "@/components/chart-card";
 import { DownloadCsvButton } from "@/components/download-csv-button";
 import { createBriefFromGap } from "@/lib/actions/briefs";
+import { buttonSecondarySm } from "@/lib/button-styles";
 import {
   getAnswerBrandMentions,
   getCitations,
@@ -233,7 +234,7 @@ export default async function GapAnalysisPage() {
               <form action={createBriefFromGap.bind(null, promptText, origin)} className="text-right">
                 <button
                   type="submit"
-                  className="border border-[var(--ink)] px-3 py-2 font-sans text-[11px] tracking-[0.08em] text-[var(--ink)] uppercase whitespace-nowrap hover:bg-[var(--ink)] hover:text-[var(--cream)]"
+                  className={buttonSecondarySm}
                 >
                   Brief this gap
                 </button>

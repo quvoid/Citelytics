@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { EmptyState } from "@/components/empty-state";
+import { buttonPrimary } from "@/lib/button-styles";
 import { getContentBriefs } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
@@ -22,7 +23,7 @@ export default async function BriefsPage() {
         </div>
         <Link
           href="/briefs/new"
-          className="whitespace-nowrap border border-[var(--ink)] bg-[var(--ink)] px-4 py-2.5 font-sans text-xs tracking-[0.06em] text-[var(--cream)] uppercase no-underline hover:border-[var(--rust)] hover:bg-[var(--rust)]"
+          className={buttonPrimary}
         >
           + New brief
         </Link>

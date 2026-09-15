@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { buttonPrimary } from "@/lib/button-styles";
 import { BACKEND_URL } from "@/lib/constants";
 import type { PerceptionFetchResponse } from "@/lib/types";
 
@@ -46,7 +47,7 @@ export function FetchPerceptionButton({ projectId }: { projectId: string }) {
       <button
         onClick={handleFetch}
         disabled={state.phase === "loading"}
-        className="whitespace-nowrap border border-[var(--ink)] bg-[var(--ink)] px-4 py-2.5 font-sans text-xs tracking-[0.06em] text-[var(--cream)] uppercase hover:border-[var(--rust)] hover:bg-[var(--rust)] disabled:opacity-60"
+        className={buttonPrimary}
       >
         {state.phase === "loading" ? "Fetching…" : "Fetch perception now"}
       </button>

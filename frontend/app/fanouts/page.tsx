@@ -89,7 +89,16 @@ export default async function FanoutsPage({
   const engineLabel = (name: string | undefined) =>
     name === "openrouter" ? "ChatGPT" : name === "gemini" ? "Gemini" : name || "Unknown";
 
-  const fanouts = await getQueryFanouts(rawResponses.map((r) => r.id));
+  // Both depend only on the raw_response ids from the batch above, not on
+  // each other — one round trip to Supabase (~230ms) instead of two in a
+  // row. `ownMentions` used to be fetched a screen lower, after all the
+  // fanout aggregation, for no reason other than where it was first needed.
+  const rawResponseIds = rawResponses.map((r) => r.id);
+  const hasOwnBrand = brands.some((b) => !b.is_competitor);
+  const [fanouts, ownMentions] = await Promise.all([
+    getQueryFanouts(rawResponseIds),
+    hasOwnBrand ? getAnswerBrandMentions(rawResponseIds) : Promise.resolve([]),
+  ]);
 
   const distinctQueries = new Set(fanouts.map((f) => f.query_text.toLowerCase()));
   const totalOccurrences = fanouts.length;
@@ -176,9 +185,7 @@ export default async function FanoutsPage({
 
   // Only answers that have BOTH a fanout record and a mention row can enter
   // the comparison — an answer missing either tells us nothing about it.
-  const ownMentions = own
-    ? await getAnswerBrandMentions(rawResponses.map((r) => r.id))
-    : [];
+  // (`ownMentions` was fetched alongside `fanouts` above.)
   const ownBrandId = brands.find((b) => !b.is_competitor)?.id;
   const namedByResponse = new Map(
     ownMentions.filter((m) => m.tracked_url_id === ownBrandId).map((m) => [m.raw_response_id, m.mentioned]),

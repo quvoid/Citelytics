@@ -1,6 +1,7 @@
 "use client";
 
 import { CopyButton } from "@/components/copy-button";
+import { buttonSecondarySm } from "@/lib/button-styles";
 import { downloadText } from "@/lib/csv";
 import type { ContentBrief } from "@/lib/types";
 
@@ -43,7 +44,7 @@ export function BriefExportActions({ brief }: { brief: ContentBrief }) {
       <CopyButton text={markdown} label="Copy as Markdown" />
       <button
         onClick={() => downloadText(filename, markdown, "text/markdown;charset=utf-8")}
-        className="border border-[var(--ink)] px-3.5 py-2 font-sans text-[11px] tracking-[0.08em] uppercase whitespace-nowrap hover:bg-[var(--ink)] hover:text-[var(--cream)]"
+        className={buttonSecondarySm}
       >
         Download .md
       </button>

@@ -1,6 +1,6 @@
 import { createAnonServerClient } from "@/lib/supabase/server";
 import { getCurrentProjectId } from "@/lib/current-project";
-import { getProjects } from "@/lib/queries";
+import { getProjects, getPrompts } from "@/lib/queries";
 import type { Project } from "@/lib/types";
 
 export type LayoutData = {
@@ -19,17 +19,20 @@ export async function getLayoutData(): Promise<LayoutData> {
   const projectId = await getCurrentProjectId();
   const sb = createAnonServerClient();
 
-  const [projects, { data: prompts }] = await Promise.all([
+  // All four in ONE batch. This used to be two sequential Promise.all
+  // phases (projects + prompts, THEN the two counts) even though the counts
+  // never depended on the first phase — a second ~230ms Supabase round trip
+  // paid on every single page load, since this runs in the root layout.
+  // getPrompts is the same per-request-cached read the pages use, so a page
+  // that also lists prompts shares this fetch instead of repeating it.
+  const [projects, prompts, { count: brandCount }, { count: briefCount }] = await Promise.all([
     getProjects(),
-    sb.from("prompts").select("id, prompt_type").eq("project_id", projectId),
-  ]);
-
-  const citationPromptCount = (prompts ?? []).filter((p) => p.prompt_type === "citation").length;
-
-  const [{ count: brandCount }, { count: briefCount }] = await Promise.all([
+    getPrompts(undefined, projectId),
     sb.from("tracked_urls").select("id", { count: "exact", head: true }).eq("project_id", projectId),
     sb.from("content_briefs").select("id", { count: "exact", head: true }).eq("project_id", projectId),
   ]);
+
+  const citationPromptCount = prompts.filter((p) => p.prompt_type === "citation").length;
 
   const fallback: Project = {
     id: projectId,

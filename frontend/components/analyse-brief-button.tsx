@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { buttonAccent } from "@/lib/button-styles";
 import { BACKEND_URL } from "@/lib/constants";
 
 type State = { phase: "idle" } | { phase: "loading" } | { phase: "error"; message: string };
@@ -35,7 +36,7 @@ export function AnalyseBriefButton({ briefId }: { briefId: string }) {
       <button
         onClick={handleAnalyse}
         disabled={state.phase === "loading"}
-        className="border border-[var(--rust)] bg-[var(--rust)] px-6 py-3 font-sans text-xs tracking-[0.06em] text-[var(--paper)] uppercase disabled:opacity-60"
+        className={buttonAccent}
       >
         {state.phase === "loading" ? "Analysing…" : "Analyse prompt"}
       </button>

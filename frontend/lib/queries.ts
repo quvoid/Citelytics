@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createAnonServerClient } from "@/lib/supabase/server";
 import { getCurrentProjectId } from "@/lib/current-project";
 import type {
@@ -54,16 +55,29 @@ export type PromptType = "citation" | "perception";
  * callers: `prompts.country` is null for anything inheriting the project's
  * market, so the filter needs the project's default_country to resolve —
  * which the pages already have loaded. */
-export async function getPrompts(promptType?: PromptType, projectId?: string): Promise<Prompt[]> {
-  const sb = createAnonServerClient();
-  const pid = projectId ?? (await getCurrentProjectId());
-  let query = sb.from("prompts").select(PROMPT_COLS).eq("project_id", pid);
-  if (promptType) query = query.eq("prompt_type", promptType);
-  const { data } = await query.order("query_text").returns<Prompt[]>();
-  return data ?? [];
-}
+// The reads below are wrapped in React `cache()`: per-request memoization,
+// keyed on the (primitive) arguments. The root layout and every page each
+// ask for the same engines / projects / prompts / tracked brands during one
+// render, and several pages ask twice (Overview wants tracked_urls both
+// as "all" and as "own only"). Each of those was a separate ~230ms round
+// trip to Supabase before; now identical calls within a render share one
+// in-flight request. Request-scoped, so nothing leaks across users or
+// goes stale between requests. Functions taking arrays/objects
+// (getCitations, getAnswerBrandMentions, ...) are deliberately NOT wrapped —
+// cache() keys by reference, so a fresh array literal never hits.
 
-export async function getProjects(): Promise<Project[]> {
+export const getPrompts = cache(
+  async (promptType?: PromptType, projectId?: string): Promise<Prompt[]> => {
+    const sb = createAnonServerClient();
+    const pid = projectId ?? (await getCurrentProjectId());
+    let query = sb.from("prompts").select(PROMPT_COLS).eq("project_id", pid);
+    if (promptType) query = query.eq("prompt_type", promptType);
+    const { data } = await query.order("query_text").returns<Prompt[]>();
+    return data ?? [];
+  },
+);
+
+export const getProjects = cache(async (): Promise<Project[]> => {
   const sb = createAnonServerClient();
   const { data } = await sb
     .from("projects")
@@ -71,9 +85,9 @@ export async function getProjects(): Promise<Project[]> {
     .order("created_at")
     .returns<Project[]>();
   return data ?? [];
-}
+});
 
-export async function getProject(id: string): Promise<Project | null> {
+export const getProject = cache(async (id: string): Promise<Project | null> => {
   const sb = createAnonServerClient();
   const { data } = await sb
     .from("projects")
@@ -81,31 +95,46 @@ export async function getProject(id: string): Promise<Project | null> {
     .eq("id", id)
     .maybeSingle<Project>();
   return data ?? null;
-}
+});
 
-export async function getPrompt(id: string): Promise<Prompt | null> {
+export const getPrompt = cache(async (id: string): Promise<Prompt | null> => {
   const sb = createAnonServerClient();
   const { data } = await sb.from("prompts").select(PROMPT_COLS).eq("id", id).maybeSingle<Prompt>();
   return data ?? null;
-}
+});
 
-export async function getEngines(): Promise<Engine[]> {
+export const getEngines = cache(async (): Promise<Engine[]> => {
   const sb = createAnonServerClient();
   const { data } = await sb.from("engines").select("id, name").returns<Engine[]>();
   return data ?? [];
-}
+});
+
+/** One cached fetch of ALL of a project's tracked brands; the public
+ *  getTrackedUrls filters it in memory. That's what lets `getTrackedUrls()`
+ *  and `getTrackedUrls({ ownOnly: true })` in the same render share one
+ *  round trip — an options-object argument would never cache-hit on its
+ *  own (keyed by reference), so the cacheable part is split out to take
+ *  only the project id. */
+const getAllTrackedUrls = cache(async (pid: string): Promise<TrackedUrl[]> => {
+  const sb = createAnonServerClient();
+  const { data } = await sb
+    .from("tracked_urls")
+    .select(TRACKED_URL_COLS)
+    .eq("project_id", pid)
+    .order("is_competitor")
+    .returns<TrackedUrl[]>();
+  return data ?? [];
+});
 
 export async function getTrackedUrls(
   options?: { competitorsOnly?: boolean; ownOnly?: boolean },
   projectId?: string
 ) {
-  const sb = createAnonServerClient();
   const pid = projectId ?? (await getCurrentProjectId());
-  let query = sb.from("tracked_urls").select(TRACKED_URL_COLS).eq("project_id", pid);
-  if (options?.competitorsOnly) query = query.eq("is_competitor", true);
-  if (options?.ownOnly) query = query.eq("is_competitor", false);
-  const { data } = await query.order("is_competitor").returns<TrackedUrl[]>();
-  return data ?? [];
+  const all = await getAllTrackedUrls(pid);
+  if (options?.competitorsOnly) return all.filter((t) => t.is_competitor);
+  if (options?.ownOnly) return all.filter((t) => !t.is_competitor);
+  return all;
 }
 
 /** Raw sightings for /brands' "seen in N answers" competitor suggestions —

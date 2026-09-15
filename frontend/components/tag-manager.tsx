@@ -2,6 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { createTag, deleteTag, renameTag, updateTagGroup } from "@/lib/actions/tags";
+import { buttonAccentSm } from "@/lib/button-styles";
 import { colorForTag } from "@/lib/tag-colors";
 import type { Tag } from "@/lib/types";
 
@@ -179,7 +180,7 @@ export function TagManager({ tags }: { tags: Tag[] }) {
           <button
             type="submit"
             disabled={isPending}
-            className="rounded-full border border-[var(--rust)] bg-[var(--rust)] px-3.5 py-1.5 font-sans text-[11px] font-semibold tracking-[0.06em] text-[var(--paper)] uppercase disabled:opacity-60"
+            className={buttonAccentSm}
           >
             {isPending ? "Adding…" : "Add"}
           </button>

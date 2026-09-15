@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AnalyseBriefButton } from "@/components/analyse-brief-button";
 import { BriefExportActions } from "@/components/brief-export-actions";
+import { buttonAccent, buttonSecondary } from "@/lib/button-styles";
 import { getContentBrief } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
@@ -139,14 +140,14 @@ export default async function BriefDetailPage({
                 <button
                   disabled
                   title="Not yet available"
-                  className="border border-[var(--rust)] bg-[var(--rust)] px-5 py-3 font-sans text-xs tracking-[0.06em] text-[var(--paper)] uppercase opacity-50"
+                  className={buttonAccent}
                 >
                   Write with AI
                 </button>
                 <button
                   disabled
                   title="Not yet available"
-                  className="border border-[var(--ink)] px-5 py-3 font-sans text-xs tracking-[0.06em] text-[var(--ink)] uppercase opacity-50"
+                  className={buttonSecondary}
                 >
                   Write manually
                 </button>

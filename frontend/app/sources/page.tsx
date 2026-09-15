@@ -32,6 +32,8 @@ type UrlRow = {
   contentType: string | null;
 };
 
+const MAX_URLS_PER_DOMAIN = 12;
+
 /** Collapses repeat citations of the same URL into one row.
  *
  * Deliberately order-independent: a URL cited several times may have rows
@@ -58,7 +60,14 @@ function aggregateUrls(citations: Citation[]): UrlRow[] {
     existing.contentType ??= c.content_type;
   }
 
-  return [...byUrl.values()].sort((a, b) => b.citations - a.citations);
+  // Top 12 URLs per domain, most-cited first. Every one of these rows is
+  // serialized into the RSC payload as a prop of the client-side
+  // SourcesTable, for EVERY domain, even though the table only ever shows
+  // the one expanded domain's URLs — measured at 524KB of HTML for this
+  // page, the single largest reason it rendered slowly. A domain with more
+  // than 12 distinct cited URLs is rare, and the row count on the domain
+  // itself (`citations`) is still the full, uncapped figure.
+  return [...byUrl.values()].sort((a, b) => b.citations - a.citations).slice(0, MAX_URLS_PER_DOMAIN);
 }
 
 function titleFromUrl(url: string): string {

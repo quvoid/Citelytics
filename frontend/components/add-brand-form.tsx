@@ -2,6 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { addBrand } from "@/lib/actions/brands";
+import { buttonAccent, buttonPrimary, buttonSecondary } from "@/lib/button-styles";
 
 export function AddBrandForm() {
   const [open, setOpen] = useState(false);
@@ -14,11 +15,7 @@ export function AddBrandForm() {
       <div className="flex justify-end border-b border-[var(--rule)] py-3">
         <button
           onClick={() => setOpen((v) => !v)}
-          className="border border-[var(--ink)] px-4.5 py-2.5 font-sans text-xs tracking-[0.06em] uppercase"
-          style={{
-            background: open ? "transparent" : "var(--ink)",
-            color: open ? "var(--ink)" : "var(--cream)",
-          }}
+          className={open ? buttonSecondary : buttonPrimary}
         >
           {open ? "Cancel" : "Add competitor"}
         </button>
@@ -72,14 +69,14 @@ export function AddBrandForm() {
                 className="mt-2.5 w-full border-0 border-b border-[var(--ink)] bg-transparent py-2 font-serif text-2xl text-[var(--ink)] outline-none placeholder:text-[var(--faint)]"
               />
             </div>
-            <div className="flex overflow-hidden border border-[var(--ink)]">
+            <div className="flex items-center gap-1 self-end rounded-[8px] border border-[var(--border)] bg-[var(--card)] p-0.5">
               <button
                 type="button"
                 onClick={() => setIsCompetitor(false)}
-                className="px-3.5 py-2.5 font-sans text-[11px] tracking-[0.06em] uppercase"
+                className="rounded-[6px] px-2.5 py-1.5 font-sans text-[12px] font-medium"
                 style={{
                   background: !isCompetitor ? "var(--ink)" : "transparent",
-                  color: !isCompetitor ? "var(--cream)" : "var(--muted-2)",
+                  color: !isCompetitor ? "var(--paper)" : "var(--muted-2)",
                 }}
               >
                 Our brand
@@ -87,10 +84,10 @@ export function AddBrandForm() {
               <button
                 type="button"
                 onClick={() => setIsCompetitor(true)}
-                className="border-l border-[var(--ink)] px-3.5 py-2.5 font-sans text-[11px] tracking-[0.06em] uppercase"
+                className="rounded-[6px] px-2.5 py-1.5 font-sans text-[12px] font-medium"
                 style={{
                   background: isCompetitor ? "var(--ink)" : "transparent",
-                  color: isCompetitor ? "var(--cream)" : "var(--muted-2)",
+                  color: isCompetitor ? "var(--paper)" : "var(--muted-2)",
                 }}
               >
                 Competitor
@@ -99,7 +96,7 @@ export function AddBrandForm() {
             <button
               type="submit"
               disabled={isPending}
-              className="rounded-full border border-[var(--rust)] bg-[var(--rust)] px-5 py-2.5 font-sans text-xs font-semibold tracking-[0.06em] text-[var(--paper)] uppercase disabled:opacity-60"
+              className={buttonAccent}
             >
               {isPending ? "Adding…" : "Add brand"}
             </button>

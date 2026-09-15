@@ -11,6 +11,7 @@
 
 import "server-only";
 
+import { cache } from "react";
 import { createAnonServerClient } from "@/lib/supabase/server";
 import { makeDelta } from "./delta";
 import { coverageOf, finalize, sumAll, ZERO_SUMS, type MetricSums } from "./finalize";
@@ -93,7 +94,19 @@ async function rpc<T>(fn: string, args: Record<string, unknown>): Promise<T[]> {
   return (data ?? []) as T[];
 }
 
-export async function getFilterOptions(projectId: string): Promise<FilterOptions> {
+/** Per-request memoized via React `cache()`. This is the single biggest
+ *  page-load fix in the app: every metrics function below (getBrandMetrics,
+ *  getSourceMetrics, getBrandTimeSeries, resolveFilterScope, ...) calls
+ *  this first to resolve the date range against `dataRange`, and every page
+ *  also calls it once itself for the FilterBar. Before memoization that was
+ *  ~10 identical `metrics_filter_options` RPC round trips per Insights
+ *  render (and N more on Overview, one per engine in its per-model loop) at
+ *  ~230ms each to Supabase — measured, not estimated. `cache()` collapses
+ *  every call with the same projectId within one server render into a
+ *  single in-flight request; the rest just await the same promise. Scoped
+ *  to the request, so it never serves one user's project to another and
+ *  never goes stale across requests. */
+export const getFilterOptions = cache(async (projectId: string): Promise<FilterOptions> => {
   const sb = createAnonServerClient();
   const { data, error } = await sb.rpc("metrics_filter_options", { p_project: projectId });
   if (error) throw new Error(`metrics_filter_options failed: ${error.message}`);
@@ -106,7 +119,7 @@ export async function getFilterOptions(projectId: string): Promise<FilterOptions
     system: raw.system ?? { branded: [], intent: [] },
     dataRange: raw.dataRange ?? null,
   };
-}
+});
 
 /** Parses the shared FilterBar's searchParams into a MetricsFilter. */
 export function parseMetricsFilter(
